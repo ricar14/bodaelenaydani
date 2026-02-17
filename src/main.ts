@@ -71,7 +71,7 @@ function renderPuzzle() {
     piece.style.position = 'absolute';
     piece.style.left = `${(i % SIZE) * PIECE_SIZE}px`;
     piece.style.top = `${Math.floor(i / SIZE) * PIECE_SIZE}px`;
-    piece.style.backgroundImage = "url('./src/img/IMG-20260101-WA0000.jpg')";
+    piece.style.backgroundImage = "url('/img/IMG-20260101-WA0000.jpg')";
     piece.style.backgroundSize = `${SIZE * PIECE_SIZE}px ${SIZE * PIECE_SIZE}px`;
     piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
     piece.dataset.index = i.toString();
