@@ -76,7 +76,7 @@ function renderPuzzle() {
     piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
     piece.dataset.index = i.toString();
     piece.dataset.piece = idx.toString();
-    piece.addEventListener('dragstart', (e) => {
+    piece.addEventListener('dragstart', () => {
       draggingIndex = i;
       piece.classList.add('dragging');
     });
