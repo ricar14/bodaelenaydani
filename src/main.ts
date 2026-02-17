@@ -80,12 +80,12 @@ function renderPuzzle() {
       draggingIndex = i;
       piece.classList.add('dragging');
     });
-    piece.addEventListener('dragend', (e) => {
+    piece.addEventListener('dragend', () => {
       draggingIndex = null;
       piece.classList.remove('dragging');
     });
-    piece.addEventListener('dragover', (e) => {
-      e.preventDefault();
+    piece.addEventListener('dragover', (event) => {
+      event.preventDefault();
     });
     piece.addEventListener('drop', (e) => {
       e.preventDefault();
@@ -303,4 +303,4 @@ function showModal(message: string) {
 
 
 
-const GUESTS_KEY = "wedding_confirmed_guests";
+
