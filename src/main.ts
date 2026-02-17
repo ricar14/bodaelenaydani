@@ -6,14 +6,17 @@ import "./style.css";
 
 // Smooth scrolling effect for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener("click", function (e) {
+  anchor.addEventListener("click", (e) => {
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    const href = (e.currentTarget as HTMLAnchorElement).getAttribute("href");
+    if (href) {
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
     }
   });
 });
@@ -116,9 +119,6 @@ setupPuzzle();
 const invitationCard = document.querySelector("#invitation-card") as HTMLElement;
 const envelopeAnim = document.getElementById("envelope-anim");
 const sobreAnimado = document.getElementById("sobreAnimado") as HTMLVideoElement | null;
-const nosCasamosSection = document.querySelector("#nos-casamos");
-const weddingInfoSection = document.querySelector("#wedding-info");
-const formSection = document.querySelector("#form");
 
 // Ocultar todas las secciones menos puzzle-gate al inicio
 const sections = document.querySelectorAll('section');
@@ -165,9 +165,7 @@ function puzzleSolved() {
   }, 700); // Duración del efecto de éxito
 }
 
-resetPuzzleBtn.addEventListener('click', createPuzzle);
 
-createPuzzle();
 
 // Event listener for invitation card
 if (envelopeAnim && sobreAnimado && invitationCard) {
@@ -293,11 +291,7 @@ function normalizeName(name: string): string {
     .replace(/\p{Diacritic}/gu, "");
 }
 
-function isNameUsed(name: string): boolean {
-  const guests = JSON.parse(localStorage.getItem(GUESTS_KEY) || "[]");
-  const normalized = normalizeName(name);
-  return guests.some((g: any) => normalizeName(g.name) === normalized);
-}
+
 
 function showModal(message: string) {
   const modalBody = document.querySelector('.modal-body');
@@ -307,10 +301,6 @@ function showModal(message: string) {
   modal.show();
 }
 
-function saveGuest(guest: { name: string; email: string; guests: number }) {
-  const current = JSON.parse(localStorage.getItem(GUESTS_KEY) || "[]");
-  current.push(guest);
-  localStorage.setItem(GUESTS_KEY, JSON.stringify(current));
-}
+
 
 const GUESTS_KEY = "wedding_confirmed_guests";
