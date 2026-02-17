@@ -1,0 +1,550 @@
+/* Efecto de éxito al resolver el puzzle */
+.puzzle-success {
+  animation: puzzle-glow 0.7s cubic-bezier(.4,2,.6,1) both, puzzle-shake 0.7s cubic-bezier(.4,2,.6,1) both;
+  box-shadow: 0 0 40px 10px #ffe7b6, 0 0 80px 20px #b48a78;
+}
+
+@keyframes puzzle-glow {
+  0% { box-shadow: 0 0 0 0 #ffe7b6, 0 0 0 0 #b48a78; }
+  60% { box-shadow: 0 0 40px 10px #ffe7b6, 0 0 80px 20px #b48a78; }
+  100% { box-shadow: 0 0 0 0 #ffe7b6, 0 0 0 0 #b48a78; }
+}
+
+@keyframes puzzle-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+  20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+/* Puzzle styles */
+.puzzle-piece {
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  background-repeat: no-repeat;
+  background-color: #eee;
+  cursor: grab;
+  transition: box-shadow 0.2s;
+}
+.puzzle-piece.dragging {
+  opacity: 0.7;
+  box-shadow: 0 0 12px #b48a78;
+}
+#puzzle-board {
+  user-select: none;
+  aspect-ratio: 1/1;
+  min-width: 220px;
+  min-height: 220px;
+  max-width: 90vw;
+  max-height: 90vw;
+}
+#puzzle-gate h2 {
+  text-align: center;
+}
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+#envelope-static, #envelope-anim {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+  max-width: 95vw;
+  height: 260px;
+  margin: 0 auto;
+  background: none;
+}
+
+
+h3 {
+  font-size: 2em;
+  line-height: 1.1;
+  font-family: 'Great Vibes', cursive;
+  font-weight: 400;
+  color: #b48a78;
+  letter-spacing: 2px;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vanilla:hover {
+  filter: drop-shadow(0 0 2em #3178c6aa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Smooth scrolling styles */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fade-in animation */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* General styles */
+header {
+  background: #f4f4f4;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+nav a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #333;
+}
+
+section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  margin: 0.5rem 0 0.2rem;
+}
+
+form input, form button {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+form button:hover {
+  background: #555;
+}
+
+footer {
+  background: #f4f4f4;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  header {
+    padding: 0.5rem 0;
+  }
+
+  nav a {
+    margin: 0 0.5rem;
+  }
+
+  form {
+    width: 90%;
+  }
+
+  section {
+    height: 100vh;
+    min-height: 100vh;
+    width: 100vw;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .envelope-image {
+    height: 35vh;
+    max-width: 90vw;
+  }
+
+  .envelope p {
+    font-size: 1.3em;
+    margin-top: 1rem;
+  }
+
+  #nos-casamos .bg-video {
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    object-fit: cover;
+  }
+}
+
+/* Invitation card styles */
+#invitation-card .card {
+  width: 300px;
+  height: 200px;
+  background: #f4f4f4;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.6s ease-in-out;
+}
+
+#invitation-card .card.open {
+  transform: rotateY(180deg);
+}
+
+/* 'Nos casamos' section */
+#nos-casamos {
+  position: relative;
+  overflow: hidden;
+}
+
+#nos-casamos .bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: brightness(0.85) saturate(1.2);
+}
+
+#nos-casamos h1 {
+  position: relative;
+  z-index: 2;
+  font-size: 4em;
+  color: #fff;
+  text-shadow: 0 4px 32px #b48a78, 0 2px 8px #0008;
+  font-family: 'Great Vibes', cursive;
+  margin-bottom: 0;
+  padding: 0.2em 0.5em;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  letter-spacing: 2px;
+}
+
+/* Wedding information section */
+#wedding-info {
+  background: #f9f9f9;
+}
+
+#wedding-info h2, #wedding-info p {
+  margin: 0.5rem 0;
+}
+
+/* Form section */
+#form form {
+  max-width: 400px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
+#form label {
+  margin: 0.5rem 0 0.2rem;
+}
+
+#form input, #form button {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#form button {
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+#form button:hover {
+  background: #555;
+}
+
+/* Envelope and seal styles */
+.envelope {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+  max-width: 95vw;
+  height: 260px;
+  margin: 0 auto;
+  background: none;
+}
+
+.envelope-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px #b48a7833, 0 2px 8px #0002;
+  transition: transform 0.7s cubic-bezier(0.4,2,0.6,1);
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+.seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 2;
+  transition: transform 0.4s cubic-bezier(0.4,2,0.6,1), opacity 0.4s;
+  cursor: pointer;
+  box-shadow: 0 2px 12px #b48a7833;
+  mix-blend-mode: multiply;
+}
+
+.seal.broken {
+  transform: translate(-50%, -50%) scale(1.3) rotate(-25deg);
+  opacity: 0;
+}
+
+.envelope.open .envelope-image {
+  transform: rotateX(70deg) scale(1.05) translateY(-40px);
+  opacity: 0.7;
+}
+
+
+#invitation-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background: #fff8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s;
+}
+
+#invitation-card.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s;
+}
+
+@media (max-width: 768px) {
+  .envelope {
+    width: 95vw;
+    height: 180px;
+  }
+  .seal {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Only show invitation card initially */
+#nos-casamos,
+#wedding-info,
+#form {
+  display: none;
+}
+
+#nos-casamos.visible,
+#wedding-info.visible,
+#form.visible {
+  display: flex;
+}
+
+/* Keep .hidden for compatibility */
+.hidden {
+  display: none !important;
+}
+
+/* Wedding style fonts */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&display=swap');
+
+body {
+  font-family: 'Playfair Display', serif;
+  color: #3a2c1a;
+  background: #fff8f0;
+}
+
+h1, h2, h3 {
+  font-family: 'Great Vibes', cursive;
+  font-weight: 400;
+  color: #b48a78;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: 4em;
+  margin-bottom: 0.2em;
+}
+
+h2 {
+  font-size: 2.5em;
+  margin-bottom: 0.2em;
+}
+
+section, p, label, input, button {
+  font-family: 'Playfair Display', serif;
+}
+
+p, label {
+  font-size: 1.2em;
+  color: #5a4632;
+}
+
+button {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1em;
+  background: #b48a78;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7em 1.5em;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #a06c5a;
+}
+
+input {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1em;
+  border: 1px solid #b48a78;
+  border-radius: 6px;
+  padding: 0.5em;
+  color: #3a2c1a;
+  background: #fffaf6;
+}
+
+.wedding-titles {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.wedding-titles h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 4em;
+  color: #fff;
+  text-shadow: 0 4px 32px #b48a78, 0 2px 8px #0008;
+  margin-bottom: 0.2em;
+  letter-spacing: 2px;
+}
+
+.wedding-titles h2 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.5em;
+  color: #fff;
+  text-shadow: 0 2px 16px #b48a78, 0 1px 4px #0008;
+  margin-bottom: 0.2em;
+  letter-spacing: 1px;
+}
+
+.wedding-titles .wedding-date {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7em;
+  color: #fff;
+  text-shadow: 0 2px 8px #b48a78, 0 1px 4px #0008;
+  margin-top: 0.2em;
+  letter-spacing: 1px;
+}
