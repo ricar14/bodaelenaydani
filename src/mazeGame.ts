@@ -1,20 +1,41 @@
 // --- VARIABLES GLOBALES ---
-const CELL_SIZE = 48;
-const MAZE_ROWS = 9;
-const MAZE_COLS = 13;
-const MAZE: number[][] = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,1,0,0,0,0,1,0,0,1],
-  [1,0,1,0,1,0,1,1,0,1,0,1,1],
-  [1,0,1,0,0,0,1,0,0,0,0,0,1],
-  [1,0,1,1,1,0,1,0,1,1,1,0,1],
-  [1,0,0,0,1,0,0,0,1,0,0,0,1],
-  [1,1,1,0,1,1,1,0,1,0,1,1,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1],
-];
+const CELL_SIZE = 36;
+const MAZE_ROWS = 17; // odd for generator
+const MAZE_COLS = 21; // odd for generator
+
+function generateMaze(rows: number, cols: number) {
+  const maze: number[][] = Array.from({ length: rows }, () => Array(cols).fill(1));
+  const startR = 1, startC = 1;
+  maze[startR][startC] = 0;
+  const stack: [number, number][] = [[startR, startC]];
+  const dirs = [[0, -2], [0, 2], [-2, 0], [2, 0]];
+  while (stack.length) {
+    const [r, c] = stack[stack.length - 1];
+    const neighbors: [number, number][] = [];
+    for (const [dr, dc] of dirs) {
+      const nr = r + dr, nc = c + dc;
+      if (nr > 0 && nr < rows - 1 && nc > 0 && nc < cols - 1 && maze[nr][nc] === 1) {
+        neighbors.push([nr, nc]);
+      }
+    }
+    if (neighbors.length) {
+      const [nr, nc] = neighbors[Math.floor(Math.random() * neighbors.length)];
+      maze[nr][nc] = 0;
+      // carve the wall between
+      const betweenR = (r + nr) >> 1;
+      const betweenC = (c + nc) >> 1;
+      maze[betweenR][betweenC] = 0;
+      stack.push([nr, nc]);
+    } else {
+      stack.pop();
+    }
+  }
+  return maze;
+}
+
+const MAZE: number[][] = generateMaze(MAZE_ROWS, MAZE_COLS);
 const START = { row: 1, col: 1 };
-const GOAL = { row: 7, col: 11 };
+const GOAL = { row: MAZE_ROWS - 2, col: MAZE_COLS - 2 };
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 let playerImg: HTMLImageElement;
@@ -114,6 +135,84 @@ function setupMazeGame() {
   canvas.addEventListener('pointermove', handlePointerMove);
   canvas.addEventListener('pointerup', handlePointerUp);
   canvas.addEventListener('pointercancel', handlePointerUp);
+
+  // Controles en pantalla: flechas para mover la pareja
+  let controls = document.getElementById('maze-controls') as HTMLDivElement | null;
+  if (!controls) {
+    controls = document.createElement('div');
+    controls.id = 'maze-controls';
+    // D-pad style: grid 3x3, center empty
+    controls.style.display = 'grid';
+    controls.style.gridTemplateColumns = '48px 48px 48px';
+    controls.style.gridTemplateRows = '48px 48px 48px';
+    controls.style.gap = '8px';
+    controls.style.justifyContent = 'center';
+    controls.style.alignItems = 'center';
+    controls.style.margin = '1em auto';
+    controls.style.maxWidth = `${canvas.width}px`;
+    // Flechas: crear botones y colocarlos en la cuadrícula
+    const up = document.createElement('button');
+    up.type = 'button';
+    up.innerText = '▲';
+    up.title = 'Subir';
+    up.style.fontSize = '1.2rem';
+    up.style.width = '48px';
+    up.style.height = '48px';
+    up.style.display = 'flex';
+    up.style.alignItems = 'center';
+    up.style.justifyContent = 'center';
+    up.style.gridColumn = '2';
+    up.style.gridRow = '1';
+    up.addEventListener('click', () => handleMove('up'));
+
+    const left = document.createElement('button');
+    left.type = 'button';
+    left.innerText = '◀';
+    left.title = 'Izquierda';
+    left.style.fontSize = '1.2rem';
+    left.style.width = '48px';
+    left.style.height = '48px';
+    left.style.display = 'flex';
+    left.style.alignItems = 'center';
+    left.style.justifyContent = 'center';
+    left.style.gridColumn = '1';
+    left.style.gridRow = '2';
+    left.addEventListener('click', () => handleMove('left'));
+
+    const right = document.createElement('button');
+    right.type = 'button';
+    right.innerText = '▶';
+    right.title = 'Derecha';
+    right.style.fontSize = '1.2rem';
+    right.style.width = '48px';
+    right.style.height = '48px';
+    right.style.display = 'flex';
+    right.style.alignItems = 'center';
+    right.style.justifyContent = 'center';
+    right.style.gridColumn = '3';
+    right.style.gridRow = '2';
+    right.addEventListener('click', () => handleMove('right'));
+
+    const down = document.createElement('button');
+    down.type = 'button';
+    down.innerText = '▼';
+    down.title = 'Bajar';
+    down.style.fontSize = '1.2rem';
+    down.style.width = '48px';
+    down.style.height = '48px';
+    down.style.display = 'flex';
+    down.style.alignItems = 'center';
+    down.style.justifyContent = 'center';
+    down.style.gridColumn = '2';
+    down.style.gridRow = '3';
+    down.addEventListener('click', () => handleMove('down'));
+
+    controls.appendChild(up);
+    controls.appendChild(left);
+    controls.appendChild(right);
+    controls.appendChild(down);
+    mazeSection.appendChild(controls);
+  }
 }
 
 
