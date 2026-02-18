@@ -42,8 +42,8 @@ const puzzleGate = document.getElementById("puzzle-gate") as HTMLElement;
 const puzzleBoard = document.getElementById("puzzle-board") as HTMLElement;
 const resetPuzzleBtn = document.getElementById("reset-puzzle") as HTMLButtonElement;
 
-const SIZE = 4; // 4x4
-const PIECE_SIZE = 80;
+const SIZE = 3; // 3x3
+const PIECE_SIZE = 106; // 320/3 ≈ 106.6, para que encaje bien en el canvas de 320px
 let pieces: number[] = [];
 let draggingIndex: number | null = null;
 
@@ -76,6 +76,7 @@ function renderPuzzle() {
     piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
     piece.dataset.index = i.toString();
     piece.dataset.piece = idx.toString();
+    // Drag & drop para escritorio
     piece.addEventListener('dragstart', () => {
       draggingIndex = i;
       piece.classList.add('dragging');
@@ -99,6 +100,40 @@ function renderPuzzle() {
         }
       }
     });
+    // Touch events para móvil (fluido, sin retardo)
+    let touchStartX = 0, touchStartY = 0, touchDragging = false;
+    piece.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      touchDragging = true;
+      draggingIndex = i;
+      piece.classList.add('dragging');
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      e.preventDefault();
+    }, {passive: false});
+    piece.addEventListener('touchmove', (e) => {
+      if (!touchDragging || draggingIndex === null) return;
+      if (e.touches.length !== 1) return;
+      const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+      if (target && target.classList.contains('puzzle-piece') && target !== piece) {
+        const otherIndex = parseInt(target.dataset.index!);
+        [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
+        draggingIndex = otherIndex;
+        renderPuzzle();
+      }
+      e.preventDefault();
+    }, {passive: false});
+    piece.addEventListener('touchend', (e) => {
+      touchDragging = false;
+      piece.classList.remove('dragging');
+      draggingIndex = null;
+      if (isSolved()) {
+        setTimeout(() => {
+          puzzleSolved();
+        }, 300);
+      }
+      e.preventDefault();
+    }, {passive: false});
     puzzleBoard.appendChild(piece);
   }
 }
@@ -132,36 +167,46 @@ sections.forEach(sec => {
 
 
 function puzzleSolved() {
-    console.log('puzzleSolved() ejecutado: puzzle-gate se ocultará y se mostrarán las secciones.');
-  // Animación fade-out para puzzle-gate
-  puzzleGate.classList.add('fade-out');
+  console.log('puzzleSolved() ejecutado: puzzle-gate se ocultará y se mostrarán las secciones.');
   // Efecto de éxito: resplandor y vibración breve
   puzzleGate.classList.add('puzzle-success');
   setTimeout(() => {
     puzzleGate.classList.remove('puzzle-success');
+    // Forzar reflow para asegurar que la animación se aplica
+    void puzzleGate.offsetWidth;
     puzzleGate.classList.add('fade-out');
-    setTimeout(() => {
+
+    let finished = false;
+    const showSections = () => {
+      if (finished) return;
+      finished = true;
       puzzleGate.style.display = 'none';
       if (envelopeAnim) envelopeAnim.style.display = "none";
       if (sobreAnimado) {
         sobreAnimado.pause();
       }
-      // Mostrar el resto de secciones (excepto invitation-card y puzzle-gate)
-      const idsToShow = [
-        'nos-casamos',
-        'wedding-info',
-        'celebracion',
-        'form'
-      ];
-      idsToShow.forEach(id => {
-        const sec = document.getElementById(id);
-        if (sec) {
-          sec.style.display = 'flex';
+      // Mostrar todos los sections excepto invitation-card y puzzle-gate
+      document.querySelectorAll('section').forEach(sec => {
+        if (sec.id !== 'puzzle-gate' && sec.id !== 'invitation-card') {
           sec.classList.remove('hidden');
+          sec.style.removeProperty('display');
+          sec.style.display = 'flex';
+        } else {
+          sec.classList.add('hidden');
+          sec.style.display = 'none';
         }
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 700);
+    };
+    // Fallback por si transitionend no se dispara
+    const fallback = setTimeout(showSections, 900);
+    puzzleGate.addEventListener('transitionend', function handler(e) {
+      if (e.propertyName === 'opacity') {
+        clearTimeout(fallback);
+        puzzleGate.removeEventListener('transitionend', handler);
+        showSections();
+      }
+    });
   }, 700); // Duración del efecto de éxito
 }
 
@@ -206,7 +251,7 @@ if (envelopeAnim && sobreAnimado && invitationCard) {
 const form = document.querySelector<HTMLFormElement>("#form form");
 
 // Backend API URL
-const API_URL = "http://localhost:3001/api/guests";
+const API_URL = "https://TU-BACKEND.onrender.com/api/guests"; // Cambia TU-BACKEND por el subdominio real de tu backend en Render
 
 async function saveGuestBackend(guest: { name: string; email: string; guests: number }) {
   const res = await fetch(API_URL, {
