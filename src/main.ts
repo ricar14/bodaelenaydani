@@ -38,120 +38,124 @@ const observer = new IntersectionObserver(
 fadeInElements.forEach((el) => observer.observe(el));
 
 // Puzzle and Invitation logic
-const puzzleGate = document.getElementById("puzzle-gate") as HTMLElement;
-const puzzleBoard = document.getElementById("puzzle-board") as HTMLElement;
-const resetPuzzleBtn = document.getElementById("reset-puzzle") as HTMLButtonElement;
+const puzzleGateEl = document.getElementById("puzzle-gate");
+const puzzleBoardEl = document.getElementById("puzzle-board");
+const resetPuzzleBtnEl = document.getElementById("reset-puzzle");
 
-const SIZE = 3; // 3x3
-const PIECE_SIZE = 106; // 320/3 ≈ 106.6, para que encaje bien en el canvas de 320px
-let pieces: number[] = [];
-let draggingIndex: number | null = null;
+if (puzzleBoardEl && puzzleGateEl && resetPuzzleBtnEl) {
+  const puzzleBoard = puzzleBoardEl as HTMLElement;
+  const resetPuzzleBtn = resetPuzzleBtnEl as HTMLButtonElement;
+  const SIZE = 3; // 3x3
+  const PIECE_SIZE = 106; // 320/3 ≈ 106.6, para que encaje bien en el canvas de 320px
+  let pieces: number[] = [];
+  let draggingIndex: number | null = null;
 
-function shufflePieces() {
-  pieces = Array.from({ length: SIZE * SIZE }, (_, i) => i);
-  for (let i = pieces.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+  function shufflePieces() {
+    pieces = Array.from({ length: SIZE * SIZE }, (_, i) => i);
+    for (let i = pieces.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+    }
   }
-}
 
-function isSolved(): boolean {
-  return pieces.every((v, i) => v === i);
-}
+  function isSolved(): boolean {
+    return pieces.every((v, i) => v === i);
+  }
 
-function renderPuzzle() {
-  puzzleBoard.innerHTML = '';
-  for (let i = 0; i < SIZE * SIZE; i++) {
-    const idx = pieces[i];
-    const piece = document.createElement('div');
-    piece.className = 'puzzle-piece';
-    piece.draggable = true;
-    piece.style.width = `${PIECE_SIZE}px`;
-    piece.style.height = `${PIECE_SIZE}px`;
-    piece.style.position = 'absolute';
-    piece.style.left = `${(i % SIZE) * PIECE_SIZE}px`;
-    piece.style.top = `${Math.floor(i / SIZE) * PIECE_SIZE}px`;
-    piece.style.backgroundImage = "url('/img/IMG-20260101-WA0000.jpg')";
-    piece.style.backgroundSize = `${SIZE * PIECE_SIZE}px ${SIZE * PIECE_SIZE}px`;
-    piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
-    piece.dataset.index = i.toString();
-    piece.dataset.piece = idx.toString();
-    // Drag & drop para escritorio
-    piece.addEventListener('dragstart', () => {
-      draggingIndex = i;
-      piece.classList.add('dragging');
-    });
-    piece.addEventListener('dragend', () => {
-      draggingIndex = null;
-      piece.classList.remove('dragging');
-    });
-    piece.addEventListener('dragover', (event) => {
-      event.preventDefault();
-    });
-    piece.addEventListener('drop', (e) => {
-      e.preventDefault();
-      if (draggingIndex !== null && draggingIndex !== i) {
-        [pieces[draggingIndex], pieces[i]] = [pieces[i], pieces[draggingIndex]];
-        renderPuzzle();
+  function renderPuzzle() {
+    puzzleBoard.innerHTML = '';
+    for (let i = 0; i < SIZE * SIZE; i++) {
+      const idx = pieces[i];
+      const piece = document.createElement('div');
+      piece.className = 'puzzle-piece';
+      piece.draggable = true;
+      piece.style.width = `${PIECE_SIZE}px`;
+      piece.style.height = `${PIECE_SIZE}px`;
+      piece.style.position = 'absolute';
+      piece.style.left = `${(i % SIZE) * PIECE_SIZE}px`;
+      piece.style.top = `${Math.floor(i / SIZE) * PIECE_SIZE}px`;
+      piece.style.backgroundImage = "url('/img/IMG-20260101-WA0000.jpg')";
+      piece.style.backgroundSize = `${SIZE * PIECE_SIZE}px ${SIZE * PIECE_SIZE}px`;
+      piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
+      piece.dataset.index = i.toString();
+      piece.dataset.piece = idx.toString();
+      // Drag & drop para escritorio
+      piece.addEventListener('dragstart', () => {
+        draggingIndex = i;
+        piece.classList.add('dragging');
+      });
+      piece.addEventListener('dragend', () => {
+        draggingIndex = null;
+        piece.classList.remove('dragging');
+      });
+      piece.addEventListener('dragover', (event) => {
+        event.preventDefault();
+      });
+      piece.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (draggingIndex !== null && draggingIndex !== i) {
+          [pieces[draggingIndex], pieces[i]] = [pieces[i], pieces[draggingIndex]];
+          renderPuzzle();
+          if (isSolved()) {
+            setTimeout(() => {
+              puzzleSolved();
+            }, 300);
+          }
+        }
+      });
+      // Touch events para móvil (fluido, sin retardo)
+      let touchDragging = false;
+      piece.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        touchDragging = true;
+        draggingIndex = i;
+        piece.classList.add('dragging');
+        e.preventDefault();
+      }, {passive: false});
+      piece.addEventListener('touchmove', (e) => {
+        if (!touchDragging || draggingIndex === null) return;
+        if (e.touches.length !== 1) return;
+        const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+        if (target && target instanceof HTMLElement && target.classList.contains('puzzle-piece') && target !== piece) {
+          const otherIndexStr = target.dataset.index;
+          if (otherIndexStr !== undefined) {
+            const otherIndex = parseInt(otherIndexStr);
+            [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
+            draggingIndex = otherIndex;
+            renderPuzzle();
+          }
+        }
+        e.preventDefault();
+      }, {passive: false});
+      piece.addEventListener('touchend', (e) => {
+        touchDragging = false;
+        piece.classList.remove('dragging');
+        draggingIndex = null;
         if (isSolved()) {
           setTimeout(() => {
             puzzleSolved();
           }, 300);
         }
-      }
-    });
-    // Touch events para móvil (fluido, sin retardo)
-    let touchDragging = false;
-    piece.addEventListener('touchstart', (e) => {
-      if (e.touches.length !== 1) return;
-      touchDragging = true;
-      draggingIndex = i;
-      piece.classList.add('dragging');
-      e.preventDefault();
-    }, {passive: false});
-    piece.addEventListener('touchmove', (e) => {
-      if (!touchDragging || draggingIndex === null) return;
-      if (e.touches.length !== 1) return;
-      const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-      if (target && target instanceof HTMLElement && target.classList.contains('puzzle-piece') && target !== piece) {
-        const otherIndexStr = target.dataset.index;
-        if (otherIndexStr !== undefined) {
-          const otherIndex = parseInt(otherIndexStr);
-          [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
-          draggingIndex = otherIndex;
-          renderPuzzle();
-        }
-      }
-      e.preventDefault();
-    }, {passive: false});
-    piece.addEventListener('touchend', (e) => {
-      touchDragging = false;
-      piece.classList.remove('dragging');
-      draggingIndex = null;
-      if (isSolved()) {
-        setTimeout(() => {
-          puzzleSolved();
-        }, 300);
-      }
-      e.preventDefault();
-    }, {passive: false});
-    puzzleBoard.appendChild(piece);
+        e.preventDefault();
+      }, {passive: false});
+      puzzleBoard.appendChild(piece);
+    }
   }
-}
 
-function setupPuzzle() {
-  puzzleBoard.style.position = 'relative';
-  puzzleBoard.style.width = `${SIZE * PIECE_SIZE}px`;
-  puzzleBoard.style.height = `${SIZE * PIECE_SIZE}px`;
-  shufflePieces();
-  renderPuzzle();
-  resetPuzzleBtn.onclick = () => {
+  function setupPuzzle() {
+    puzzleBoard.style.position = 'relative';
+    puzzleBoard.style.width = `${SIZE * PIECE_SIZE}px`;
+    puzzleBoard.style.height = `${SIZE * PIECE_SIZE}px`;
     shufflePieces();
     renderPuzzle();
-  };
-}
+    resetPuzzleBtn.onclick = () => {
+      shufflePieces();
+      renderPuzzle();
+    };
+  }
 
-setupPuzzle();
+  setupPuzzle();
+}
 const invitationCard = document.querySelector("#invitation-card") as HTMLElement;
 const envelopeAnim = document.getElementById("envelope-anim");
 const sobreAnimado = document.getElementById("sobreAnimado") as HTMLVideoElement | null;
@@ -170,18 +174,20 @@ sections.forEach(sec => {
 function puzzleSolved() {
   console.log('puzzleSolved() ejecutado: puzzle-gate se ocultará y se mostrarán las secciones.');
   // Efecto de éxito: resplandor y vibración breve
-  puzzleGate.classList.add('puzzle-success');
+    const gate = document.getElementById('puzzle-gate');
+    if (!gate) return;
+    gate.classList.add('puzzle-success');
   setTimeout(() => {
-    puzzleGate.classList.remove('puzzle-success');
+    gate.classList.remove('puzzle-success');
     // Forzar reflow para asegurar que la animación se aplica
-    void puzzleGate.offsetWidth;
-    puzzleGate.classList.add('fade-out');
+    void gate.offsetWidth;
+    gate.classList.add('fade-out');
 
     let finished = false;
     const showSections = () => {
       if (finished) return;
       finished = true;
-      puzzleGate.style.display = 'none';
+      gate.style.display = 'none';
       if (envelopeAnim) envelopeAnim.style.display = "none";
       if (sobreAnimado) {
         sobreAnimado.pause();
@@ -201,10 +207,10 @@ function puzzleSolved() {
     };
     // Fallback por si transitionend no se dispara
     const fallback = setTimeout(showSections, 900);
-    puzzleGate.addEventListener('transitionend', function handler(e) {
+    gate.addEventListener('transitionend', function handler(e) {
       if (e.propertyName === 'opacity') {
         clearTimeout(fallback);
-        puzzleGate.removeEventListener('transitionend', handler);
+        gate.removeEventListener('transitionend', handler);
         showSections();
       }
     });
