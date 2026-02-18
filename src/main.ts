@@ -101,25 +101,26 @@ function renderPuzzle() {
       }
     });
     // Touch events para móvil (fluido, sin retardo)
-    let touchStartX = 0, touchStartY = 0, touchDragging = false;
+    let touchDragging = false;
     piece.addEventListener('touchstart', (e) => {
       if (e.touches.length !== 1) return;
       touchDragging = true;
       draggingIndex = i;
       piece.classList.add('dragging');
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
       e.preventDefault();
     }, {passive: false});
     piece.addEventListener('touchmove', (e) => {
       if (!touchDragging || draggingIndex === null) return;
       if (e.touches.length !== 1) return;
       const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-      if (target && target.classList.contains('puzzle-piece') && target !== piece) {
-        const otherIndex = parseInt(target.dataset.index!);
-        [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
-        draggingIndex = otherIndex;
-        renderPuzzle();
+      if (target && target instanceof HTMLElement && target.classList.contains('puzzle-piece') && target !== piece) {
+        const otherIndexStr = target.dataset.index;
+        if (otherIndexStr !== undefined) {
+          const otherIndex = parseInt(otherIndexStr);
+          [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
+          draggingIndex = otherIndex;
+          renderPuzzle();
+        }
       }
       e.preventDefault();
     }, {passive: false});
