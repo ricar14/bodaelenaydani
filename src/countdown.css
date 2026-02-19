@@ -1,0 +1,118 @@
+/* Countdown section styles - elegant, minimalista */
+#countdown-section {
+  background: #e6e6e6 !important; /* forzar sobre reglas globales */
+  color: #2b2b2b;
+  padding: 3rem 1rem 2.5rem;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+.count-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+}
+.count-seal {
+  width: 72px; /* entre 60-80px */
+  max-width: 80px;
+  margin-top: -36px; /* sobresale ligeramente sobre la parte superior */
+  object-fit: contain;
+  background: transparent;
+}
+.count-title {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 4px;
+  color: #6b6b6b;
+  font-weight: 700;
+}
+
+/* Aplicar Great Vibes + Montserrat sobre el texto "SOLO FALTAN" */
+.count-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 3.5px;
+  color: #6b6b6b;
+  text-align: center;
+}
+.count-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.2rem;
+  box-shadow: 0 10px 30px rgba(16,24,40,0.06);
+  width: 100%;
+  box-sizing: border-box;
+}
+.count-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem; /* aumentar separación entre cuadros */
+  align-items: stretch;
+}
+.count-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px; /* pequeño acolchamiento interno para separación visual */
+}
+.count-number {
+  font-family: 'Great Vibes', 'Montserrat', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #2b2b2b;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.count-number span { display:block; }
+.count-label {
+  margin-top: 0.45rem;
+  font-size: 0.85rem;
+  color: #7a7a7a;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+/* Flip animation for seconds */
+.flip {
+  position: relative;
+  perspective: 600px;
+  overflow: visible;
+}
+.flip .current,
+.flip .next {
+  display: block;
+  backface-visibility: hidden;
+}
+.flip .next { position: absolute; top:0; left:0; right:0; opacity:0; transform: rotateX(90deg); }
+.flip.flipping .current {
+  animation: foldTop 0.45s forwards ease-in;
+}
+.flip.flipping .next {
+  animation: unfoldBottom 0.45s 0.05s forwards ease-out;
+}
+@keyframes foldTop {
+  0% { transform-origin: 50% 0%; transform: rotateX(0deg); opacity:1; }
+  100% { transform-origin: 50% 0%; transform: rotateX(-90deg); opacity:0; }
+}
+@keyframes unfoldBottom {
+  0% { transform-origin: 50% 100%; transform: rotateX(90deg); opacity:0; }
+  100% { transform-origin: 50% 100%; transform: rotateX(0deg); opacity:1; }
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .count-grid { grid-template-columns: repeat(2, 1fr); }
+  .count-number { font-size: 1.8rem; min-height:48px; }
+}
+@media (max-width: 420px) {
+  .count-seal { width: 60px; margin-top: -30px; }
+  .count-grid { gap: 0.6rem; }
+  .count-number { font-size: 1.4rem; }
+  .count-card { padding: 0.8rem; border-radius: 10px; }
+}

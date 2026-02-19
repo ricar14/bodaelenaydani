@@ -160,15 +160,22 @@ const invitationCard = document.querySelector("#invitation-card") as HTMLElement
 const envelopeAnim = document.getElementById("envelope-anim");
 const sobreAnimado = document.getElementById("sobreAnimado") as HTMLVideoElement | null;
 
-// Ocultar todas las secciones menos puzzle-gate al inicio
+// Mostrar sólo la invitación al cargar; ocultar el resto
 const sections = document.querySelectorAll('section');
 sections.forEach(sec => {
-  if (sec.id !== 'puzzle-gate') {
-    sec.style.display = 'none';
-  } else {
-    sec.style.display = 'flex';
-  }
+  sec.style.display = 'none';
 });
+// Mostrar invitation-card solo si existe
+if (invitationCard) {
+  invitationCard.style.display = 'flex';
+} else {
+  // si no hay invitation-card, mostrar las principales secciones por seguridad
+  const fallbackIds = ['nos-casamos', 'wedding-info', 'celebracion', 'form'];
+  fallbackIds.forEach(id => {
+    const s = document.getElementById(id);
+    if (s) s.style.display = 'flex';
+  });
+}
 
 
 function puzzleSolved() {
@@ -236,6 +243,7 @@ if (envelopeAnim && sobreAnimado && invitationCard) {
       const idsToShow = [
         'nos-casamos',
         'wedding-info',
+        'countdown-section',
         'celebracion',
         'form'
       ];
@@ -258,7 +266,8 @@ if (envelopeAnim && sobreAnimado && invitationCard) {
 const form = document.querySelector<HTMLFormElement>("#form form");
 
 // Backend API URL
-const API_URL = "https://TU-BACKEND.onrender.com/api/guests"; // Cambia TU-BACKEND por el subdominio real de tu backend en Render
+// En producción el frontend y backend suelen estar en el mismo host; usar ruta relativa
+const API_URL = window.location.hostname.includes('localhost') ? 'http://localhost:3001/api/guests' : '/api/guests';
 
 async function saveGuestBackend(guest: { name: string; email: string; guests: number }) {
   const res = await fetch(API_URL, {

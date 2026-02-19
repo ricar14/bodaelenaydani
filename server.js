@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// Configurar conexión incluyendo SSL en producción (Render requiere SSL)
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
+});
 
 // Crear tabla si no existe
 pool.query(`CREATE TABLE IF NOT EXISTS guests (

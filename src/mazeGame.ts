@@ -34,6 +34,22 @@ function generateMaze(rows: number, cols: number) {
 }
 
 const MAZE: number[][] = generateMaze(MAZE_ROWS, MAZE_COLS);
+
+// Suavizar/ablandar el laberinto: convertir un porcentaje de paredes en pasillos
+function softenMaze(maze: number[][], ease = 0.9) {
+  for (let r = 1; r < maze.length - 1; r++) {
+    for (let c = 1; c < maze[0].length - 1; c++) {
+      // no tocar inicio/fin
+      if ((r === START?.row && c === START?.col) || (r === GOAL?.row && c === GOAL?.col)) continue;
+      if (maze[r][c] === 1 && Math.random() < ease) {
+        maze[r][c] = 0;
+      }
+    }
+  }
+}
+
+// Aplicar suavizado para hacer el laberinto mucho más fácil (~90% de paredes convertidas)
+softenMaze(MAZE, 0.9);
 const START = { row: 1, col: 1 };
 const GOAL = { row: MAZE_ROWS - 2, col: MAZE_COLS - 2 };
 let canvas: HTMLCanvasElement;
