@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="./src/countdown.css">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     /* Evitar parpadeo: ocultar sections por defecto y mostrar solo la invitación hasta que JS actúe */
     section { display: none; }
@@ -20,19 +21,32 @@
 
   <section id="invitation-card">
     <div id="envelope-anim" style="display:flex;">
-      <video id="sobreAnimado" src="/img/sobre_animado.mp4" class="envelope-video" width="100%" height="auto" style="border-radius:12px;max-width:100%;box-shadow:0 4px 32px #b48a7833,0 2px 8px #0002;cursor:pointer;" preload="auto"></video>
-      <p>Esta invitación es exclusiva para ti</p>
+      <img id="sobreAnimado" src="/img/portada.png" class="envelope-image" alt="Sobre animado">
     </div>
   </section>
 
-  <section id="nos-casamos" class="full-screen">
-    <video class="bg-video" src="/img/playa.mp4" autoplay loop muted playsinline></video>
-    <div class="wedding-titles">
-      <h1>Nos casamos</h1>
-      <h2>Dani y Elena</h2>
-      <p class="wedding-date">31/10/2026</p>
+  
+  
+<section id="nos-casamos" class="full-screen">
+  <div class="hero-rect invitation-box has-seal">
+    <img class="wax-seal" src="/img/sello_solo.png" alt="Sello de cera">
+
+    <p class="intro-text">Lo nuestro empezó entre bailes y risas,<br>y hoy se convierte en un para siempre.</p>
+    <p class="small-title">¡Nos casamos!</p>
+
+    <div class="names-block">
+      <h1 class="name">ELENA</h1>
+      <div class="middle-line"></div>
+      <h2 class="ampersand">y</h2>
+      <div class="middle-line"></div>
+      <h1 class="name">DANI</h1>
     </div>
-  </section>
+
+    <p class="footer-text">Acompáñanos a celebrar el inicio<br>de nuestra vida juntos.</p>
+  </div>
+</section>
+
+
 
   <section id="wedding-info" class="full-screen">
     <h2>Información de la boda</h2>
@@ -98,6 +112,10 @@
 
       <button type="submit">Enviar</button>
     </form>
+  </section>
+
+  <section id="foto-final" class="full-screen">
+    <img src="/img/cabecera.png" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 32px #b48a7833,0 2px 8px #0002;">
   </section>
 
   <!-- Bootstrap Modal for alerts -->

@@ -67,6 +67,29 @@
   background: none;
 }
 
+/* When shown as the main invitation (full-screen), make envelope fill viewport */
+#invitation-card #envelope-anim {
+  width: 150vw;
+  height: 100vh;
+  max-width: none;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+#invitation-card .envelope-image {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  background-color: #fff8f0;
+}
+
 
 h3 {
   font-size: 2em;
@@ -184,6 +207,30 @@ section {
   border-radius: 0 !important;
 }
 
+/* Make the final photo section size to its content instead of full viewport */
+
+/* Final photo should fill width and end the page */
+#foto-final {
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block;
+}
+
+#foto-final img {
+  width: 100vw !important;
+  max-width: none !important;
+  height: auto !important;
+  display: block;
+  border-radius: 0 !important;
+}
+
+/* Remove default body margin to avoid tiny whitespace after final section */
+body {
+  margin: 0;
+}
+
 form {
   max-width: 400px;
   margin: 0 auto;
@@ -283,10 +330,21 @@ footer {
 }
 
 /* 'Nos casamos' section */
+
 #nos-casamos {
   position: relative;
   overflow: hidden;
 }
+
+/* Oscurecimiento muy suave para contraste del papel */
+#nos-casamos::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, #00000014 0%, #0000000a 60%, #00000000 100%);
+  pointer-events: none;
+}
+
 
 #nos-casamos .bg-video {
   position: absolute;
@@ -299,6 +357,39 @@ footer {
   object-fit: cover;
   z-index: 1;
   filter: brightness(0.85) saturate(1.2);
+}
+
+/* Vertical hero rectangle replacing the video */
+#nos-casamos .hero-rect {
+  position: relative;
+  z-index: 2;
+  width: min(420px, 86vw);
+  height: min(76vh, 820px);
+  background: #ffffff; /* card background */
+  padding: 2rem 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem;
+  text-align: center;
+}
+
+#nos-casamos .hero-rect .wedding-titles h1,
+#nos-casamos .hero-rect .wedding-titles h2 {
+  color: #3a2c1a;
+  text-shadow: none;
+}
+
+@media (max-width: 600px) {
+  #nos-casamos .hero-rect {
+    width: 90vw;
+    height: auto;
+    padding: 1.4rem;
+    margin: 1rem;
+  }
 }
 
 #nos-casamos h1 {
@@ -547,4 +638,120 @@ input {
   text-shadow: 0 2px 8px #b48a78, 0 1px 4px #0008;
   margin-top: 0.2em;
   letter-spacing: 1px;
+}
+
+
+
+/* Caja de invitación con “papel” sutil hecho en CSS */
+.invitation-box {
+  position: relative;
+  background: #fff;
+  border-radius: 14px;
+  padding: 3rem 2rem;
+  width: min(86vw, 440px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  color: #3a2c1a;
+  text-align: center;
+  isolation: isolate;
+}
+
+/* Efecto de papel: luces/sombras y ligero grano “falso” con gradientes */
+.invitation-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 90% at 50% 10%, #ffffff 0%, #fbf7f0 55%, #f6efe6 100%),
+    linear-gradient(180deg, #ffffff88 0%, #00000007 100%),
+    repeating-linear-gradient(90deg, #0000 0 2px, #00000006 2px 3px);
+  box-shadow:
+    inset 0 1px 0 #ffffffcc,
+    inset 0 -1px 0 #00000008;
+  z-index: -1;
+  opacity: 0.98;
+}
+
+
+
+.monogram {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.8em;
+  color: #b48a78;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+/* Frases */
+.intro-text,
+.footer-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.06em;
+  line-height: 1.65;
+  color: #524534;
+  margin-top: 4em;
+}
+
+.small-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 1.05em;
+  margin: 1.2rem 0 1.8rem;
+}
+
+/* Bloque de nombres */
+.names-block { margin: 1.2rem 0 0.8rem; }
+
+.name {
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  font-size: clamp(2.1em, 6vw, 2.6em);
+  letter-spacing: 0.38em; /* espaciado alto como en la referencia */
+  color: #2a2a2a;
+  margin: 0.35rem 0;
+}
+
+.middle-line {
+  width: 72%;
+  height: 1px;
+  background: #222;
+  margin: 0.55rem auto;
+  opacity: 0.9;
+}
+
+.ampersand {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.2em;
+  color: #b48a78;
+  margin: 0.2rem 0;
+}
+
+/* Ajustes responsive */
+@media (max-width: 520px) {
+  .name { letter-spacing: 0.26em; }
+  .middle-line { width: 78%; }
+}
+
+
+/* Frase inferior */
+.footer-text {
+  font-size: 1.1em;
+  margin-top: 2rem;
+}
+
+
+/* Para que el sello se posicione relativo a la tarjeta */
+.invitation-box.has-seal {
+  position: relative;
+  overflow: visible; /* por si el sello sale un poco fuera del borde superior */
+}
+
+/* Sello centrado arriba, ligeramente solapado */
+.wax-seal {
+  position: absolute;
+  top: -83px;                 /* sobresale como en la foto */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14em;                /* ajusta el tamaño a tu gusto (80–120px) */
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.18));
+  pointer-events: none;       /* que no interfiera con clicks */
 }

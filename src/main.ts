@@ -37,7 +37,7 @@ const observer = new IntersectionObserver(
 
 fadeInElements.forEach((el) => observer.observe(el));
 
-// Puzzle and Invitation logic
+// DEBUG: mostrar la URL de la API que // Puzzle and Invitation logic
 const puzzleGateEl = document.getElementById("puzzle-gate");
 const puzzleBoardEl = document.getElementById("puzzle-board");
 const resetPuzzleBtnEl = document.getElementById("reset-puzzle");
@@ -158,7 +158,7 @@ if (puzzleBoardEl && puzzleGateEl && resetPuzzleBtnEl) {
 }
 const invitationCard = document.querySelector("#invitation-card") as HTMLElement;
 const envelopeAnim = document.getElementById("envelope-anim");
-const sobreAnimado = document.getElementById("sobreAnimado") as HTMLVideoElement | null;
+const sobreAnimadoEl = document.getElementById("sobreAnimado") as HTMLElement | null;
 
 // Mostrar sólo la invitación al cargar; ocultar el resto
 const sections = document.querySelectorAll('section');
@@ -170,7 +170,7 @@ if (invitationCard) {
   invitationCard.style.display = 'flex';
 } else {
   // si no hay invitation-card, mostrar las principales secciones por seguridad
-  const fallbackIds = ['nos-casamos', 'wedding-info', 'celebracion', 'form'];
+  const fallbackIds = ['nos-casamos', 'wedding-info', 'celebracion', 'form', 'foto-final'];
   fallbackIds.forEach(id => {
     const s = document.getElementById(id);
     if (s) s.style.display = 'flex';
@@ -196,8 +196,8 @@ function puzzleSolved() {
       finished = true;
       gate.style.display = 'none';
       if (envelopeAnim) envelopeAnim.style.display = "none";
-      if (sobreAnimado) {
-        sobreAnimado.pause();
+      if (sobreAnimadoEl && (sobreAnimadoEl instanceof HTMLMediaElement)) {
+        sobreAnimadoEl.pause();
       }
       // Mostrar todos los sections excepto invitation-card y puzzle-gate
       document.querySelectorAll('section').forEach(sec => {
@@ -227,25 +227,22 @@ function puzzleSolved() {
 
 
 // Event listener for invitation card
-if (envelopeAnim && sobreAnimado && invitationCard) {
-  sobreAnimado.currentTime = 0;
-  sobreAnimado.pause();
-  envelopeAnim.addEventListener("click", () => {
-    sobreAnimado.currentTime = 0;
-    sobreAnimado.playbackRate = 2;
-    sobreAnimado.play();
-  });
-  sobreAnimado.onended = () => {
+if (envelopeAnim && sobreAnimadoEl && invitationCard) {
+  const revealFromInvitation = () => {
     invitationCard.classList.add("fade-out");
     setTimeout(() => {
       invitationCard.style.display = "none";
-      // Mostrar todas las secciones (excepto invitation-card y puzzle-gate)
+      if (envelopeAnim) envelopeAnim.style.display = "none";
+      if (sobreAnimadoEl && (sobreAnimadoEl instanceof HTMLMediaElement)) {
+        try { sobreAnimadoEl.pause(); } catch (e) { /* noop */ }
+      }
       const idsToShow = [
         'nos-casamos',
         'wedding-info',
         'countdown-section',
         'celebracion',
-        'form'
+        'form',
+        'foto-final'
       ];
       idsToShow.forEach(id => {
         const sec = document.getElementById(id);
@@ -257,6 +254,24 @@ if (envelopeAnim && sobreAnimado && invitationCard) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 700);
   };
+
+  if (sobreAnimadoEl instanceof HTMLMediaElement) {
+    sobreAnimadoEl.currentTime = 0;
+    sobreAnimadoEl.pause();
+    // when the media ends, reveal the site
+    sobreAnimadoEl.onended = revealFromInvitation;
+  }
+
+  envelopeAnim.addEventListener("click", () => {
+    if (sobreAnimadoEl instanceof HTMLMediaElement) {
+      sobreAnimadoEl.currentTime = 0;
+      sobreAnimadoEl.playbackRate = 2;
+      sobreAnimadoEl.play();
+    } else {
+      // element is not media (e.g. an image) — reveal immediately
+      revealFromInvitation();
+    }
+  });
 }
 
 // Seal and envelope animation logic
@@ -265,22 +280,37 @@ if (envelopeAnim && sobreAnimado && invitationCard) {
 // RSVP form logic
 const form = document.querySelector<HTMLFormElement>("#form form");
 
-// Backend API URL
-// En producción el frontend y backend suelen estar en el mismo host; usar ruta relativa
-const API_URL = window.location.hostname.includes('localhost') ? 'http://localhost:3001/api/guests' : '/api/guests';
+// Backend API URL: usar backend local en desarrollo (localhost/file), ruta relativa en producción
+const isLocal = window.location.hostname.includes('localhost') || window.location.protocol === 'file:';
+const API_URL = isLocal ? 'http://localhost:3001/api/guests' : '/api/guests';
+console.log('Frontend startup - API_URL =', API_URL);
 
 async function saveGuestBackend(guest: { name: string; email: string; guests: number }) {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(guest)
-  });
-  return await res.json();
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(guest)
+    });
+    if (!res.ok) {
+      try { return await res.json(); } catch (e) { return { error: `Error en respuesta del servidor: ${res.status}` }; }
+    }
+    return await res.json();
+  } catch (err) {
+    console.error('Error saving guest:', err);
+    return { error: 'No se pudo conectar con el servidor. Inténtalo más tarde.' };
+  }
 }
 
 async function getGuestsBackend() {
-  const res = await fetch(API_URL);
-  return await res.json();
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error('Error fetching guests:', err);
+    return null;
+  }
 }
 
 form?.addEventListener("submit", async (e) => {
@@ -296,6 +326,10 @@ form?.addEventListener("submit", async (e) => {
 
   // Check for duplicate name in backend
   const allGuests = await getGuestsBackend();
+  if (allGuests === null) {
+    showModal('No se pudo conectar con el servidor. Inténtalo más tarde.');
+    return;
+  }
   const normalized = normalizeName(name);
   if (allGuests.some((g: any) => normalizeName(g.name) === normalized)) {
     showModal("Ya se ha registrado el invitado");
