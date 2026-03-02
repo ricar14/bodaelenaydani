@@ -313,12 +313,53 @@ section {
   display: block;
 }
 
-#foto-final img {
+#foto-final .cabecera {
   width: 100vw !important;
   max-width: none !important;
   height: auto !important;
   display: block;
   border-radius: 0 !important;
+}
+
+/* Foto-final: contenedor para superponer la imagen de letras sobre la cabecera */
+.foto-wrap{
+  position: relative;
+  /* make the container full-bleed so the image spans the full viewport width */
+  width: 100vw;
+  max-width: none;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  display: block;
+}
+.foto-wrap .cabecera{
+  width: 100vw; /* ensure image fills viewport */
+  max-width: none;
+  height: auto;
+  display: block;
+  border-radius: 0; /* full-bleed usually looks better without rounding */
+  box-shadow: 0 4px 32px #b48a7833, 0 2px 8px #0002;
+}
+.foto-wrap .letras-overlay{
+  position: absolute;
+  left: 25%;
+  transform: translateX(-50%);
+  width: clamp(120px, 30%, 420px); /* tamaño responsive más pequeño que la cabecera */
+  height: auto;
+  pointer-events: none;
+  z-index: 3;
+}
+
+@media (max-width: 520px){
+  .foto-wrap{ width: 200vw; }
+  .foto-wrap .letras-overlay{ top: 2%; width: clamp(70px, 12%, 65px); }
+}
+
+/* Ensure overlay appears in black & white */
+.letras-overlay,
+.foto-wrap .letras-overlay{
+  filter: grayscale(100%) contrast(1.05) brightness(1);
 }
 
 /* Remove default body margin to avoid tiny whitespace after final section */
@@ -786,17 +827,17 @@ input {
 /* Frases */
 .intro-text,
 .footer-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.06em;
+  font-family: 'Allura', cursive !important;
+  font-size: 1.35em;
   line-height: 1.65;
   color: #524534;
   margin-top: 4em;
 }
 
 .small-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Allura', cursive !important;
   font-weight: 600;
-  font-size: 1.05em;
+  font-size: 1.8em;
   margin: 1.2rem 0 1.8rem;
 }
 

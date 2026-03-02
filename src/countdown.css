@@ -47,17 +47,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
-  /* Variables locales para ajustar espacios y tamaños dentro del contador */
   --gap: 0.6rem;
   --num-size: clamp(1.6rem, 4.8vw, 3rem);
   --sep-size: clamp(1.2rem, 3.6vw, 2.6rem);
   /* Fondo papel para todo el contenedor interior (único fondo) */
-  background-color: white;
+  background-image: url('/img/fondo_papel.png');
   background-repeat: no-repeat;
-  background-position: center center;
   background-size: cover;
-  background-color: var(--paper-bg);
+  background-position: center top;
   padding: 1.2rem 1.6rem; /* reducir padding para que la tarjeta no recorte demasiado */
   border-radius: 14px;
   /* aplicar recorte con muescas laterales a todo el contenedor interior */
@@ -70,8 +67,11 @@
     100% 0
   );
   overflow: hidden;
-  box-shadow: var(--card-shadow);
+  position: relative;
 }
+
+/* Ensure inner content sits above the shadows */
+.count-inner > * { position: relative; z-index: 2; }
 
 /* Sello y título */
 .count-seal{
@@ -82,12 +82,12 @@
 }
 
 .count-title{
-  font-family: var(--serif);
+  font-family: 'Allura', cursive !important;
   font-weight: 400;
   color: var(--accent);
   margin: 0;
   letter-spacing: 1px;
-  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  font-size: clamp(1.45rem, 2.8vw, 1.5rem);
   text-align: center;
 }
 
@@ -238,7 +238,7 @@
 /* Etiquetas (DÍAS, HORAS...) */
 .count-label{
   font-family: var(--system);
-  margin-top: 0.45rem;
+  margin-top: 0.75rem;
   font-size: var(--label-size);
   color: var(--muted);
   letter-spacing: 0.15em;
