@@ -1,3 +1,94 @@
+/* ============================
+   Import de Google Fonts y estilos para .names-block
+   Playfair Display (serif) y Allura (script)
+   ============================ */
+/* Variables para estilos */
+:root{
+  --main-color: #3f3f3f;        /* color principal del texto */
+  --line-color: #b5b5b5;        /* color de las líneas horizontales */
+  --name-tracking: 0.25em;      /* espaciado de letras para los nombres */
+  --ampersand-scale: 1.6;       /* escala visual de la 'y' caligráfica */
+  --gap: 1rem;                  /* separación horizontal entre elementos */
+  --small-gap: 0.6rem;
+  --name-min-size: 1.6rem;
+  --name-max-size: 3.2rem;
+  --amp-min-size: 2rem;
+  --amp-max-size: 4rem;
+  --line-thickness: 1px;
+  --line-width-large: 8rem;
+  --line-width-small: 3.5rem;
+  --fallback-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --fallback-script: "Allura", cursive;
+}
+
+.names-block{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0.4rem 1rem;
+  flex-wrap: nowrap;
+}
+
+.names-block .name{
+  font-family: var(--fallback-serif);
+  font-weight: 400;
+  color: var(--main-color);
+  text-transform: uppercase;
+  letter-spacing: var(--name-tracking);
+  margin: 0;
+  line-height: 1;
+  white-space: nowrap;
+  font-size: clamp(var(--name-min-size), 3.6vw, var(--name-max-size));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.names-block .middle-line{
+  display: block;
+  width: var(--line-width-large);
+  height: var(--line-thickness);
+  background-color: var(--line-color);
+  flex-shrink: 0;
+  border-radius: 1px;
+  align-self: center;
+  opacity: 0.95;
+}
+
+.names-block .ampersand{
+  font-family: var(--fallback-script);
+  color: var(--main-color);
+  margin: 0;
+  line-height: 1;
+  text-align: center;
+  font-size: clamp(var(--amp-min-size), 6.5vw, var(--amp-max-size));
+  transform: scale(var(--ampersand-scale));
+  transform-origin: center;
+  letter-spacing: 0;
+  padding: 0 0.15rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@media (max-width: 520px){
+  :root{ --gap: var(--small-gap); }
+  .names-block{ flex-direction: column; gap: 0.35rem; padding: 0.25rem; }
+  .names-block .name{ font-size: clamp(1.25rem, 6vw, 1.9rem); letter-spacing: 0.18em; text-align: center; width: 100%; }
+  .names-block .ampersand{ font-size: clamp(1.6rem, 9vw, 2.6rem); transform: none; margin: 0.05rem 0; }
+  .names-block .middle-line{ display: none; }
+}
+
+@media (prefers-color-scheme: light){
+  .names-block .name,
+  .names-block .ampersand{ color: var(--main-color); }
+  .names-block .middle-line{ background-color: var(--line-color); }
+}
+
+/* Fin de bloque: ajustar variables si deseas otros tamaños/colores */
 /* Efecto de éxito al resolver el puzzle */
 .puzzle-success {
   animation: puzzle-glow 0.7s cubic-bezier(.4,2,.6,1) both, puzzle-shake 0.7s cubic-bezier(.4,2,.6,1) both;
@@ -158,6 +249,7 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+  /* secciones en tema claro: no cambiar aquí (mantener estilos por defecto) */
 }
 
 /* Smooth scrolling styles */
@@ -195,7 +287,7 @@ nav a {
 }
 
 section {
-  height: 100vh;
+  height: 70vh; /* reduced from 100vh to halve vertical space between sections */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -285,8 +377,8 @@ footer {
   }
 
   section {
-    height: 100vh;
-    min-height: 100vh;
+    height: 72vh;
+    min-height: 95vh;
     width: 100vw;
     padding: 0;
     box-sizing: border-box;
@@ -385,7 +477,7 @@ footer {
 
 @media (max-width: 600px) {
   #nos-casamos .hero-rect {
-    width: 90vw;
+    width: 80vw;
     height: auto;
     padding: 1.4rem;
     margin: 1rem;
@@ -395,12 +487,12 @@ footer {
 #nos-casamos h1 {
   position: relative;
   z-index: 2;
-  font-size: 4em;
+  font-size: 3.5em;
   color: #fff;
   text-shadow: 0 4px 32px #b48a78, 0 2px 8px #0008;
   font-family: 'Great Vibes', cursive;
   margin-bottom: 0;
-  padding: 0.2em 0.5em;
+  padding: 0em 0.5em;
   background: none;
   border-radius: 0;
   box-shadow: none;
@@ -699,30 +791,32 @@ input {
   margin: 1.2rem 0 1.8rem;
 }
 
-/* Bloque de nombres */
+/* Bloque de nombres: estilos solicitados (Playfair Display + Allura) */
 .names-block { margin: 1.2rem 0 0.8rem; }
 
 .name {
-  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
   font-size: clamp(2.1em, 6vw, 2.6em);
-  letter-spacing: 0.38em; /* espaciado alto como en la referencia */
-  color: #2a2a2a;
+  letter-spacing: 0.25em; /* tracking solicitado */
+  color: #3f3f3f;         /* color principal */
   margin: 0.35rem 0;
+  text-transform: uppercase;
 }
 
 .middle-line {
   width: 72%;
   height: 1px;
-  background: #222;
+  background: #b5b5b5;   /* líneas en gris suave */
   margin: 0.55rem auto;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .ampersand {
-  font-family: 'Great Vibes', cursive;
+  font-family: 'Allura', cursive;
   font-size: 2.2em;
-  color: #b48a78;
+  color: #3f3f3f;
   margin: 0.2rem 0;
+  letter-spacing: 0;
 }
 
 /* Ajustes responsive */
@@ -745,6 +839,49 @@ input {
   overflow: visible; /* por si el sello sale un poco fuera del borde superior */
 }
 
+/* Fondo de papel aplicado a la tarjeta que contiene el sello */
+.invitation-box.has-seal {
+  position: relative; /* asegurar contenedor para pseudo-elemento y corner-decor */
+}
+
+/* Fondo de papel (capa inferior) usando pseudo-elemento */
+.invitation-box.has-seal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/img/fondo_papel.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+  z-index: 1; /* papel por encima del corner-decor */
+  pointer-events: none;
+}
+
+/* corner-decor: encima del papel, pero detrás del contenido */
+.corner-decor.top-left {
+  z-index: 1;
+}
+
+/* Asegurar que el resto del contenido de la tarjeta quede por encima */
+.invitation-box.has-seal > :not(.corner-decor):not(.wax-seal) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Reglas con mayor especificidad para forzar los estilos solicitados */
+.hero-rect.invitation-box.has-seal .names-block .name{
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
+  color: #3f3f3f !important;
+  letter-spacing: 0.25em !important;
+}
+.hero-rect.invitation-box.has-seal .names-block .middle-line{
+  background: #b5b5b5 !important;
+}
+.hero-rect.invitation-box.has-seal .names-block .ampersand{
+  font-family: 'Allura', cursive !important;
+  color: #3f3f3f !important;
+}
+
 /* Sello centrado arriba, ligeramente solapado */
 .wax-seal {
   position: absolute;
@@ -754,4 +891,184 @@ input {
   width: 14em;                /* ajusta el tamaño a tu gusto (80–120px) */
   filter: drop-shadow(0 6px 10px rgba(0,0,0,0.18));
   pointer-events: none;       /* que no interfiera con clicks */
+  z-index: 5;
 }
+
+/* Flores decorativas centradas y con el mismo tamaño que el sello */
+.decorative-flourish {
+  display: block;
+  width: 14em;                /* mismo ancho que .wax-seal */
+  margin: 0 auto 1rem;       /* centro horizontal y pequeño espacio abajo */
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.08));
+  pointer-events: none;
+}
+
+/* Posicionar la decoración de fondo detrás del sello y reducir tamaño */
+.corner-decor.top-left {
+  position: absolute;        /* relativo a #nos-casamos (se queda con la sección) */
+  left: 50%;
+  transform: translateX(-50%);
+  top: 4vh;                  /* ajusta para que quede detrás de la tarjeta */
+  width: 10.5em;             /* más pequeño que el sello */
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: 0;                 /* colocarlo detrás del papel y la tarjeta */
+  mix-blend-mode: multiply;  /* opcional: mezcla suave con el fondo */
+}
+
+@media (max-width: 520px) {
+  .corner-decor.top-left {
+    top: -9vh;
+    width: 32em;
+  }
+}
+
+/* Elevar el contenido por encima del fondo del sobre */
+section,
+.hero-rect,
+#invitation-card,
+.modal,
+.invitation-box {
+  position: relative;
+  z-index: 2; /* asegurar que las cajas queden por encima de corner-decor (z=0) */
+}
+
+/* Asegurar que la sección pueda posicionar corner-decor */
+#nos-casamos { position: relative; }
+
+/* Fondo de papel para la sección 'nos-casamos' */
+#nos-casamos {
+  background-image: url('/img/fondo_papel.png');
+  background-repeat: no-repeat;
+  background-size: cover;       /* usar 'contain' si prefieres ajustar sin recortar */
+  background-position: center top;
+}
+
+
+.date-card{
+    background: var(--bg);
+    /* opcional: textura sutil con ruido */
+    /* background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+       background-size: 3px 3px; */
+    display:grid;
+    place-items:center;
+    padding: 28px 16px;
+  }
+
+  .date-wrap{
+    width: min(600px, 94vw);
+    color: var(--ink);
+    text-align:center;
+    font-family: "Playfair Display","Cormorant Garamond", Garamond, serif;
+  }
+
+  .month{
+    font-size: clamp(12px, 2.4vw, 16px);
+    letter-spacing: .4em;
+    font-weight: 500;
+    color: var(--ink);
+    opacity: .95;
+    margin: 0 auto 6px;
+  }
+
+  .day-number{
+    font-size: clamp(14px, 7vw, 76px);
+    line-height: 1;
+    font-weight: 500;
+    margin: 0 0 -25px 0;
+  }
+
+  .meta-row{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .spacer{ width: 0px; } /* separación entre los dos lados */
+
+  .meta{
+    font-size: clamp(10px, 1.8vw, 14px);
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: .95;
+    white-space: nowrap;
+  }
+
+  .with-lines{
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items:center;
+    gap: 12px;
+  }
+    .with-lines::before,
+    .with-lines::after{
+      content:"";
+      height: var(--line-thickness);
+      background: var(--line-color);
+    }
+
+  /* Ajuste fino móvil */
+  @media (max-width: 420px){
+    .with-lines{ gap: 8px; }
+    .spacer{ width: 14px; }
+  }
+
+    /* Reglas específicas: asegurar que los elementos .meta.with-lines tengan
+       una línea arriba y otra abajo que abarquen todo el ancho del elemento. */
+    .meta.with-lines{
+      display: inline-block; /* ajustar al tamaño del contenido */
+      position: relative;
+      padding: 0.45rem 0.6rem;
+      text-align: center;
+      z-index: 1;
+      width: auto;
+      justify-self: center; /* centrar en la celda del grid */
+    }
+    .meta.with-lines::before,
+    .meta.with-lines::after{
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: var(--line-thickness);
+      background: var(--line-color);
+      z-index: 0;
+    }
+    .meta.with-lines::before{ top: 0; }
+    .meta.with-lines::after{ bottom: 0; }
+
+  .metaText{
+    font-size: clamp(10px, 1.8vw, 14px);
+    letter-spacing: .35em;
+    color: var(--ink);
+    opacity: .95;
+    white-space: nowrap;
+  }
+
+  .with-linesText{
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items:center;
+    gap: 12px;
+  }
+  .with-linesText::before,
+  .with-linesText::after{
+    content:"";
+    height: 1px;
+    background: var(--line);
+  }
+    .with-linesText::before,
+    .with-linesText::after{
+      content:"";
+      height: var(--line-thickness);
+      background: var(--line-color);
+    }
+
+  /* Ajuste fino móvil */
+  @media (max-width: 420px){
+    .with-linesText{ gap: 8px; }
+    .spacer{ width: 14px; }
+  }
+

@@ -7,8 +7,11 @@
   <link rel="stylesheet" href="./src/style.css">
   <link rel="stylesheet" href="./src/countdown.css">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Añadido: Playfair Display y Allura para nombres y ampersand -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Allura&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* Evitar parpadeo: ocultar sections por defecto y mostrar solo la invitación hasta que JS actúe */
     section { display: none; }
@@ -19,19 +22,21 @@
 
   <script type="module" src="./src/countdown.ts"></script>
 
+  <!-- Fondo del sobre, colocado dentro de la tarjeta más abajo (ver .invitation-box) -->
+
   <section id="invitation-card">
     <div id="envelope-anim" style="display:flex;">
       <img id="sobreAnimado" src="/img/portada.png" class="envelope-image" alt="Sobre animado">
     </div>
   </section>
-
   
-  
-<section id="nos-casamos" class="full-screen">
+  <section id="nos-casamos" class="full-screen">
+    <!-- Imagen del sobre colocada como fondo relativo a la sección (queda detrás de la tarjeta) -->
+    <img class="corner-decor top-left" src="/img/sobreDef.png" aria-hidden="true">
   <div class="hero-rect invitation-box has-seal">
     <img class="wax-seal" src="/img/sello_solo.png" alt="Sello de cera">
-
-    <p class="intro-text">Lo nuestro empezó entre bailes y risas,<br>y hoy se convierte en un para siempre.</p>
+    <!-- <img class="decorative-flourish" src="/img/letras.png" alt="Letras"> -->
+    <p class="intro-text">Lo nuestro empezó entre juegos y risas,<br>y hoy se convierte en un para siempre.</p>
     <p class="small-title">¡Nos casamos!</p>
 
     <div class="names-block">
@@ -49,17 +54,35 @@
 
 
   <section id="wedding-info" class="full-screen">
-    <h2>Información de la boda</h2>
-    <p>Fecha: 31/11/2026</p>
-    <p>Lugar: Sitio de ejemplo</p>
+    <h2>Acompáñanos el</h2>
+    
+  <div class="date-wrap">
+    <div class="month" aria-label="Octubre">OCTUBRE</div>
+    <div class="day-number" aria-label="31">31</div>
+    <div class="meta-row">
+      <div class="meta with-lines" aria-label="Sábado">SÁBADO</div>
+      <div class="spacer"></div>
+      <div class="meta with-lines" aria-label="Doce en punto">12:00 P.M.</div>
+    </div>
+  </div>
+
+    <img src="/img/novios_dibujo.png" style="width:32%;height:auto;margin:1.5em 0;">
+    <div class="metaText with-linesText" aria-label="Iglesia de San Pedro del Pinatar">Iglesia de San Pedro del Pinatar</div>
+    <div class="metaText with-linesText" aria-label="Pl. Constitución, 30740">Pl. Constitución, 30740</div>
+    <div class="metaText with-linesText" aria-label="San Pedro del Pinatar, Murcia">
+       San Pedro del Pinatar, Murcia</div>
+      <div style="margin-top: 1.5em;">
+        <a href="https://www.google.com/maps/place/Iglesia+de+San+Pedro+Apóstol/@37.835209,-0.779364,17z/data=!3m1!4b1!4m6!3m5!1s0xd6310e2e3c7e3e9:0x7e2e6e7e0e92ce5d!8m2!3d37.835209!4d-0.7767891!16s%2Fg%2F11b6h7w3w9?hl=es" target="_blank" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.75em 2em;font-size:1.1em;">
+          Ver ubicación
+        </a>
+      </div>
   </section>
 
   <!-- Sección: Cuenta atrás hasta la boda -->
-  <section id="countdown-section" class="full-screen">
+  <!-- <section id="countdown-section" class="full-screen">
     <div class="count-inner">
-      <img src="./src/img/sello_personalizado.png" alt="Sello" class="count-seal">
-      <h3 class="count-title">SOLO FALTAN</h3>
-
+      <h3 class="count-title">¡Prepárate!</h3>
+      <h1 class="count-title">Nos vemos dentro de</h1>
       <div class="count-card">
         <div class="count-grid">
           <div class="count-item">
@@ -84,9 +107,9 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
-  <section id="celebracion" class="full-screen celebration-section" onclick="window.open('https://www.google.com/maps?rlz=1C1UEAD_esES1079ES1079&gs_lcrp=EgZjaHJvbWUqDwgAEAAYQxjjAhiABBiKBTIPCAAQABhDGOMCGIAEGIoFMhIIARAuGEMYrwEYxwEYgAQYigUyCggCEAAYsQMYgAQyBwgDEC4YgAQyBwgEEC4YgAQyBwgFEC4YgAQyBwgGEC4YgAQyBggHEEUYPNIBCDIwMTNqMGo0qAIAsAIB&um=1&ie=UTF-8&fb=1&gl=es&sa=X&geocode=Kcu1Z8DwD2MNMUAopphVEmWF&daddr=Puerto+de+San+Pedro+Playa+de+la+llana,+s/n,+30740+San+Pedro+del+Pinatar,+Murcia', '_blank')">
+  <!-- <section id="celebracion" class="full-screen celebration-section" onclick="window.open('https://www.google.com/maps?rlz=1C1UEAD_esES1079ES1079&gs_lcrp=EgZjaHJvbWUqDwgAEAAYQxjjAhiABBiKBTIPCAAQABhDGOMCGIAEGIoFMhIIARAuGEMYrwEYxwEYgAQYigUyCggCEAAYsQMYgAQyBwgDEC4YgAQyBwgEEC4YgAQyBwgFEC4YgAQyBwgGEC4YgAQyBggHEEUYPNIBCDIwMTNqMGo0qAIAsAIB&um=1&ie=UTF-8&fb=1&gl=es&sa=X&geocode=Kcu1Z8DwD2MNMUAopphVEmWF&daddr=Puerto+de+San+Pedro+Playa+de+la+llana,+s/n,+30740+San+Pedro+del+Pinatar,+Murcia', '_blank')">
     <h2>Lugar de celebración</h2>
     <p>Restaurante Mar de Sal</p>
     <p>San Pedro del Pinatar, España</p>
@@ -96,7 +119,7 @@
     <p style="margin-top:1em;">
       <a href="https://www.google.com/maps/place/Restaurante+MardeSal/@37.8184021,-0.7616154,17z/data=!3m1!4b1!4m6!3m5!1s0xd630ff0c067b5cb:0x8565125598a62840!8m2!3d37.8183979!4d-0.7590405!16s%2Fg%2F1pty50bfl?hl=es&entry=ttu&g_ep=EgoyMDI2MDIxMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" style="color:#646cff;text-decoration:underline;">Ver en Google Maps</a>
     </p>
-  </section>
+  </section> -->
 
   <section id="form" class="full-screen">
     <h2>RSVP</h2>
@@ -112,6 +135,36 @@
 
       <button type="submit">Enviar</button>
     </form>
+  </section>
+
+  <section id="countdown-section" class="full-screen" style="display: flex;height: 30vh;min-height: 33vh;">
+    <div class="count-inner">
+      <h3 class="count-title">¡Prepárate!</h3>
+      <h1 class="count-title">Nos vemos dentro de</h1>
+      <div class="count-card">
+        <div class="count-grid">
+          <div class="count-item">
+            <div class="count-number" id="days"><span>0</span></div>
+            <div class="count-label">DÍAS</div>
+          </div>
+          <div class="count-item">
+            <div class="count-number" id="hours"><span>00</span></div>
+            <div class="count-label">HORAS</div>
+          </div>
+          <div class="count-item">
+            <div class="count-number" id="minutes"><span>00</span></div>
+            <div class="count-label">MINUTOS</div>
+          </div>
+          <div class="count-item">
+            <div class="count-number flip" id="seconds">
+              <span class="current">00</span>
+              <span class="next">00</span>
+            </div>
+            <div class="count-label">SEGUNDOS</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="foto-final" class="full-screen">

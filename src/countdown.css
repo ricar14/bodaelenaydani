@@ -1,118 +1,269 @@
-/* Countdown section styles - elegant, minimalista */
+/* ============================
+   CSS: Estilos para la sección de cuenta atrás
+   - Usa Playfair Display para títulos/números y Allura para subtítulos.
+   - Notches laterales (triángulos hacia dentro) con variable `--notch`.
+   - Fondo claro tipo papel, tarjeta con sombra, separadores ":" grandes.
+   - Flip animation para segundos (.flip .current/.next).
+   ============================ */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Allura&display=swap');
+
+:root{
+  /* Colores y layout */
+  --paper-bg: #fdfcf8;
+  --card-shadow: 0 10px 30px rgba(33,33,33,0.10);
+  --muted: #b5b5b5;
+  --accent: #3f3f3f;
+
+  /* Tipografía */
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --script: 'Allura', cursive;
+  --system: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+
+  /* Tamaños */
+  --notch: 4.2%;               /* ancho de las muescas laterales (ajustar) */
+  --card-max-width: 900px;
+  --card-padding: 2.2rem;
+  --num-size: clamp(2.2rem, 6.6vw, 4.6rem);
+  --label-size: 0.78rem;
+  --sep-size: clamp(1.8rem, 4.6vw, 3.4rem);
+  --gap: 1.1rem;
+}
+
+/* Contenedor de sección (centrado) */
 #countdown-section {
-  background: #e6e6e6 !important; /* forzar sobre reglas globales */
-  color: #2b2b2b;
-  padding: 3rem 1rem 2.5rem;
-  box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;
-}
-.count-inner {
-  max-width: 980px;
-  margin: 0 auto;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
-  position: relative;
-}
-.count-seal {
-  width: 72px; /* entre 60-80px */
-  max-width: 80px;
-  margin-top: -36px; /* sobresale ligeramente sobre la parte superior */
-  object-fit: contain;
+  justify-content: center;
+  padding: 3.2rem 1.2rem;
   background: transparent;
 }
-.count-title {
-  margin: 0;
-  font-size: 0.95rem;
-  letter-spacing: 4px;
-  color: #6b6b6b;
-  font-weight: 700;
-}
 
-/* Aplicar Great Vibes + Montserrat sobre el texto "SOLO FALTAN" */
-.count-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.05rem;
-  letter-spacing: 3.5px;
-  color: #6b6b6b;
-  text-align: center;
-}
-.count-card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 1.2rem;
-  box-shadow: 0 10px 30px rgba(16,24,40,0.06);
+/* Inner: centro y limite de ancho */
+#countdown-section .count-inner{
   width: 100%;
-  box-sizing: border-box;
-}
-.count-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem; /* aumentar separación entre cuadros */
-  align-items: stretch;
-}
-.count-item {
+  max-width: var(--card-max-width);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 6px; /* pequeño acolchamiento interno para separación visual */
+  gap: 1.1rem;
+  /* Variables locales para ajustar espacios y tamaños dentro del contador */
+  --gap: 0.6rem;
+  --num-size: clamp(1.6rem, 4.8vw, 3rem);
+  --sep-size: clamp(1.2rem, 3.6vw, 2.6rem);
+  /* Fondo papel para todo el contenedor interior (único fondo) */
+  background-color: white;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-color: var(--paper-bg);
+  padding: 1.2rem 1.6rem; /* reducir padding para que la tarjeta no recorte demasiado */
+  border-radius: 14px;
+  /* aplicar recorte con muescas laterales a todo el contenedor interior */
+  clip-path: polygon(
+    0 0,
+    calc(var(--notch)) 50%,
+    0 100%,
+    100% 100%,
+    calc(100% - var(--notch)) 50%,
+    100% 0
+  );
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
 }
-.count-number {
-  font-family: 'Great Vibes', 'Montserrat', sans-serif;
-  font-size: 2.4rem;
-  font-weight: 700;
-  color: #2b2b2b;
-  min-height: 54px;
+
+/* Sello y título */
+.count-seal{
+  width: 84px;
+  height: auto;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+  margin-top: 0.2rem;
+}
+
+.count-title{
+  font-family: var(--serif);
+  font-weight: 400;
+  color: var(--accent);
+  margin: 0;
+  letter-spacing: 1px;
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  text-align: center;
+}
+
+/* Tarjeta principal (con notches laterales usando clip-path) */
+.count-card{
+  width: 100%;
+  padding: var(--card-padding);
+  background: transparent; /* mostrar el fondo único del contenedor */
+  border-radius: 16px;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Textura fina (opcional: ligero patrón con pseudo) */
+.count-card::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* ligera textura/transparencia para suavizar el papel sin taparlo */
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  pointer-events: none;
+  border-radius: inherit;
+  mix-blend-mode: multiply;
+}
+
+/* Grid de unidades */
+.count-grid{
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.count-number span { display:block; }
-.count-label {
-  margin-top: 0.45rem;
-  font-size: 0.85rem;
-  color: #7a7a7a;
-  letter-spacing: 2px;
-  font-weight: 600;
+  gap: var(--gap);
+  flex-wrap: nowrap;
 }
 
-/* Flip animation for seconds */
-.flip {
+/* Cada ítem: número + etiqueta */
+.count-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56px; /* reducir anchura mínima para que quepan más unidades */
   position: relative;
-  perspective: 600px;
-  overflow: visible;
 }
-.flip .current,
-.flip .next {
+
+/* Número: serif fino y grande */
+.count-number{
+  font-family: var(--serif);
+  font-weight: 400;
+  color: var(--accent);
+  font-size: var(--num-size);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2ch;                 /* ancho más estrecho para ajustar */
+  min-width: 48px;
+  height: calc(var(--num-size) * 1.05); /* altura consistente para centrar */
+  position: relative;
+  overflow: hidden;             /* recortar las piezas durante la animación */
+}
+
+/* Estructura para animación vertical: dos capas stacked (current/next) */
+.count-number{
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+
+.count-number .current,
+.count-number .next{
   display: block;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  text-align: center;
+  transition: transform 0.52s cubic-bezier(.2,.9,.2,1), opacity 0.32s ease, box-shadow 0.32s ease;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Estado inicial: current visible, next justo abajo con ligera inclinación */
+.count-number .current{ transform-origin: center top; transform: translateY(0%) rotateX(0deg); z-index:2; }
+.count-number .next{ transform-origin: center bottom; transform: translateY(100%) rotateX(12deg); z-index:1; opacity:0; }
+
+/* (Removed page-turn rules — using cube effect only) */
+
+/* ---------------------------
+   Alternativa: efecto 'cubo' (volteo) activable añadiendo
+   la clase `effect-cube` al contenedor `.count-card`.
+   Para usarlo: <div class="count-card effect-cube">...</div>
+   La clase TS sigue aplicando `slide-anim` al elemento objetivo,
+   pero las reglas aquí redefinen la animación cuando el padre
+   tiene `.effect-cube`.
+   --------------------------- */
+
+
+/* Efecto 'cubo' (volteo) - aplicado globalmente */
+.count-number{
+  perspective: 900px; /* reforzar perspectiva para efecto 3D */
+  transform-style: preserve-3d;
+}
+
+.count-number .current,
+.count-number .next{
+  transition: transform 0.52s cubic-bezier(.2,.9,.2,1), opacity 0.32s ease;
   backface-visibility: hidden;
 }
-.flip .next { position: absolute; top:0; left:0; right:0; opacity:0; transform: rotateX(90deg); }
-.flip.flipping .current {
-  animation: foldTop 0.45s forwards ease-in;
+
+/* inicial: current visible, next rotado hacia abajo */
+.count-number .current{ transform: rotateX(0deg) translateY(0%); z-index:2; }
+.count-number .next{ transform: rotateX(90deg) translateY(100%); z-index:1; opacity:0; }
+
+/* al aplicar .slide-anim: current gira hacia atrás y next gira al frente */
+.count-number.slide-anim .current{
+  transform: rotateX(-90deg) translateY(-20%);
+  opacity: 0;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
 }
-.flip.flipping .next {
-  animation: unfoldBottom 0.45s 0.05s forwards ease-out;
-}
-@keyframes foldTop {
-  0% { transform-origin: 50% 0%; transform: rotateX(0deg); opacity:1; }
-  100% { transform-origin: 50% 0%; transform: rotateX(-90deg); opacity:0; }
-}
-@keyframes unfoldBottom {
-  0% { transform-origin: 50% 100%; transform: rotateX(90deg); opacity:0; }
-  100% { transform-origin: 50% 100%; transform: rotateX(0deg); opacity:1; }
+.count-number.slide-anim .next{
+  transform: rotateX(0deg) translateY(0%);
+  opacity: 1;
 }
 
-/* Responsive */
-@media (max-width: 800px) {
-  .count-grid { grid-template-columns: repeat(2, 1fr); }
-  .count-number { font-size: 1.8rem; min-height:48px; }
+/* Separadores grandes ":" como pseudo-elemento después de cada item excepto el último */
+.count-item:not(:last-child)::after{
+  /* colocar ':' a la derecha del número, centrado verticalmente */
+  content: ":";
+  font-family: var(--serif);
+  font-size: var(--sep-size);
+  color: var(--muted);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translate(0, -50%);
+  margin-left: calc(var(--gap) / 2);
+  pointer-events: none;
+  z-index: 1;
 }
-@media (max-width: 420px) {
-  .count-seal { width: 60px; margin-top: -30px; }
-  .count-grid { gap: 0.6rem; }
-  .count-number { font-size: 1.4rem; }
-  .count-card { padding: 0.8rem; border-radius: 10px; }
+
+/* Etiquetas (DÍAS, HORAS...) */
+.count-label{
+  font-family: var(--system);
+  margin-top: 0.45rem;
+  font-size: var(--label-size);
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
 }
+
+/* Ajustes responsivos: en pantallas pequeñas apilar y reducir tamaños */
+@media (max-width: 620px){
+  :root{
+    --card-padding: 1.2rem;
+    --num-size: clamp(1.6rem, 10vw, 2.6rem);
+    --sep-size: clamp(1.2rem, 6vw, 1.8rem);
+    --notch: 6%;
+  }
+  .count-grid{
+    gap: 0.6rem;
+  }
+  .count-item:not(:last-child)::after{
+    top: 15px;
+    font-size: var(--sep-size);
+  }
+}
+
+/* Pequeños refinamientos visuales */
+.count-card { transition: box-shadow .25s ease; }
+.count-card:hover { box-shadow: 0 18px 48px rgba(33,33,33,0.12); }
+
+/* Nota: si quieres cambiar la muesca lateral ajusta --notch en :root. */
+
+/* ============================
+   FIN CSS
+   ============================ */
