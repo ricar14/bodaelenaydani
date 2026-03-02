@@ -603,14 +603,17 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.7s;
+  transition: opacity 0.32s;
 }
 
 #invitation-card.fade-out {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.7s;
+  transition: opacity 0.32s;
 }
+
+/* Generic fade-out speed for other elements that use the class */
+.fade-out { transition: opacity 0.32s !important; }
 
 @media (max-width: 768px) {
   .envelope {

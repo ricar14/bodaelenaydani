@@ -213,7 +213,7 @@ function puzzleSolved() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     // Fallback por si transitionend no se dispara
-    const fallback = setTimeout(showSections, 900);
+    const fallback = setTimeout(showSections, 450);
     gate.addEventListener('transitionend', function handler(e) {
       if (e.propertyName === 'opacity') {
         clearTimeout(fallback);
@@ -221,7 +221,7 @@ function puzzleSolved() {
         showSections();
       }
     });
-  }, 700); // Duración del efecto de éxito
+  }, 300); // Duración del efecto de éxito (reducida)
 }
 
 
@@ -252,7 +252,7 @@ if (envelopeAnim && sobreAnimadoEl && invitationCard) {
         }
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 700);
+    }, 300);
   };
 
   if (sobreAnimadoEl instanceof HTMLMediaElement) {
@@ -262,16 +262,47 @@ if (envelopeAnim && sobreAnimadoEl && invitationCard) {
     sobreAnimadoEl.onended = revealFromInvitation;
   }
 
-  envelopeAnim.addEventListener("click", () => {
-    if (sobreAnimadoEl instanceof HTMLMediaElement) {
-      sobreAnimadoEl.currentTime = 0;
-      sobreAnimadoEl.playbackRate = 2;
-      sobreAnimadoEl.play();
-    } else {
-      // element is not media (e.g. an image) — reveal immediately
-      revealFromInvitation();
-    }
-  });
+  // Play only the first 2 seconds on click, then reveal sections.
+  {
+    let clicked = false;
+    envelopeAnim.addEventListener("click", () => {
+      if (clicked) return;
+      clicked = true;
+      if (sobreAnimadoEl instanceof HTMLMediaElement) {
+        try {
+          sobreAnimadoEl.currentTime = 0;
+        } catch (e) { /* ignore if seek not allowed yet */ }
+        sobreAnimadoEl.playbackRate = 1;
+        const playPromise = sobreAnimadoEl.play();
+        // After ~1.3s of playback, pause and reveal the site
+        const revealAfter = 1300;
+        const t = setTimeout(() => {
+          try { sobreAnimadoEl.pause(); } catch (e) {}
+          revealFromInvitation();
+        }, revealAfter);
+        // In case the media ends earlier, ensure we clear the timeout and reveal
+        const onEndOrError = () => {
+          clearTimeout(t);
+          revealFromInvitation();
+          sobreAnimadoEl.removeEventListener('ended', onEndOrError);
+          sobreAnimadoEl.removeEventListener('error', onEndOrError);
+        };
+        sobreAnimadoEl.addEventListener('ended', onEndOrError);
+        sobreAnimadoEl.addEventListener('error', onEndOrError);
+        // If play() returns a promise, handle rejection (e.g., autoplay policy)
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise.catch(() => {
+            // If playback failed, just reveal immediately
+            clearTimeout(t);
+            revealFromInvitation();
+          });
+        }
+      } else {
+        // element is not media (e.g. an image) — reveal immediately
+        revealFromInvitation();
+      }
+    });
+  }
 }
 
 // Seal and envelope animation logic
