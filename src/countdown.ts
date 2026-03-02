@@ -9,8 +9,6 @@ const secondsEl = document.getElementById('seconds') as HTMLElement | null;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-let prevSeconds = '';
-
 function calcRemaining(target: Date) {
   const now = new Date();
   let diff = Math.max(0, target.getTime() - now.getTime());
