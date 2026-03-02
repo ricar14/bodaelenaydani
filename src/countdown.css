@@ -123,7 +123,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--gap);
-  flex-wrap: nowrap;
+  flex-wrap: nowrap; /* prefer one line */
+  overflow-x: auto; /* allow horizontal scroll on very narrow viewports */
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.2rem; /* room for scrollbar on some devices */
 }
 
 /* Cada ítem: número + etiqueta */
@@ -131,8 +134,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 56px; /* reducir anchura mínima para que quepan más unidades */
+  min-width: 44px; /* reducir anchura mínima para que quepan más unidades */
   position: relative;
+  flex: 0 0 auto; /* evitar que los items se encojan/estiren */
 }
 
 /* Número: serif fino y grande */
@@ -145,11 +149,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3.2ch;                 /* ancho más estrecho para ajustar */
-  min-width: 48px;
+  width: auto;
+  min-width: 36px;
   height: calc(var(--num-size) * 1.05); /* altura consistente para centrar */
   position: relative;
   overflow: hidden;             /* recortar las piezas durante la animación */
+  padding: 0 0.15rem;
 }
 
 /* Estructura para animación vertical: dos capas stacked (current/next) */
@@ -250,7 +255,9 @@
     --notch: 6%;
   }
   .count-grid{
-    gap: 0.6rem;
+    gap: 0.45rem;
+    flex-wrap: nowrap; /* keep one line, allow scroll */
+    overflow-x: auto;
   }
   .count-item:not(:last-child)::after{
     top: 15px;
