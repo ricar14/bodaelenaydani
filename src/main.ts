@@ -168,9 +168,11 @@ sections.forEach(sec => {
 // Mostrar invitation-card solo si existe
 if (invitationCard) {
   invitationCard.style.display = 'flex';
+  // lock page scroll while invitation overlay is visible
+  document.body.classList.add('no-scroll');
 } else {
   // si no hay invitation-card, mostrar las principales secciones por seguridad
-  const fallbackIds = ['nos-casamos', 'wedding-info', 'celebracion', 'form', 'foto-final'];
+  const fallbackIds = ['nos-casamos', 'wedding-info', 'celebracion', 'form', 'foto-final', 'confirmacion-asistencia'];
   fallbackIds.forEach(id => {
     const s = document.getElementById(id);
     if (s) s.style.display = 'flex';
@@ -199,6 +201,8 @@ function puzzleSolved() {
       if (sobreAnimadoEl && (sobreAnimadoEl instanceof HTMLMediaElement)) {
         sobreAnimadoEl.pause();
       }
+      // ensure scrolling unlocked when revealing sections
+      document.body.classList.remove('no-scroll');
       // Mostrar todos los sections excepto invitation-card y puzzle-gate
       document.querySelectorAll('section').forEach(sec => {
         if (sec.id !== 'puzzle-gate' && sec.id !== 'invitation-card') {
@@ -230,27 +234,16 @@ function puzzleSolved() {
 if (envelopeAnim && sobreAnimadoEl && invitationCard) {
   const revealFromInvitation = () => {
     invitationCard.classList.add("fade-out");
+    // allow page scrolling again
+    document.body.classList.remove('no-scroll');
     setTimeout(() => {
       invitationCard.style.display = "none";
       if (envelopeAnim) envelopeAnim.style.display = "none";
       if (sobreAnimadoEl && (sobreAnimadoEl instanceof HTMLMediaElement)) {
         try { sobreAnimadoEl.pause(); } catch (e) { /* noop */ }
       }
-      const idsToShow = [
-        'nos-casamos',
-        'wedding-info',
-        'countdown-section',
-        'celebracion',
-        'form',
-        'foto-final'
-      ];
-      idsToShow.forEach(id => {
-        const sec = document.getElementById(id);
-        if (sec) {
-          sec.style.display = 'flex';
-          sec.classList.remove('hidden');
-        }
-      });
+      // Show the main site sections (excluding the invitation and the standalone form)
+      showMainSections();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 300);
   };
@@ -331,6 +324,58 @@ async function saveGuestBackend(guest: { name: string; email: string; guests: nu
     console.error('Error saving guest:', err);
     return { error: 'No se pudo conectar con el servidor. Inténtalo más tarde.' };
   }
+}
+
+// Navigation helpers: show only one section (used for confirm -> form flow)
+function showOnlySection(id: string) {
+  document.querySelectorAll('section').forEach(sec => {
+    (sec as HTMLElement).style.display = 'none';
+  });
+  const target = document.getElementById(id);
+  if (target) {
+    target.style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// When user clicks the confirm button in the confirmation screen, show only the form
+document.querySelectorAll('.confirm-btn').forEach(el => {
+  el.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    showOnlySection('form');
+    const backBtn = document.getElementById('back-from-form') as HTMLElement | null;
+    if (backBtn) backBtn.style.display = 'inline-block';
+  });
+});
+
+// Back button on the form returns to the confirmation screen
+const backFromFormBtn = document.getElementById('back-from-form');
+if (backFromFormBtn) {
+  backFromFormBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    // Restore the main site sections as they were after closing the invitation
+    showMainSections();
+    (backFromFormBtn as HTMLElement).style.display = 'none';
+  });
+}
+
+// Reusable helper to show the primary sections shown after invitation
+function showMainSections() {
+  const idsToShow = [
+    'nos-casamos',
+    'wedding-info',
+    'countdown-section',
+    'celebracion',
+    'foto-final',
+    'confirmacion-asistencia'
+  ];
+  idsToShow.forEach(id => {
+    const sec = document.getElementById(id);
+    if (sec) {
+      sec.style.display = 'flex';
+      sec.classList.remove('hidden');
+    }
+  });
 }
 
 async function getGuestsBackend() {

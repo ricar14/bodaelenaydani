@@ -5,6 +5,7 @@
 /* Variables para estilos */
 :root{
   --main-color: #3f3f3f;        /* color principal del texto */
+  --ink: var(--main-color);
   --line-color: #b5b5b5;        /* color de las líneas horizontales */
   --name-tracking: 0.25em;      /* espaciado de letras para los nombres */
   --ampersand-scale: 1.6;       /* escala visual de la 'y' caligráfica */
@@ -158,9 +159,20 @@
   background: none;
 }
 
-/* When shown as the main invitation (full-screen), make envelope fill viewport */
+/* When shown as the main invitation (full-screen), make envelope fill viewport
+   and keep the invitation overlay fixed to avoid page scroll or bleed. */
+#invitation-card{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  overflow: hidden;
+}
 #invitation-card #envelope-anim {
-  width: 150vw;
+  width: 100vw;
   height: 100vh;
   max-width: none;
   margin: 0;
@@ -169,16 +181,18 @@
 }
 
 #invitation-card .envelope-image {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  /* Use cover so the video fills the viewport without letterboxing */
+  object-fit: cover;
   object-position: center center;
   border-radius: 0;
   box-shadow: none;
   cursor: pointer;
-  background-color: #fff8f0;
+  background-color: #fff8f0; /* fallback color matching paper */
+  display: block;
 }
 
 
@@ -258,6 +272,19 @@ button:focus-visible {
 /* Smooth scrolling styles */
 html {
   scroll-behavior: smooth;
+}
+
+/* Prevent horizontal overflow site-wide (avoids seeing white edges) */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* When invitation is active, lock all scrolling */
+body.no-scroll, html.no-scroll {
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Fade-in animation */
@@ -1010,39 +1037,66 @@ section,
     color: var(--ink);
     text-align:center;
     font-family: "Playfair Display","Cormorant Garamond", Garamond, serif;
+    /* stack month and day vertically and center them; meta-row is spaced below */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
   }
 
-  .month{
-    font-size: clamp(12px, 2.4vw, 16px);
-    letter-spacing: .4em;
-    font-weight: 500;
-    color: var(--ink);
-    opacity: .95;
-    margin: 0 auto 6px;
-  }
+    .month-svg{
+      width: min(260px, 48vw);
+      height: auto;
+      display: block;
+      margin: 0 auto -100px;
+    }
+    .month-svg .month-text{ 
+      font-family: "Playfair Display", serif;
+      font-size: clamp(14px, 2.5vw, 22px);
+      letter-spacing: .24em;
+      fill: var(--ink);
+      font-weight: 600;
+    }
+    /* Slight lift so the curved text visually points toward the day-number below */
+    .month-svg { transform: translateY(10px); overflow: visible; }
 
+  /* Day number size (larger and more prominent). Reduce negative margin
+     so the SVG text above is not visually clipped by the day number. */
   .day-number{
-    font-size: clamp(14px, 7vw, 76px);
+    font-size: clamp(18px, 9vw, 110px);
     line-height: 1;
-    font-weight: 500;
-    margin: 0 0 -25px 0;
+    font-weight: 600;
+    margin: 8px 8px 0 0;
+    z-index: 2;
+    position: relative;
   }
 
   .meta-row{
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 10px;
+    gap: 27px;
+    width: 100%;
+    max-width: 460px;
+    margin-top: -2.1rem; /* ensure it sits below the day-number */
+    box-sizing: border-box;
+    padding: 0 37px; /* small horizontal padding to avoid touching edges */
+  }
+
+  /* Ensure month/day render above meta-row without overlap */
+  .month-svg, .day-number {
+    position: relative;
+    z-index: 2;
+    display: block;
   }
 
   .spacer{ width: 0px; } /* separación entre los dos lados */
 
   .meta{
-    font-size: clamp(10px, 1.8vw, 14px);
+    font-size: clamp(10px, 4vw, 14px);
     letter-spacing: .35em;
     text-transform: uppercase;
     color: var(--ink);
-    opacity: .95;
     white-space: nowrap;
   }
 
@@ -1080,6 +1134,43 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   gap: clamp(0.6rem, 1.5vw, 1.2rem);
 }
 
+/* Styles for the inserted confirmation section */
+.confirm-section {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: clamp(1rem, 3vw, 2.4rem);
+  background: transparent;
+}
+.confirm-inner{
+  display:flex;
+  gap: 1.6rem;
+  align-items:center;
+  max-width: 1100px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.confirm-image{
+  width: 48%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+.confirm-content{
+  width: 52%;
+  text-align: left;
+}
+.confirm-content h2{ font-size: clamp(1.4rem, 3.8vw, 2.4rem); margin:0 0 0.6rem; }
+.confirm-content p{ margin:0 0 1rem; color:var(--ink); }
+.confirm-btn{ display:inline-block; }
+
+@media (max-width: 720px){
+  .confirm-inner{ flex-direction:column; }
+  .confirm-image, .confirm-content{ width: 100%; }
+  .confirm-content{ text-align:center; }
+}
+
 @media (max-width: 420px){
   section { min-height: auto; padding: 0.8rem; }
   .hero-rect { width: 94vw; padding: 1rem; margin: 0.6rem; }
@@ -1093,7 +1184,7 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
     .meta.with-lines{
       display: inline-block; /* ajustar al tamaño del contenido */
       position: relative;
-      padding: 0.45rem 0.6rem;
+      padding: 0.45rem 0.4rem;
       text-align: center;
       z-index: 1;
       width: auto;
