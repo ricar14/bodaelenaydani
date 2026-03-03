@@ -75,12 +75,34 @@
   vertical-align: middle;
 }
 
+/* Dibujar líneas a ambos lados de la 'y' usando pseudo-elementos para asegurar alineación */
+.names-block .ampersand{
+  position: relative;
+  padding: 0 0.9rem; /* espacio para que las líneas no toquen la letra */
+  z-index: 1;
+}
+.names-block .ampersand::before,
+.names-block .ampersand::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: var(--line-width-small);
+  height: var(--line-thickness);
+  background-color: var(--line-color);
+  transform: translateY(-50%);
+  opacity: 0.95;
+}
+.names-block .ampersand::before{ left: calc(-1 * (var(--line-width-small) + 0.6rem)); }
+.names-block .ampersand::after{ right: calc(-1 * (var(--line-width-small) + 0.6rem)); }
+
 @media (max-width: 520px){
   :root{ --gap: var(--small-gap); }
   .names-block{ flex-direction: column; gap: 0.35rem; padding: 0.25rem; }
   .names-block .name{ font-size: clamp(1.25rem, 6vw, 1.9rem); letter-spacing: 0.18em; text-align: center; width: 100%; }
   .names-block .ampersand{ font-size: clamp(1.6rem, 9vw, 2.6rem); transform: none; margin: 0.05rem 0; }
   .names-block .middle-line{ display: none; }
+  .names-block .ampersand::before,
+  .names-block .ampersand::after{ display: none; }
 }
 
 @media (prefers-color-scheme: light){
@@ -1202,6 +1224,37 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   color: #5a4632;
   margin-bottom: 0.6rem;
 }
+
+/* Estilos específicos para la tarjeta de confirmación con fondo arco */
+.confirm-content.card-arco{
+  font-family: 'Great Vibes', cursive;
+  color: #ffffff;
+  text-align: center;
+}
+.confirm-content.card-arco h2,
+.confirm-content.card-arco p,
+.confirm-content.card-arco strong{
+  color: #ffffff;
+  font-family: 'Great Vibes', cursive;
+}
+#confirmar-asistencia {
+  color: #ffffff;
+  font-family: 'Playfair Display', serif !important;
+}
+.confirm-content.card-arco img{
+  display: block;
+  margin: 1.5em auto; /* refuerzo por si la imagen no tiene estilo inline */
+}
+.confirm-content.card-arco .confirm-btn,
+.confirm-content.card-arco .btn-confirm{
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 0.5em 1em;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-block;
+}
 .confirm-content p{ color: #5a4632; margin-bottom: 0.6rem; }
 .confirm-btn{ margin-top: 0.6rem; }
 
@@ -1275,3 +1328,37 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
     .spacer{ width: 14px; }
   }
 
+
+.card-arco {
+  background: #9a4d4b;       /* color vino / terracota */
+  padding: 2.5em 2em;
+  text-align: center;
+  border-radius: 150px 150px 20px 20px; /* semicirculo arriba */
+  max-width: 380px;
+  margin: auto;
+  color: #f5e9e4;            /* tono claro para el texto */
+  font-family: "Georgia", serif;
+}
+
+.card-arco h2 {
+  font-size: 1.4em;
+  margin-top: 0.5em;
+  font-weight: normal;
+}
+
+.btn-confirm {
+  display: inline-block;
+  background: #ffffff;
+  padding: 0.7em 2em;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  margin-top: 1.5em;
+  font-family: sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.btn-confirm:hover {
+  background: #f2f2f2;
+}

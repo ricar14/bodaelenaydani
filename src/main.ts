@@ -376,6 +376,11 @@ function showMainSections() {
       sec.classList.remove('hidden');
     }
   });
+  // Asegura que el formulario esté oculto tras la invitación
+  const formSection = document.getElementById('form');
+  if (formSection) {
+    formSection.style.display = 'none';
+  }
 }
 
 async function getGuestsBackend() {
