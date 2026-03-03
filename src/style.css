@@ -1171,6 +1171,45 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   .confirm-content{ text-align:center; }
 }
 
+/* Enhanced visual styling to match the image look */
+.confirm-section {
+  background: linear-gradient(180deg, #fffaf6 0%, #fff7f0 100%);
+}
+.confirm-inner {
+  padding: clamp(1rem, 2.5vw, 2.4rem);
+  background: transparent;
+  align-items: stretch;
+  border-radius: 14px;
+}
+.confirm-image{
+  flex: 0 0 48%;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.confirm-content{
+  flex: 1 1 52%;
+  background: url('/img/fondo_papel.png') center/cover no-repeat, #fffaf6;
+  padding: clamp(1rem, 2.5vw, 2.4rem);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.confirm-content h2{
+  font-family: 'Playfair Display', serif;
+  color: #5a4632;
+  margin-bottom: 0.6rem;
+}
+.confirm-content p{ color: #5a4632; margin-bottom: 0.6rem; }
+.confirm-btn{ margin-top: 0.6rem; }
+
+@media (max-width: 720px){
+  .confirm-content{ background: transparent; box-shadow: none; padding: 0; }
+  .confirm-inner{ gap: 1rem; }
+}
+
 @media (max-width: 420px){
   section { min-height: auto; padding: 0.8rem; }
   .hero-rect { width: 94vw; padding: 1rem; margin: 0.6rem; }
