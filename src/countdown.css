@@ -258,10 +258,9 @@
   font-size: var(--sep-size);
   color: var(--muted);
   position: absolute;
-  left: 90%;
+  left: 100%;
   top: 50%;
   transform: translate(0, -50%);
-  margin-left: calc(var(--gap) / 2);
   pointer-events: none;
   z-index: 1;
 }
@@ -306,6 +305,22 @@
 #countdown-section .count-number,
 #countdown-section .count-label {
   color: #B3804B !important;
+}
+
+/* Alternativa para juntar aún más items + ':'
+   - Posiciona el ':' desde la derecha para que no dependa del ancho del item.
+   - Usa margen negativo en el item para solaparlos ligeramente.
+   - Ajusta `--sep-shift` y `--item-overlap` para cambiar la separación. */
+:root{ --sep-shift: 8px; --item-overlap: 6px; }
+
+#countdown-section .count-item{
+  margin-right: calc(-1 * var(--item-overlap)) !important; /* solapar ligeramente */
+}
+
+#countdown-section .count-item:not(:last-child)::after{
+  left: auto !important;
+  right: calc(0 * var(--sep-shift)) !important; /* acerca ':' al borde derecho */
+  transform: translate(0, -50%) !important;
 }
 
 /* ============================
