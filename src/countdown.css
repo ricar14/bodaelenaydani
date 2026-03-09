@@ -45,6 +45,7 @@
   /* Scale the whole section visually to 90% (keeps layout centered) */
   transform: scale(0.9);
   transform-origin: center center;
+  margin-bottom: 10em;
 }
 
 /* Inner: centro y limite de ancho */

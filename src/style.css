@@ -398,6 +398,53 @@ section {
   height: auto;
   pointer-events: none;
   z-index: 3;
+
+/* ============================
+   Top hero (nos-casamos) responsive images
+   - `.top-sunset` llena el ancho y usa `object-fit:cover` para recortar de forma elegante
+   - `.top-curve` se solapa con la imagen superior mediante margen negativo ajustable
+   ============================ */
+/* Full-bleed top hero: always span the viewport width */
+.top-hero{
+  width: 100vw;
+  max-width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+  display: block;
+  box-sizing: border-box;
+}
+
+.top-hero .top-sunset,
+.top-hero .top-curve{
+  width: 100vw;
+  max-width: 100vw;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+.top-hero .top-sunset{ max-height: 60vh; }
+
+:root{
+  --curve-overlap-lg: 150px; /* solapamiento en pantallas grandes */
+  --curve-overlap-md: 90px;  /* medios */
+  --curve-overlap-sm: 40px;  /* móviles */
+}
+
+.top-hero .top-curve{ margin-top: calc(-1 * var(--curve-overlap-lg)); }
+
+@media (max-width: 1024px){
+  .top-hero .top-sunset{ max-height: 50vh; }
+  .top-hero .top-curve{ margin-top: calc(-1 * var(--curve-overlap-md)); }
+}
+
+@media (max-width: 480px){
+  .top-hero .top-sunset{ max-height: 40vh; }
+  .top-hero .top-curve{ margin-top: calc(-1 * var(--curve-overlap-sm)); }
+}
 }
 
 @media (max-width: 520px){
@@ -484,6 +531,10 @@ footer {
     max-width: 90vw;
   }
 
+  #top-curve {
+    margin-top: -15em;
+  }
+
   .envelope p {
     font-size: 1.3em;
     margin-top: 1rem;
@@ -521,6 +572,7 @@ footer {
 #nos-casamos {
   position: relative;
   overflow: hidden;
+  margin-bottom: 10em;
 }
 
 /* Oscurecimiento muy suave para contraste del papel */
@@ -552,10 +604,7 @@ footer {
   z-index: 2;
   width: min(420px, 86vw);
   height: min(76vh, 820px);
-  background: #ffffff; /* card background */
   padding: 2rem 1.5rem;
-  border-radius: 14px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -568,15 +617,6 @@ footer {
 #nos-casamos .hero-rect .wedding-titles h2 {
   color: #3a2c1a;
   text-shadow: none;
-}
-
-@media (max-width: 600px) {
-  #nos-casamos .hero-rect {
-    width: 80vw;
-    height: auto;
-    padding: 1.4rem;
-    margin: 10rem;
-  }
 }
 
 #nos-casamos h1 {
@@ -597,7 +637,6 @@ footer {
 /* Wedding information section */
 #wedding-info {
   background: #f9f9f9;
-  margin-bottom: 8rem;
 }
 
 #wedding-info h2, #wedding-info p {
@@ -740,7 +779,7 @@ footer {
 body {
   font-family: 'Playfair Display', serif;
   color: #3a2c1a;
-  background: #fff8f0;
+  background-color: #FDFCF4 !important;
 }
 
 h1, h2, h3 {
@@ -765,8 +804,9 @@ section, p, label, input, button {
 }
 
 p, label {
-  font-size: 1.2em;
+  font-size: 1.5em;
   color: #5a4632;
+  font-family: 'Allura', cursive !important;
 }
 
 button {
@@ -877,9 +917,9 @@ input {
 .intro-text,
 .footer-text {
   font-family: 'Allura', cursive !important;
-  font-size: 1.35em;
+  font-size: 1.8em;
   line-height: 1.65;
-  color: #524534;
+  color: #B3804B;
   margin-top: 4em;
 }
 
@@ -927,8 +967,7 @@ input {
 
 /* Frase inferior */
 .footer-text {
-  font-size: 1.1em;
-  margin-top: 2rem;
+  font-size: 1.8em;
 }
 
 
@@ -1212,6 +1251,10 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   margin-bottom: 0.6rem;
 }
 
+#confirmacion-asistencia {
+  margin-bottom: 15em;
+}
+
 /* Estilos específicos para la tarjeta de confirmación con fondo arco */
 .confirm-content.card-arco{
   font-family: 'Great Vibes', cursive;
@@ -1258,6 +1301,33 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   .count-number { font-size: clamp(1.1rem, 6vw, 2.4rem); }
 }
 
+/* Fix: ensure top-hero is truly full-bleed on very small screens */
+@media (max-width: 420px){
+  .top-hero,
+  .top-hero .top-sunset,
+  .top-hero .top-curve {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    left: 25% !important;
+    right: 50% !important;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    bottom: 1em;
+  }
+
+  /* override section padding that reduces visible width */
+  #nos-casamos { padding-left: 0 !important; padding-right: 0 !important; }
+
+  .top-hero .top-sunset,
+  .top-hero .top-curve{
+    display: block !important;
+    object-fit: cover !important;
+    height: auto !important;
+  }
+}
+
 /* Wedding-info rectangle styled like confirmation card but red base */
 #wedding-info .wedding-rect {
   max-width: 640px;
@@ -1288,6 +1358,19 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 
 #wedding-info .wedding-rect .btn-rect:hover{ filter: brightness(.98); }
+
+/* Make .btn-rect reusable outside #wedding-info */
+.btn-rect{
+  display: inline-block;
+  background: #fff8f0;
+  color: #9f3a3a;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-rect:hover{ filter: brightness(.98); }
 
     /* Reglas específicas: asegurar que los elementos .meta.with-lines tengan
        una línea arriba y otra abajo que abarquen todo el ancho del elemento. */
@@ -1359,7 +1442,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 
 .card-arco h2 {
-  font-size: 1.4em;
   margin-top: 0.5em;
   font-weight: normal;
 }
@@ -1379,4 +1461,30 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 
 .btn-confirm:hover {
   background: #f2f2f2;
+}
+
+/* Global background for all sections (overrides previous 'none') */
+section {
+  background-color: #FDFCF4 !important;
+}
+
+/* Salon logo: force dark rendering and subtle shadow to increase contrast
+   Works for white SVGs loaded as <img>. Adjust --logo-darkness if needed. */
+.salon-logo{
+  display:block;
+  max-width: 64%;
+  height: auto;
+  margin: 0.8rem auto;
+  --logo-darkness: 0; /* 0 = black, 1 = original colors */
+  /* make white SVG appear dark and add shadow for legibility */
+  filter: brightness(0) saturate(100%) contrast(120%) drop-shadow(0 6px 18px rgba(0,0,0,0.28));
+  -webkit-filter: brightness(0) saturate(100%) contrast(120%) drop-shadow(0 6px 18px rgba(0,0,0,0.28));
+}
+
+@media (max-width:720px){
+  .salon-logo{ max-width: 80%; }
+}
+
+@media (max-width:420px){
+  .salon-logo{ max-width: 90%; }
 }

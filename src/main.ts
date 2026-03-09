@@ -172,7 +172,7 @@ if (invitationCard) {
   document.body.classList.add('no-scroll');
 } else {
   // si no hay invitation-card, mostrar las principales secciones por seguridad
-  const fallbackIds = ['nos-casamos', 'wedding-info', 'celebracion', 'form', 'foto-final', 'confirmacion-asistencia'];
+  const fallbackIds = ['nos-casamos', 'wedding-info', 'salon-celebraciones', 'celebracion', 'form', 'foto-final', 'confirmacion-asistencia'];
   fallbackIds.forEach(id => {
     const s = document.getElementById(id);
     if (s) s.style.display = 'flex';
@@ -364,6 +364,7 @@ function showMainSections() {
   const idsToShow = [
     'nos-casamos',
     'wedding-info',
+    'salon-celebraciones',
     'countdown-section',
     'celebracion',
     'foto-final',
