@@ -31,13 +31,20 @@
   --gap: 1.1rem;
 }
 
-/* Contenedor de sección (centrado) */
+/* Contenedor de sección (centrado) - usar imagen de corona como fondo base */
 #countdown-section {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 3.2rem 1.2rem;
-  background: transparent;
+  background-image: url('/img/corona.png') !important;
+  background-repeat: no-repeat !important;
+  /* Make the visible background image appear 90% of its original size */
+  background-size: 90% auto !important;
+  background-position: center center !important;
+  /* Scale the whole section visually to 90% (keeps layout centered) */
+  transform: scale(0.9);
+  transform-origin: center center;
 }
 
 /* Inner: centro y limite de ancho */
@@ -48,26 +55,50 @@
   flex-direction: column;
   align-items: center;
   --gap: 0.6rem;
-  --num-size: clamp(1.6rem, 4.8vw, 3rem);
+  --num-size: clamp(1.6rem, 5.8vw, 3rem);
   --sep-size: clamp(1.2rem, 3.6vw, 2.6rem);
-  /* Fondo papel para todo el contenedor interior (único fondo) */
-  background-image: url('/img/fondo_papel.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center top;
-  padding: 1.2rem 1.6rem; /* reducir padding para que la tarjeta no recorte demasiado */
-  border-radius: 14px;
-  /* aplicar recorte con muescas laterales a todo el contenedor interior */
-  clip-path: polygon(
-    0 0,
-    calc(var(--notch)) 50%,
-    0 100%,
-    100% 100%,
-    calc(100% - var(--notch)) 50%,
-    100% 0
-  );
+  /* Interior transparente para dejar ver completamente el fondo */
+  background: transparent;
+  backdrop-filter: none;
   overflow: hidden;
   position: relative;
+}
+
+/* Reducir el tamaño de .count-inner y su .count-grid un 80% (quedar al 20%) */
+#countdown-section .count-inner.reduce-80,
+#countdown-section .count-inner.reduce-80 .count-grid{
+  transform: scale(0.2);
+  transform-origin: center center;
+  /* asegurar que no recorte contenido al estar muy pequeño */
+  overflow: visible;
+}
+
+/* Variante: reducir ancho un 85% (quedar al 15%) para count-inner y sus items */
+#countdown-section .count-inner.reduce-85{
+  width: 15% !important;
+  max-width: none !important;
+  padding: 0.4rem !important;
+}
+
+#countdown-section .count-inner.reduce-85 .count-grid{
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#countdown-section .count-inner.reduce-85 .count-item{
+  flex: 0 0 calc(100% / 4);
+  min-width: 0;
+}
+
+#countdown-section .count-inner.reduce-85 .count-number{
+  font-size: calc(var(--num-size) * 0.5) !important;
+}
+
+#countdown-section .count-inner.reduce-85 .count-label{
+  font-size: calc(var(--label-size) * 0.8) !important;
 }
 
 /* Ensure inner content sits above the shadows */
@@ -150,7 +181,7 @@
   align-items: center;
   justify-content: center;
   width: auto;
-  min-width: 36px;
+  min-width: 50px;
   height: calc(var(--num-size) * 1.05); /* altura consistente para centrar */
   position: relative;
   overflow: hidden;             /* recortar las piezas durante la animación */
@@ -222,12 +253,12 @@
 /* Separadores grandes ":" como pseudo-elemento después de cada item excepto el último */
 .count-item:not(:last-child)::after{
   /* colocar ':' a la derecha del número, centrado verticalmente */
-  content: ":";
+  content: ":"; 
   font-family: var(--serif);
   font-size: var(--sep-size);
   color: var(--muted);
   position: absolute;
-  left: 100%;
+  left: 90%;
   top: 50%;
   transform: translate(0, -50%);
   margin-left: calc(var(--gap) / 2);
@@ -238,7 +269,7 @@
 /* Etiquetas (DÍAS, HORAS...) */
 .count-label{
   font-family: var(--system);
-  margin-top: 0.75rem;
+  margin-top: 0.55rem;
   font-size: var(--label-size);
   color: var(--muted);
   letter-spacing: 0.15em;
@@ -260,7 +291,7 @@
     overflow-x: auto;
   }
   .count-item:not(:last-child)::after{
-    top: 15px;
+    top: 13px;
     font-size: var(--sep-size);
   }
 }
@@ -271,6 +302,12 @@
 
 /* Nota: si quieres cambiar la muesca lateral ajusta --notch en :root. */
 
+/* Colores personalizados para contadores (sobrescriben reglas previas) */
+#countdown-section .count-number,
+#countdown-section .count-label {
+  color: #B3804B !important;
+}
+
 /* ============================
-   FIN CSS
-   ============================ */
+  FIN CSS
+  ============================ */

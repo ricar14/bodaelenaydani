@@ -402,7 +402,7 @@ section {
 
 @media (max-width: 520px){
   .foto-wrap{ width: 200vw; }
-  .foto-wrap .letras-overlay{ top: 2%; width: clamp(70px, 12%, 65px); }
+  .foto-wrap .letras-overlay{ top: 9%; width: clamp(70px, 12%, 65px); }
 }
 
 /* Ensure overlay appears in black & white */
@@ -948,10 +948,6 @@ input {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('/img/fondo_papel.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center top;
   z-index: 1; /* papel por encima del corner-decor */
   pointer-events: none;
 }
@@ -1034,14 +1030,6 @@ section,
 
 /* Asegurar que la sección pueda posicionar corner-decor */
 #nos-casamos { position: relative; }
-
-/* Fondo de papel para la sección 'nos-casamos' */
-#nos-casamos {
-  background-image: url('/img/fondo_papel.png');
-  background-repeat: no-repeat;
-  background-size: cover;       /* usar 'contain' si prefieres ajustar sin recortar */
-  background-position: center top;
-}
 
 
 .date-card{
@@ -1153,7 +1141,7 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 
 /* Countdown grid responsive tweaks */
 .count-grid {
-  gap: clamp(0.6rem, 1.5vw, 1.2rem);
+  gap: clamp(0rem, 0vw, 0rem);
 }
 
 /* Styles for the inserted confirmation section */
@@ -1211,7 +1199,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 .confirm-content{
   flex: 1 1 52%;
-  background: url('/img/fondo_papel.png') center/cover no-repeat, #fffaf6;
   padding: clamp(1rem, 2.5vw, 2.4rem);
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.06);
@@ -1270,6 +1257,37 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   .count-item { min-width: 44px; }
   .count-number { font-size: clamp(1.1rem, 6vw, 2.4rem); }
 }
+
+/* Wedding-info rectangle styled like confirmation card but red base */
+#wedding-info .wedding-rect {
+  max-width: 640px;
+  margin: 1.2rem auto;
+  padding: 1.2rem 1.4rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #c85b5b 0%, #9f3a3a 100%);
+  color: #fff;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.14);
+  text-align: center;
+}
+
+#wedding-info .wedding-rect h2 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+  color: #fff;
+}
+
+#wedding-info .wedding-rect p { margin: 0.2rem 0; color: rgba(255,255,255,0.95); }
+
+#wedding-info .wedding-rect .btn-rect {
+  background: #fff8f0;
+  color: #9f3a3a;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  text-decoration: none;
+}
+
+#wedding-info .wedding-rect .btn-rect:hover{ filter: brightness(.98); }
 
     /* Reglas específicas: asegurar que los elementos .meta.with-lines tengan
        una línea arriba y otra abajo que abarquen todo el ancho del elemento. */
