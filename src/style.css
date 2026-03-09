@@ -637,6 +637,11 @@ footer {
 /* Wedding information section */
 #wedding-info {
   background: #f9f9f9;
+  margin-bottom: 3rem;
+}
+
+#salon-celebraciones {
+  margin-bottom: 10rem;
 }
 
 #wedding-info h2, #wedding-info p {
