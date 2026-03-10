@@ -26,6 +26,28 @@
     .suggest-card form { width:100%; display:flex; flex-direction:column; gap:0.6rem; }
     .suggest-card input[type="text"], .suggest-card input[type="url"], .suggest-card input[type="number"], .suggest-card textarea { width:100%; padding:0.6rem 0.8rem; border-radius:8px; border:1px solid #e6e6e6; }
     @media (max-width:600px){ .suggest-top-img{ width:120px; top:-70px } .suggest-card{ padding:2.2rem 1rem 1.2rem } }
+    /* Carrusel de imágenes */
+    #carousel-section .carousel-wrapper { position:relative; width:100%; max-width:1100px; height:38vh; max-height:520px; overflow:hidden; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.12); }
+    #carousel-section .slides { position:relative; width:100%; height:100%; }
+    #carousel-section .slide { position:absolute; inset:0; opacity:0; transition:opacity 0.6s ease; display:flex; align-items:center; justify-content:center; }
+    #carousel-section .slide.active { opacity:1; z-index:2; }
+    #carousel-section .slide img { width:100%; height:100%; object-fit:cover; display:block; }
+    #carousel-section .carousel-dots { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:3; }
+    #carousel-section .carousel-dot { width:11px; height:11px; border-radius:50%; background:rgba(255,255,255,0.65); border:none; padding:0; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,0.15); }
+    #carousel-section .carousel-dot.active { background:#b48a78; }
+    @media (max-width:600px) { #carousel-section .carousel-wrapper { height:28vh; } }
+    /* Título del carrusel: asegurar visibilidad sobre las imágenes */
+    #carousel-section .title {
+      position: relative;
+      z-index: 999;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+      text-align: center;
+      margin: 0 0 1rem 0;
+      padding: 0.2rem 0.6rem;
+    }
   </style>
 </head>
 <body>
@@ -114,6 +136,48 @@
         <a href="#sugerir-cancion" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Sugerir Canción</a>
       </div>
     </section>
+
+    <!-- Sección: Carrusel de imágenes (auto-advance cada 3s) -->
+    <section id="carousel-section" class="full-screen" style="display:flex;align-items:center;justify-content:center;padding:2rem 1rem;margin-bottom:2rem;">
+      <img src="/img/fotos.png" alt="Fotos" class="title">
+      <div class="carousel-wrapper">
+        <div class="slides">
+          <div class="slide active"><img src="/img/1.jpg" alt=""></div>
+          <div class="slide"><img src="/img/2.jpg" alt=""></div>
+          <div class="slide"><img src="/img/3.jpg" alt=""></div>
+          <div class="slide"><img src="/img/4.jpg" alt=""></div>
+        </div>
+        <div class="carousel-dots" aria-hidden="true"></div>
+      </div>
+    </section>
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        var slides = document.querySelectorAll('#carousel-section .slide');
+        if (!slides || slides.length === 0) return;
+        var dotsContainer = document.querySelector('#carousel-section .carousel-dots');
+        var current = 0;
+        slides.forEach(function(s, i){
+          var dot = document.createElement('button');
+          dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+          dot.dataset.index = i;
+          dotsContainer.appendChild(dot);
+          dot.addEventListener('click', function(){ showSlide(parseInt(this.dataset.index)); resetTimer(); });
+        });
+        function showSlide(idx){
+          slides.forEach(function(s,i){ s.classList.toggle('active', i === idx); });
+          Array.from(dotsContainer.children).forEach(function(d,i){ d.classList.toggle('active', i === idx); });
+          current = idx;
+        }
+        function nextSlide(){ showSlide((current + 1) % slides.length); }
+        var timer = setInterval(nextSlide, 3000);
+        function resetTimer(){ clearInterval(timer); timer = setInterval(nextSlide, 3000); }
+        var wrapper = document.querySelector('#carousel-section .carousel-wrapper');
+        if (wrapper) {
+          wrapper.addEventListener('mouseenter', function(){ clearInterval(timer); });
+          wrapper.addEventListener('mouseleave', function(){ resetTimer(); });
+        }
+      });
+    </script>
 
     <section id="sugerir-cancion" class="full-screen">
       <div class="suggest-card">
