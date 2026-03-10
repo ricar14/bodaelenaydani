@@ -37,7 +37,7 @@
   align-items: center;
   justify-content: center;
   padding: 3.2rem 1.2rem;
-  background-image: url('/img/corona.png') !important;
+  background-image: url('/img/contador.png') !important;
   background-repeat: no-repeat !important;
   /* Make the visible background image appear 90% of its original size */
   background-size: 90% auto !important;
@@ -319,8 +319,7 @@
 }
 
 #countdown-section .count-item:not(:last-child)::after{
-  left: auto !important;
-  right: calc(0 * var(--sep-shift)) !important; /* acerca ':' al borde derecho */
+  left: 2.5em !important;
   transform: translate(0, -50%) !important;
 }
 

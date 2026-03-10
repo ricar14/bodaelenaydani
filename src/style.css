@@ -399,6 +399,38 @@ section {
   pointer-events: none;
   z-index: 3;
 
+
+/* Fiesta animation container */
+.content-anim-fiesta{
+  width: 140px;
+  height: 140px;
+  margin: 0.5rem auto;
+}
+.anim-musica{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.anim-musica svg{ display:block; width:100%; height:100%; }
+
+/* Simple float animation applied to the svg's top-level groups */
+.anim-musica svg > g,
+.anim-musica svg g {
+  transform-origin: 50% 50%;
+  animation: fiestaFloat 4.8s ease-in-out infinite;
+}
+
+@keyframes fiestaFloat{
+  0% { transform: translateY(0px) rotate(0deg); }
+  45% { transform: translateY(-8px) rotate(1.2deg); }
+  55% { transform: translateY(-6px) rotate(-1.2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* Prevent SVG from capturing pointer events that block clicks */
+.anim-musica svg { pointer-events: none; }
 /* ============================
    Top hero (nos-casamos) responsive images
    - `.top-sunset` llena el ancho y usa `object-fit:cover` para recortar de forma elegante
@@ -532,7 +564,7 @@ footer {
   }
 
   #top-curve {
-    margin-top: -15em;
+    margin-top: -17em;
   }
 
   .envelope p {
@@ -637,7 +669,7 @@ footer {
 /* Wedding information section */
 #wedding-info {
   background: #f9f9f9;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 #salon-celebraciones {
@@ -839,6 +871,71 @@ input {
   background: #fffaf6;
 }
 
+/* ===== RSVP form layout helpers ===== */
+#rsvp-form .attendance{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.25rem 0 1rem;
+}
+
+/* Force Playfair Display for all text inside the RSVP form */
+#rsvp-form, #rsvp-form * {
+  font-family: 'Playfair Display', serif !important;
+}
+
+/* Ensure placeholder text uses Playfair as well */
+#rsvp-form ::placeholder {
+  font-family: 'Playfair Display', serif;
+  opacity: 0.7;
+}
+
+#rsvp-form .attendance input[type="checkbox"]{
+  transform: scale(1.05);
+  margin: 0 0.15rem 0 0;
+}
+
+#rsvp-form .inline-controls{
+  display: flex;
+  gap: 1.75rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin: 0.8rem 0;
+  width: 100%;
+  max-width: 720px;
+}
+
+#rsvp-form .control-block{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#rsvp-form .control-options{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#rsvp-form input[type="radio"],
+#rsvp-form input[type="checkbox"]{
+  margin-right: 0.25rem;
+}
+
+#alcohol-no{
+  margin-left: 0.25rem;
+}
+#bus-no{
+  margin-left: 0.25rem;
+}
+
+@media (max-width: 520px){
+  #rsvp-form .inline-controls{ flex-direction: column; gap: 0.6rem; }
+  #rsvp-form .control-block{ width: 100%; justify-content: center; }
+}
+
 .wedding-titles {
   position: relative;
   z-index: 2;
@@ -922,10 +1019,12 @@ input {
 .intro-text,
 .footer-text {
   font-family: 'Allura', cursive !important;
-  font-size: 1.8em;
+  font-size: 2.8em;
+  font-weight: 400;
   line-height: 1.65;
   color: #B3804B;
-  margin-top: 4em;
+  margin-top: 0.7em;
+  text-align: center;
 }
 
 .small-title {
@@ -972,7 +1071,7 @@ input {
 
 /* Frase inferior */
 .footer-text {
-  font-size: 1.8em;
+  font-size: 2.8em;
 }
 
 
@@ -1333,6 +1432,62 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   }
 }
 
+/* Large textarea for important notes */
+.large-text{
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #b48a78;
+  background: #fffaf6;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif;
+}
+
+/* Fiesta section styles */
+#fiesta {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.fiesta-image{
+  width: 220px;
+  max-width: 60%;
+  height: auto;
+  display: block;
+  margin: 1rem auto 0.6rem;
+}
+
+/* Suggest song form styles reuse form defaults but slightly larger */
+#sugerir-cancion form {
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#sugerir-cancion input {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #b48a78;
+  background: #fffaf6;
+}
+
+#sugerir-cancion button {
+  margin-top: 0.6rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  border: none;
+  background: #b48a78;
+  color: #fff;
+}
+
+@media (max-width: 520px){
+  .fiesta-image{ width: 48%; }
+}
+
 /* Wedding-info rectangle styled like confirmation card but red base */
 #wedding-info .wedding-rect {
   max-width: 640px;
@@ -1492,4 +1647,25 @@ section {
 
 @media (max-width:420px){
   .salon-logo{ max-width: 90%; }
+}
+
+#titulo-form-confirmacion {
+  font-family: 'Playfair Display', serif !important;
+}
+
+.p-fiesta {
+  font-family: 'Playfair Display', serif !important;
+}
+
+#h-fiesta {
+  font-size: 4.5em !important;
+}
+
+#id-musica {
+  font-family: 'Playfair Display', serif !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.8em;    
+  margin-bottom: -0.5em;
+  margin-top: 2em;
 }
