@@ -35,6 +35,55 @@
   flex-wrap: nowrap;
 }
 
+/* Render the PNG content in a single terracotta color while keeping transparent background intact.
+   Approach: keep the original <img> for sizing/accessibility but hide it visually, and paint
+   a masked layer (using the same PNG) filled with the exact color. This ensures only the
+   non-transparent pixels receive the color #c15123 and the transparent background remains untouched. */
+.names-image-wrap{
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 860px;
+}
+.names-image-wrap .names-image{
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0; /* keep image in DOM for layout and alt text, but hide visual content only when wrapped */
+}
+.names-image-wrap::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #c15123; /* exact terracotta color requested */
+  -webkit-mask-image: url('/img/nombres_personaliz.png');
+  mask-image: url('/img/nombres_personaliz.png');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.names-overlay{
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  color: #c15123;
+  font-family: wfont_25822f_742283984906494d857b784be3c912ce, wf_742283984906494d857b784be, orig_geographica_script_w_01_regular, 'Great Vibes', cursive;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+}
+
 .names-block .name{
   font-family: var(--fallback-serif);
   font-weight: 400;
@@ -604,7 +653,6 @@ footer {
 #nos-casamos {
   position: relative;
   overflow: hidden;
-  margin-bottom: 10em;
 }
 
 /* Oscurecimiento muy suave para contraste del papel */
@@ -669,11 +717,12 @@ footer {
 /* Wedding information section */
 #wedding-info {
   background: #f9f9f9;
-  margin-bottom: 2rem;
+  /* Reduce extra gap below wedding-info so next section aligns visually */
+  margin-bottom: 1.2rem;
 }
 
-#salon-celebraciones {
-  margin-bottom: 10rem;
+#itinerario {
+  background: #f9f9f9;
 }
 
 #wedding-info h2, #wedding-info p {
@@ -817,6 +866,7 @@ body {
   font-family: 'Playfair Display', serif;
   color: #3a2c1a;
   background-color: #FDFCF4 !important;
+  /* background-color: #dcd6ca !important; */
 }
 
 h1, h2, h3 {
@@ -1035,7 +1085,7 @@ input {
 }
 
 /* Bloque de nombres: estilos solicitados (Playfair Display + Allura) */
-.names-block { margin: 1.2rem 0 0.8rem; }
+.names-block { margin: -0.8rem; }
 
 .name {
   font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -1626,6 +1676,7 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 /* Global background for all sections (overrides previous 'none') */
 section {
   background-color: #FDFCF4 !important;
+  /* background-color: #dcd6ca !important; */
 }
 
 /* Salon logo: force dark rendering and subtle shadow to increase contrast
@@ -1634,7 +1685,8 @@ section {
   display:block;
   max-width: 64%;
   height: auto;
-  margin: 0.8rem auto;
+  /* Reduce vertical margin to better match spacing of other sections */
+  margin: 0.4rem auto;
   --logo-darkness: 0; /* 0 = black, 1 = original colors */
   /* make white SVG appear dark and add shadow for legibility */
   filter: brightness(0) saturate(100%) contrast(120%) drop-shadow(0 6px 18px rgba(0,0,0,0.28));
