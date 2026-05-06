@@ -37,16 +37,20 @@ const observer = new IntersectionObserver(
 
 fadeInElements.forEach((el) => observer.observe(el));
 
-// DEBUG: mostrar la URL de la API que // Puzzle and Invitation logic
-const puzzleGateEl = document.getElementById("puzzle-gate");
-const puzzleBoardEl = document.getElementById("puzzle-board");
-const resetPuzzleBtnEl = document.getElementById("reset-puzzle");
+// Puzzle initialization helper: ensure the puzzle is created when needed.
+function initPuzzleIfNeeded() {
+  if ((window as any).setupPuzzle) return; // already initialized
 
-if (puzzleBoardEl && puzzleGateEl && resetPuzzleBtnEl) {
-  const puzzleBoard = puzzleBoardEl as HTMLElement;
-  const resetPuzzleBtn = resetPuzzleBtnEl as HTMLButtonElement;
+  const puzzleGate = document.getElementById("puzzle-gate");
+  const puzzleBoardElLocal = document.getElementById("puzzle-board");
+  const resetPuzzleBtnElLocal = document.getElementById("reset-puzzle");
+
+  if (!(puzzleBoardElLocal && puzzleGate && resetPuzzleBtnElLocal)) return;
+
+  const puzzleBoard = puzzleBoardElLocal as HTMLElement;
+  const resetPuzzleBtn = resetPuzzleBtnElLocal as HTMLButtonElement;
   const SIZE = 3; // 3x3
-  const PIECE_SIZE = 106; // 320/3 ≈ 106.6, para que encaje bien en el canvas de 320px
+  const PIECE_SIZE = 106;
   let pieces: number[] = [];
   let draggingIndex: number | null = null;
 
@@ -74,12 +78,12 @@ if (puzzleBoardEl && puzzleGateEl && resetPuzzleBtnEl) {
       piece.style.position = 'absolute';
       piece.style.left = `${(i % SIZE) * PIECE_SIZE}px`;
       piece.style.top = `${Math.floor(i / SIZE) * PIECE_SIZE}px`;
-      piece.style.backgroundImage = "url('/img/IMG-20260101-WA0000.jpg')";
+      piece.style.backgroundImage = "url('/img/nuestra-historia.png')";
       piece.style.backgroundSize = `${SIZE * PIECE_SIZE}px ${SIZE * PIECE_SIZE}px`;
       piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
       piece.dataset.index = i.toString();
       piece.dataset.piece = idx.toString();
-      // Drag & drop para escritorio
+
       piece.addEventListener('dragstart', () => {
         draggingIndex = i;
         piece.classList.add('dragging');
@@ -96,14 +100,10 @@ if (puzzleBoardEl && puzzleGateEl && resetPuzzleBtnEl) {
         if (draggingIndex !== null && draggingIndex !== i) {
           [pieces[draggingIndex], pieces[i]] = [pieces[i], pieces[draggingIndex]];
           renderPuzzle();
-          if (isSolved()) {
-            setTimeout(() => {
-              puzzleSolved();
-            }, 300);
-          }
+          if (isSolved()) setTimeout(puzzleSolved, 300);
         }
       });
-      // Touch events para móvil (fluido, sin retardo)
+
       let touchDragging = false;
       piece.addEventListener('touchstart', (e) => {
         if (e.touches.length !== 1) return;
@@ -131,13 +131,10 @@ if (puzzleBoardEl && puzzleGateEl && resetPuzzleBtnEl) {
         touchDragging = false;
         piece.classList.remove('dragging');
         draggingIndex = null;
-        if (isSolved()) {
-          setTimeout(() => {
-            puzzleSolved();
-          }, 300);
-        }
+        if (isSolved()) setTimeout(puzzleSolved, 300);
         e.preventDefault();
       }, {passive: false});
+
       puzzleBoard.appendChild(piece);
     }
   }
@@ -155,10 +152,30 @@ if (puzzleBoardEl && puzzleGateEl && resetPuzzleBtnEl) {
   }
 
   setupPuzzle();
+  (window as any).setupPuzzle = setupPuzzle;
+  (window as any).puzzleInitialized = true;
 }
+
+// Try to initialize puzzle on load in case DOM had the elements ready
+initPuzzleIfNeeded();
+// Global arrays used to decide which sections to show after invitation/puzzle
+const FALLBACK_IDS = [
+  'nos-casamos',
+  'wedding-info',
+  'salon-celebraciones',
+  'celebracion',
+  'fiesta',
+  'foto-final',
+  'confirmacion-asistencia',
+  'nuestra-historia',
+  'itinerario',
+  'spotify'
+];
 const invitationCard = document.querySelector("#invitation-card") as HTMLElement;
 const envelopeAnim = document.getElementById("envelope-anim");
 const sobreAnimadoEl = document.getElementById("sobreAnimado") as HTMLElement | null;
+// Element reference for the puzzle gate (used when revealing the invitation)
+const puzzleGateEl = document.getElementById("puzzle-gate");
 
 // Mostrar sólo la invitación al cargar; ocultar el resto
 const sections = document.querySelectorAll('section');
@@ -189,9 +206,9 @@ function puzzleSolved() {
     gate.classList.add('puzzle-success');
   setTimeout(() => {
     gate.classList.remove('puzzle-success');
-    // Forzar reflow para asegurar que la animación se aplica
+    // Forzar reflow y aplicar nueva clase de desvanecimiento
     void gate.offsetWidth;
-    gate.classList.add('fade-out');
+    gate.classList.add('desvanecer');
 
     let finished = false;
     const showSections = () => {
@@ -204,17 +221,29 @@ function puzzleSolved() {
       }
       // ensure scrolling unlocked when revealing sections
       document.body.classList.remove('no-scroll');
-      // Mostrar todos los sections excepto invitation-card y puzzle-gate
-      document.querySelectorAll('section').forEach(sec => {
-        if (sec.id !== 'puzzle-gate' && sec.id !== 'invitation-card') {
+      // Mostrar secciones definidas en las listas (FALLBACK_IDS + IDS_TO_SHOW)
+      const toShow = Array.from(new Set([...(FALLBACK_IDS || []),
+        'nos-casamos',
+      ]));
+      // ensure IDS_TO_SHOW exists in this scope
+      const idsToShowLocal = [
+        'nos-casamos','wedding-info','nuestra-historia','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','foto-final'
+      ];
+      const union = Array.from(new Set([...(FALLBACK_IDS || []), ...idsToShowLocal]));
+      union.forEach(id => {
+        const sec = document.getElementById(id);
+        if (sec) {
           sec.classList.remove('hidden');
           sec.style.removeProperty('display');
           sec.style.display = 'flex';
-        } else {
-          sec.classList.add('hidden');
-          sec.style.display = 'none';
         }
       });
+      // Hide the form-related back button if present
+      const backBtn = document.getElementById('back-from-form');
+      if (backBtn) backBtn.style.display = 'none';
+      // Hide invitation-card and puzzle-gate specifically
+      const inv = document.getElementById('invitation-card'); if (inv) { inv.classList.add('hidden'); inv.style.display='none'; }
+      const pg = document.getElementById('puzzle-gate'); if (pg) { pg.classList.add('hidden'); pg.style.display='none'; }
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     // Fallback por si transitionend no se dispara
@@ -243,8 +272,18 @@ if (envelopeAnim && sobreAnimadoEl && invitationCard) {
       if (sobreAnimadoEl && (sobreAnimadoEl instanceof HTMLMediaElement)) {
         try { sobreAnimadoEl.pause(); } catch (e) { /* noop */ }
       }
-      // Show the main site sections (excluding the invitation and the standalone form)
-      showMainSections();
+      // Show the puzzle gate first (if present). If not, fall back to showing main sections.
+      if (puzzleGateEl) {
+        // Ensure puzzle is initialized before showing the gate
+        try { initPuzzleIfNeeded(); } catch (e) { /* noop */ }
+        puzzleGateEl.classList.remove('hidden');
+        // Use flex when section is full-screen-like, otherwise block
+        puzzleGateEl.style.display = puzzleGateEl.classList.contains('full-screen') ? 'flex' : 'block';
+        // Ensure it's visible at the top
+        puzzleGateEl.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        showMainSections();
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 300);
   };
@@ -362,7 +401,7 @@ if (backFromFormBtn) {
 
 // Reusable helper to show the primary sections shown after invitation
 function showMainSections() {
-  const idsToShow = [
+  const IDS_TO_SHOW = [
     'nos-casamos',
     'wedding-info',
     'nuestra-historia',
@@ -375,7 +414,7 @@ function showMainSections() {
     'spotify',
     'foto-final'
   ];
-  idsToShow.forEach(id => {
+  IDS_TO_SHOW.forEach(id => {
     const sec = document.getElementById(id);
     if (sec) {
       sec.style.display = 'flex';
