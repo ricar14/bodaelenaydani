@@ -769,8 +769,8 @@ footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 19%;
-  height: 50px;
+  width: 17%;
+  height: 3em;
   border-radius: 50%;
   background: #d7a08b; /* terracotta background so icon in off-white stands out */
   color: #FDFCF4; /* icon color as requested */
@@ -788,6 +788,50 @@ footer {
   /* ensure images inside the card are centered and visible on terracotta */
   margin: 0 auto;
   display: block;
+}
+
+/* Move only the button wrappers up without changing layout or sizes of confirm-inner */
+#wedding-info .confirm-content{ position: relative; overflow: visible; }
+#wedding-info .confirm-content .map-wrap{
+  position: relative; /* keep in flow but allow transform visual shift */
+  transform: translateY(-2.6rem);
+  transition: transform 180ms ease;
+}
+@media (max-width: 720px){
+  #wedding-info .confirm-content .map-wrap{ transform: translateY(-2rem); }
+}
+
+/* Empujar hacia abajo todo el contenido dentro de la tarjeta 'card-arco' solo en la sección de wedding-info */
+#wedding-info .confirm-content.card-arco{
+  padding-top: 2.6rem; /* baja el contenido dentro del óvalo */
+  transition: padding-top 200ms ease;
+}
+@media (max-width: 720px){
+  #wedding-info .confirm-content.card-arco{ padding-top: 6.4rem; }
+}
+
+/* Tintar imágenes dentro de #wedding-info a terracota (mejor visibilidad sobre el fondo) */
+#wedding-info .names-image{
+  /* filtros para aproximar color terracota #c15123 */
+  filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
+  -webkit-filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
+  mix-blend-mode: normal;
+  display: block;
+  max-width: 92%;
+  height: auto;
+}
+#wedding-info .salon-logo{
+  /* filtros para aproximar color terracota #c15123 */
+  filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
+  -webkit-filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
+  mix-blend-mode: normal;
+  display: block;
+  max-width: 92%;
+  height: auto;
+}
+@media (max-width: 720px){
+  #wedding-info .names-image,
+  #wedding-info .salon-logo{ max-width: 96%; }
 }
 
 /* Quick tint: make images inside the wedding card appear in an off-white tone (#FDFCF4) */
@@ -1718,13 +1762,19 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 
 
 .card-arco {
-  background: #c15123;       /* color vino / terracota */
-  padding: 2.5em 2em;
+  /* Oval visual: use logo-limpio.png centered inside the oval */
+  background: url('/img/logo-limpio.png') center center / contain no-repeat;
+  padding: clamp(1.6rem, 4.5vw, 3rem) clamp(1rem, 3.2vw, 2.5rem);
   text-align: center;
-  border-radius: 150px 150px 20px 20px; /* semicirculo arriba */
-  max-width: 380px;
+  border-radius: 9999px / 50%; /* make the box an ellipse */
+  width: 100%;
+  max-width: 820px;
+  min-height: 220px; /* ensure enough vertical space for an oval look */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: auto;
-  color: #f5e9e4;            /* tono claro para el texto */
+  color: #c15123;            /* tono claro para el texto */
   font-family: "Georgia", serif;
 }
 
@@ -1756,19 +1806,15 @@ section {
   /* background-color: #dcd6ca !important; */
 }
 
-/* Salon logo: force dark rendering and subtle shadow to increase contrast
-   Works for white SVGs loaded as <img>. Adjust --logo-darkness if needed. */
+/* Salon logo: render in terracotta #9f3a3a using filters (approximate) */
 .salon-logo{
   display:block;
   max-width: 64%;
   height: auto;
-  /* Reduce vertical margin to better match spacing of other sections */
   margin: 0.4rem auto;
-  --logo-darkness: 0; /* 0 = black, 1 = original colors */
-  /* make white SVG appear dark and add shadow for legibility */
-  /* Quick tint to approximate #c15123 using CSS filters (fast, approximate) */
-  filter: invert(40%) sepia(76%) saturate(170%) hue-rotate(343deg) brightness(119%) contrast(87%);
-  -webkit-filter: invert(40%) sepia(76%) saturate(170%) hue-rotate(343deg) brightness(119%) contrast(87%);
+  /* tint toward #9f3a3a */
+  filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
+  -webkit-filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
 }
 
 @media (max-width:720px){
@@ -1782,10 +1828,11 @@ section {
 /* Quick tint for general names images to approximate #c15123 */
 .names-image{
   display: block;
-  width: 100%;
+  width: 76%;
   height: auto;
-  filter: invert(6%) sepia(152%) saturate(77%) hue-rotate(343deg) brightness(144%) contrast(100%);
-  -webkit-filter: invert(6%) sepia(152%) saturate(77%) hue-rotate(343deg) brightness(144%) contrast(100%);
+  /* tint toward #9f3a3a */
+  filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
+  -webkit-filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
 }
 .itinerario-image{
   display: block;
@@ -1859,4 +1906,12 @@ section.full-screen {
   section.full-screen {
     padding-top: clamp(0.6rem, 2vw, 1rem) !important;
   }
+}
+
+.confirm-inner {
+  width: 112%;
+}
+
+.salon-logo {
+  width: 40%;
 }

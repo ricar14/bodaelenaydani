@@ -172,7 +172,7 @@ if (invitationCard) {
   document.body.classList.add('no-scroll');
 } else {
   // si no hay invitation-card, mostrar las principales secciones por seguridad
-  const fallbackIds = ['nos-casamos', 'wedding-info', 'salon-celebraciones', 'celebracion', 'fiesta', 'form', 'foto-final', 'confirmacion-asistencia'];
+  const fallbackIds = ['nos-casamos', 'wedding-info', 'salon-celebraciones', 'celebracion', 'fiesta', 'form', 'foto-final', 'confirmacion-asistencia', 'nuestra-historia'];
   fallbackIds.push('itinerario','spotify'); // Include 'itinerario' in fallbackIds
   fallbackIds.forEach(id => {
     const s = document.getElementById(id);
@@ -365,6 +365,7 @@ function showMainSections() {
   const idsToShow = [
     'nos-casamos',
     'wedding-info',
+    'nuestra-historia',
     'itinerario',
     'salon-celebraciones',
     'countdown-section',
