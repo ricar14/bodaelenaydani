@@ -222,9 +222,6 @@ function puzzleSolved() {
       // ensure scrolling unlocked when revealing sections
       document.body.classList.remove('no-scroll');
       // Mostrar secciones definidas en las listas (FALLBACK_IDS + IDS_TO_SHOW)
-      const toShow = Array.from(new Set([...(FALLBACK_IDS || []),
-        'nos-casamos',
-      ]));
       // ensure IDS_TO_SHOW exists in this scope
       const idsToShowLocal = [
         'nos-casamos','wedding-info','nuestra-historia','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','foto-final'
