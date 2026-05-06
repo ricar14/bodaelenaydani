@@ -719,7 +719,7 @@ footer {
 #wedding-info {
   background: #f9f9f9;
   /* Reduce extra gap below wedding-info so next section aligns visually */
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.2rem;
 }
 
 #itinerario {
@@ -1529,6 +1529,10 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   margin-bottom: 15em;
 }
 
+#confirmacion-asistencia2 {
+  margin-bottom: 10em;
+}
+
 /* Estilos específicos para la tarjeta de confirmación con fondo arco */
 .confirm-content.card-arco{
   font-family: 'Great Vibes', cursive;
@@ -1783,6 +1787,17 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   font-weight: normal;
 }
 
+
+/* Mejorar contraste de la silueta dentro de card-arco2 */
+.confirm-content.card-arco2 img.silueta-sobre{
+  filter: contrast(150%) brightness(1.05) saturate(120%);
+  -webkit-filter: contrast(150%) brightness(1.05) saturate(120%);
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35)) contrast(140%) brightness(2.05) saturate(120%);
+  width: 32%;
+  height: auto;
+  display: block;
+  margin: 0.2em auto;
+}
 .btn-confirm {
   display: inline-block;
   background: #ffffff;
@@ -1915,3 +1930,56 @@ section.full-screen {
 .salon-logo {
   width: 40%;
 }
+
+.card-arco2 {
+  background-color: #9a4d4b; /* fallback color */
+  background-image: url('/img/fondo-terracota.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  /* padding original; pseudo-element se separa 0.2em del borde */
+  padding: 2.5em 2em;
+  text-align: center;
+  border-radius: 150px 150px 20px 20px; /* semicirculo arriba */
+  max-width: 380px;
+  margin: auto;
+  color: #ffffff;            /* letras blancas */
+  font-family: "Georgia", serif;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Pseudo-elemento para el trazo interior: separación 0.2em y línea fina */
+.card-arco2::before{
+  content: "";
+  position: absolute;
+  inset: 0.5em; /* distancia desde el borde de la caja */
+  border-radius: inherit;
+  border: 1px solid #c15123;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.card-arco2 h2 {
+  margin-top: 1.5em;
+  font-weight: normal;
+  color: #ffffff;
+}
+
+.confirm-content.card-arco2 .confirm-btn,
+.confirm-content.card-arco2 .btn-confirm{
+  background: rgba(255,255,255,0.10);
+  color: white; /* terracota text for button label */
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 0.5em 1em;
+  border-radius: 12px;
+  text-decoration: none;
+  display: block;
+  width: 50%;
+  box-sizing: border-box;
+  margin: 0.75rem auto 0; /* centered and spaced from content above */
+  text-align: center;
+}
+.confirm-content p{ color: #5a4632; margin-bottom: 0.6rem; }
+.confirm-content.card-arco2 p { color: #ffffff; }
+.confirm-content.card-arco2 strong { color: #ffffff; }
+.confirm-btn{ margin-top: 0.6rem; }
