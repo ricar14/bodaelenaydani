@@ -173,7 +173,7 @@ if (invitationCard) {
 } else {
   // si no hay invitation-card, mostrar las principales secciones por seguridad
   const fallbackIds = ['nos-casamos', 'wedding-info', 'salon-celebraciones', 'celebracion', 'fiesta', 'form', 'foto-final', 'confirmacion-asistencia'];
-  fallbackIds.push('itinerario'); // Include 'itinerario' in fallbackIds
+  fallbackIds.push('itinerario','spotify'); // Include 'itinerario' in fallbackIds
   fallbackIds.forEach(id => {
     const s = document.getElementById(id);
     if (s) s.style.display = 'flex';
@@ -368,10 +368,11 @@ function showMainSections() {
     'itinerario',
     'salon-celebraciones',
     'countdown-section',
-    'celebracion',
+    'celebracion',,
+    'confirmacion-asistencia',
     'fiesta',
-    'foto-final',
-    'confirmacion-asistencia'
+    'spotify',
+    'foto-final'
   ];
   idsToShow.forEach(id => {
     const sec = document.getElementById(id);

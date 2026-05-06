@@ -70,8 +70,9 @@
 
 .names-overlay{
   position: absolute;
+  width: 80%;
   left: 50%;
-  top: 18%;
+  top: 19%;
   transform: translate(-50%, -50%);
   z-index: 2;
   color: #c15123;
@@ -613,7 +614,7 @@ footer {
   }
 
   #top-curve {
-    margin-top: -17em;
+    margin-top: -15em;
   }
 
   .envelope p {
@@ -723,6 +724,81 @@ footer {
 
 #itinerario {
   background: #f9f9f9;
+}
+
+/* Terracotta card that wraps wedding-info contents
+   - occupies 90% width, centered
+   - solid terracotta background (#c15123)
+   - top-right semicircle decorative element
+   - bottom edge remains straight (rectangle)
+*/
+.wedding-card{
+  /* Match .confirm-inner: centered box with rounded corners and shadow */
+  width: 100%;
+  max-width: 1100px;
+  margin: 1.2rem auto;
+  background: #c15123;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(1rem, 2.5vw, 2.4rem) 1.2rem;
+  box-sizing: border-box;
+  position: relative;
+  overflow: visible;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  min-height: 280px;
+}
+
+.wedding-card::before{
+  /* disabled: using confirm-inner style instead of semicircular roof */
+  display: none;
+}
+
+.wedding-card .btn-primary{
+  background: #ffffff !important;
+  color: #5a4632 !important;
+  border: none !important;
+}
+
+/* Circular map button used inside the wedding-info card */
+.map-circle-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19%;
+  height: 50px;
+  border-radius: 50%;
+  background: #d7a08b; /* terracotta background so icon in off-white stands out */
+  color: #FDFCF4; /* icon color as requested */
+  text-decoration: none;
+  border: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  font-size: 1.25rem; /* icon size */
+}
+.map-circle-btn:hover{ transform: translateY(-3px); box-shadow: 0 10px 26px rgba(0,0,0,0.16); }
+.map-circle-btn:active{ transform: translateY(0); }
+.map-circle-btn .visually-hidden{ position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+.wedding-card .names-image{
+  /* ensure images inside the card are centered and visible on terracotta */
+  margin: 0 auto;
+  display: block;
+}
+
+/* Quick tint: make images inside the wedding card appear in an off-white tone (#FDFCF4) */
+.wedding-card img {
+  /* Tint images inside the wedding card toward #FDFCF4.
+     Adjusted filter values to better approximate the requested off-white tone. */
+  filter: brightness(0) saturate(100%) invert(97%) sepia(6%) saturate(20%) hue-rotate(10deg) brightness(1.02) contrast(0.99);
+  -webkit-filter: brightness(0) saturate(100%) invert(97%) sepia(6%) saturate(20%) hue-rotate(10deg) brightness(1.02) contrast(0.99);
+  /* Ensure images fit the card */
+  max-width: 100%;
+  height: auto;
 }
 
 #wedding-info h2, #wedding-info p {
@@ -1535,7 +1611,8 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 
 @media (max-width: 520px){
-  .fiesta-image{ width: 48%; }
+  .fiesta-image{ width: 20%; }
+  .spotify-embed{ width: 20%; }
 }
 
 /* Wedding-info rectangle styled like confirmation card but red base */
@@ -1641,7 +1718,7 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 
 
 .card-arco {
-  background: #9a4d4b;       /* color vino / terracota */
+  background: #c15123;       /* color vino / terracota */
   padding: 2.5em 2em;
   text-align: center;
   border-radius: 150px 150px 20px 20px; /* semicirculo arriba */
@@ -1689,8 +1766,9 @@ section {
   margin: 0.4rem auto;
   --logo-darkness: 0; /* 0 = black, 1 = original colors */
   /* make white SVG appear dark and add shadow for legibility */
-  filter: brightness(0) saturate(100%) contrast(120%) drop-shadow(0 6px 18px rgba(0,0,0,0.28));
-  -webkit-filter: brightness(0) saturate(100%) contrast(120%) drop-shadow(0 6px 18px rgba(0,0,0,0.28));
+  /* Quick tint to approximate #c15123 using CSS filters (fast, approximate) */
+  filter: invert(40%) sepia(76%) saturate(170%) hue-rotate(343deg) brightness(119%) contrast(87%);
+  -webkit-filter: invert(40%) sepia(76%) saturate(170%) hue-rotate(343deg) brightness(119%) contrast(87%);
 }
 
 @media (max-width:720px){
@@ -1699,6 +1777,20 @@ section {
 
 @media (max-width:420px){
   .salon-logo{ max-width: 90%; }
+}
+
+/* Quick tint for general names images to approximate #c15123 */
+.names-image{
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: invert(6%) sepia(152%) saturate(77%) hue-rotate(343deg) brightness(144%) contrast(100%);
+  -webkit-filter: invert(6%) sepia(152%) saturate(77%) hue-rotate(343deg) brightness(144%) contrast(100%);
+}
+.itinerario-image{
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 #titulo-form-confirmacion {
@@ -1713,13 +1805,13 @@ section {
   font-size: 4.5em !important;
 }
 
-#id-musica {
+.id-musica {
   font-family: 'Playfair Display', serif !important;
   font-weight: 700;
   text-transform: uppercase;
   font-size: 1.8em;    
-  margin-bottom: -0.5em;
-  margin-top: 2em;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
 }
 
 @media only screen and (max-width: 767px) {
@@ -1747,4 +1839,24 @@ section {
   background: linear-gradient(to right, var(--color-3) 40%, var(--color-1) 80%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+/* --- Ajuste: subir ligeramente todo el contenido de las secciones ---
+   Reduce el padding superior y alinea el contenido hacia la parte superior
+   para que la vista general quede un poco más alta en la pantalla. */
+section.full-screen {
+  justify-content: flex-start !important;
+  padding-top: clamp(0.8rem, 2vw, 1.4rem) !important;
+  padding-bottom: clamp(0.8rem, 2vw, 1.2rem) !important;
+  gap: 0.4rem;
+}
+
+@media (max-width: 520px) {
+  section.full-screen {
+    padding-top: clamp(0.6rem, 2vw, 1rem) !important;
+  }
 }

@@ -10,6 +10,7 @@
   <!-- Añadido: Playfair Display y Allura para nombres y ampersand -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Allura&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -55,7 +56,7 @@
 </section>
 
   <section id="countdown-section" class="full-screen" style="display:flex;align-items:center;justify-content:center;min-height:45vh;height:45vh;background-image:url('/img/contador3.png');background-repeat:no-repeat;background-size:cover;background-position:center center;">
-    <div class="count-inner"  style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1rem;left: 1.5em;top: 2em;">
+    <div class="count-inner"  style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1rem;left: 1.5em;top: 14em;">
       <div class="count-grid" style="display:flex;align-items:center;margin-top:3.5rem;">
         <div class="count-item" style="text-align:center;min-width:50px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5);">
           <div class="count-number" id="days" style="font-size:1.5rem;font-weight:700;"><span>0</span></div>
@@ -78,46 +79,103 @@
   </section>
 
 
-  <section id="wedding-info" class="full-screen">
-    <img src="/img/pareja-fechas-mod-int.png" alt="Acompañanos" class="names-image" style="width:80%;height:auto;">
+  <!-- <section id="wedding-info" class="full-screen">
+    <div class="wedding-card">
+      <img src="/img/pareja-fechas-mod-int.png" alt="Acompañanos" class="names-image" style="height:auto;margin-top:-42%;">
       <div style="margin-top: 1em;">
         <a href="https://www.google.com/maps/place/Iglesia+de+San+Pedro+Apóstol/@37.835209,-0.779364,17z/data=!3m1!4b1!4m6!3m5!1s0xd6310e2e3c7e3e9:0x7e2e6e7e0e92ce5d!8m2!3d37.835209!4d-0.7767891!16s%2Fg%2F11b6h7w3w9?hl=es" target="_blank" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.75em 2em;font-size:1.1em;">
           Ver ubicación
         </a>
       </div>
-  </div>
-  </section>
 
-  <section id="salon-celebraciones" class="full-screen">
-    <h2 style="font-family: 'Playfair Display', serif !important; font-size: 1.3em; color: #c15123">Y posteriormente celebra  
+      <h2 style="font-family: 'Playfair Display', serif !important; font-size: 1.3em; color: #ffffff; margin-top: 1.2rem;">Y posteriormente celebra  
       <br>con nosotros en</h2>
 
-    <img src="https://www.fincaeljardin.com/wp-content/uploads/2024/03/Logo-menusuperior-blanco.svg" class="salon-logo" alt="Finca El Jardín">
+      <img src="https://www.fincaeljardin.com/wp-content/uploads/2024/03/Logo-menusuperior-blanco.svg" class="salon-logo" alt="Finca El Jardín">
 
-    <div style="margin-top: 1em;">
-        <a href="https://www.google.com/maps/place/Finca+El+Jard%C3%ADn/@37.7434613,-1.2013204,12z/data=!4m10!1m2!2m1!1sfinca+el+jardin+san+pedro+del+pinatar!3m6!1s0xd636f467b910703:0xfa0267076ecdd67d!8m2!3d37.7434613!4d-1.0571248!15sCiVmaW5jYSBlbCBqYXJkaW4gc2FuIHBlZHJvIGRlbCBwaW5hdGFyWiciJWZpbmNhIGVsIGphcmRpbiBzYW4gcGVkcm8gZGVsIHBpbmF0YXKSAQ13ZWRkaW5nX3ZlbnVlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU40TFdWVVFXeDNSUkFC4AEA-gEFCIQDEDE!16s%2Fg%2F11h9gdbtlj?entry=ttu&g_ep=EgoyMDI2MDMwNC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.75em 2em;font-size:1.1em;">
+      <div style="margin-top: 1em;">
+        <a href="https://www.google.com/maps/place/Finca+El+Jard%C3%ADn/@37.7434613,-1.2013204,12z/data=!4m10!1m2!2m1!1sfinca+el+jardin+san+pedro+del+pinatar!3m6!1s0xd636f467b910703:0xfa0267076ecdd67d!8m2!3d37.7434613!4d-1.0571248!15sCiVmaW5jYSBlbCBqYXJkaW4gc2FuIHBlZHJvIGRlbCBwaW5hdGFyWiciJWZpbmNhIGVsIGphcmRpbiBzYW4gcGVkcm8gZGVsIHBpbmF0YXKSAQ13ZWRkaW5nX3ZlbnVlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU40TFdWVVFXeDNSUkFC4AEA-gEFCIQDEDE!16s%2Fg%2F11h9gdbtlj?entry=ttu&g_ep=EgoyMDI2MDMwNC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-primary" style="background:#ffffff;border:none;border-radius:2em;padding:0.75em 2em;font-size:1.1em;color:#5a4632;">
           Ver ubicación
         </a>
       </div>
+      
+      <img src="/img/Itinerario-white.png" alt="Itinerario" class="names-image" style="width:90%;height:auto;margin-top:1.2rem;">
+    </div>
+  </section> -->
+
+  <section id="wedding-info" class="confirm-section full-screen">
+    <div class="confirm-inner">
+      <div class="confirm-content card-arco">
+        <!-- <img src="/img/altar-flores.png" class="altar-flowers" alt="Altar flores"> -->
+        <img src="/img/pareja-fechas-mod-int.png" alt="Acompañanos" class="names-image" style="height:auto;margin-top:14%;">
+        <div style="margin-top: 1em;">
+          <a href="https://www.google.com/maps/place/Iglesia+de+San+Pedro+Apóstol/@37.835209,-0.779364,17z/data=!3m1!4b1!4m6!3m5!1s0xd6310e2e3c7e3e9:0x7e2e6e7e0e92ce5d!8m2!3d37.835209!4d-0.7767891!16s%2Fg%2F11b6h7w3w9?hl=es" target="_blank" class="map-circle-btn" rel="noopener noreferrer" aria-label="Ver ubicación (Iglesia)">
+            <i class="fa-solid fa-church" aria-hidden="true"></i>
+            <span class="visually-hidden">Iglesia</span>
+          </a>
+        </div>
+
+        <h2 style="font-family: 'Playfair Display', serif !important; font-size: 1.3em; color: #e5b9a9; margin-top: 1.5rem;">Y posteriormente celebra  
+        <br>con nosotros en</h2>
+
+        <img src="https://www.fincaeljardin.com/wp-content/uploads/2024/03/Logo-menusuperior-blanco.svg" class="salon-logo" alt="Finca El Jardín">
+
+        <div style="margin-bottom: 2em;">
+          <a href="https://www.google.com/maps/place/Finca+El+Jard%C3%ADn/@37.7434613,-1.2013204,12z/data=!4m10!1m2!2m1!1sfinca+el+jardin+san+pedro+del+pinatar!3m6!1s0xd636f467b910703:0xfa0267076ecdd67d!8m2!3d37.7434613!4d-1.0571248!15sCiVmaW5jYSBlbCBqYXJkaW4gc2FuIHBlZHJvIGRlbCBwaW5hdGFyWiciJWZpbmNhIGVsIGphcmRpbiBzYW4gcGVkcm8gZGVsIHBpbmF0YXKSAQ13ZWRkaW5nX3ZlbnVlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU40TFdWVVFXeDNSUkFC4AEA-gEFCIQDEDE!16s%2Fg%2F11h9gdbtlj?entry=ttu&g_ep=EgoyMDI2MDMwNC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="map-circle-btn" rel="noopener noreferrer" aria-label="Ver ubicación (Finca El Jardín)">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <span class="visually-hidden">Finca El Jardín</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="itinerario" class="full-screen">
-      <img src="/img/Itinerario.png" alt="Itinerario" class="names-image" style="width:64%;height:auto;">
+        <img src="/img/Itinerario.png" alt="Itinerario" class="itinerario-image" style="height:auto;">
   </section>
 
-    <section id="fiesta" style="margin-bottom: 10rem;" class="full-screen">
-      <h2 id="h-fiesta">Fiesta</h2>
-      <p class="p-fiesta">Hagamos juntos una fiesta única. <br> Os dejamos algunos detalles a tener en cuenta.</p>
+  
+  <section id="confirmacion-asistencia" class="confirm-section full-screen">
+    <div class="confirm-inner">
+      <div class="confirm-content card-arco">
+        <h2>¡Inscripciones para
+          <br>el juego!</h2>
 
-      <h3 id="id-musica">Música</h3>
-      <img src="/img/img_circuloCanciones.svg" alt="Círculo de canciones" class="fiesta-image">
+        <img src="/img/silueta_sobre.png" alt="Icono de confirmación"
+          style="width:32%;height:auto;display:block;margin:0.2em auto;">
+
+        <p style="margin-bottom: 0rem;">Nos encantaría contar contigo en nuestra lista de invitados.</p>
+        <p>Confirma tu asistencia hasta el</p>
+        <p><strong id="confirmar-asistencia">1 de SEPTIEMBRE</strong></p>
+
+        <a href="#form" style="font-family: 'Playfair Display', serif !important;" class="confirm-btn">Sí, Asistiré</a>
+      </div>
+    </div>
+  </section>
+
+    <section id="fiesta" class="full-screen">
+      <img src="/img/subir-fotos.png" alt="Sube tus fotos" class="fiesta-image">
+      <h3 class="id-musica">Sube tus fotos</h3>
 
       <p class="p-fiesta">
             ¿Cuál es la canción que no debe <br> faltar en la playlist de la fiesta?          
       </p>
 
       <div style="margin-top:1rem;">
-        <a href="#sugerir-cancion" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Sugerir Canción</a>
+        <a href="#sugerir-cancion" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Subir fotos</a>
+      </div>
+    </section>
+
+    <section id="spotify" style="margin-bottom: 5rem;" class="full-screen">
+      <img src="/img/playlist.png" alt="Playlist" class="fiesta-image">
+      <h3 class="id-musica">Playlist</h3>
+
+      <p class="p-spotify">
+            ¿Cuál es la canción que no debe <br> faltar en la playlist de la fiesta?          
+      </p>
+
+      <div style="margin-top:1rem;">
+        <a href="#sugerir-cancion" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Subir Canción</a>
       </div>
     </section>
 
@@ -141,25 +199,6 @@
       </div>
     </section>
 
-  <!-- Inserted section replicated from image.png -->
-  
-  <section id="confirmacion-asistencia" class="confirm-section full-screen">
-    <div class="confirm-inner">
-      <div class="confirm-content card-arco">
-        <h2>Confirmación 
-          <br>de Asistencia</h2>
-
-        <img src="/img/silueta_sobre.png" alt="Icono de confirmación"
-          style="width:32%;height:auto;display:block;margin:0.2em auto;">
-
-        <p style="margin-bottom: 0rem;">Nos encantaría contar contigo en nuestra lista de invitados.</p>
-        <p>Confirma tu asistencia hasta el</p>
-        <p><strong id="confirmar-asistencia">1 de SEPTIEMBRE</strong></p>
-
-        <a href="#form" style="font-family: 'Playfair Display', serif !important;" class="confirm-btn">Sí, Asistiré</a>
-      </div>
-    </div>
-  </section>
 
   <section id="form" class="full-screen">
     <button id="back-from-form" class="btn btn-secondary back-btn" style="border-radius:2em;padding:0.5em 1.2em;margin-bottom:1em;display:none;">Volver</button>
