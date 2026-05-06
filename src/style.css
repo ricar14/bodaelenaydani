@@ -1993,6 +1993,7 @@ section.full-screen {
   font-family: "Georgia", serif;
   box-sizing: border-box;
   position: relative;
+  width: 90%;
 }
 
 /* Pseudo-elemento para el trazo interior: separación 0.2em y línea fina */
@@ -2029,3 +2030,7 @@ section.full-screen {
 .confirm-content.card-arco2 p { color: #ffffff; }
 .confirm-content.card-arco2 strong { color: #ffffff; }
 .confirm-btn{ margin-top: 0.6rem; }
+
+#puzzle-gate {
+  margin-top: 30%;
+}
