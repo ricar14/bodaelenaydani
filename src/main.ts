@@ -368,7 +368,7 @@ function showMainSections() {
     'itinerario',
     'salon-celebraciones',
     'countdown-section',
-    'celebracion',,
+    'celebracion',
     'confirmacion-asistencia',
     'fiesta',
     'spotify',
