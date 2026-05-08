@@ -902,7 +902,7 @@ footer {
 }
 
 #form button {
-  background: #333;
+  background: #CF521A;
   color: #fff;
   cursor: pointer;
 }
@@ -1239,7 +1239,7 @@ input {
 }
 
 /* Bloque de nombres: estilos solicitados (Playfair Display + Allura) */
-.names-block { margin: -0.8rem; }
+.names-block { margin-top: -0.8rem; }
 
 .name {
   font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -1915,9 +1915,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 /* Ensure the itinerario section flows normally so the list height
    expands to contain all items. JS may set the section to `display:flex`
    inline; override it here for this section only. */
-#itinerario {
-  display: block !important;
-}
 
 .itinerario-list {
   display: block;
@@ -1963,6 +1960,7 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 
 #titulo-form-confirmacion {
   font-family: 'Playfair Display', serif !important;
+  color: #CF521A;
 }
 
 .p-fiesta {
@@ -2215,4 +2213,15 @@ img.inverted,
 
 .itinerario-frame-big2 {
   width: 72%;
+}
+
+/* Form labels: ensure labels inside the RSVP form use the terracotta color */
+#form label {
+  color: #CF521A !important;
+}
+
+/* Also apply to labels inside the RSVP form container when using other selectors */
+#form .attendance label,
+#form .large-text + label {
+  color: #CF521A !important;
 }

@@ -193,7 +193,7 @@ if (invitationCard) {
   fallbackIds.push('itinerario','spotify'); // Include 'itinerario' in fallbackIds
   fallbackIds.forEach(id => {
     const s = document.getElementById(id);
-    if (s) s.style.display = 'flex';
+    if (s) { s.removeAttribute('hidden'); s.style.display = 'flex'; }
   });
 }
 
@@ -231,6 +231,7 @@ function puzzleSolved() {
         const sec = document.getElementById(id);
         if (sec) {
           sec.classList.remove('hidden');
+          sec.removeAttribute('hidden');
           sec.style.removeProperty('display');
           sec.style.display = 'flex';
           // If the section was hidden by the puzzle, restore visibility attribute
@@ -291,6 +292,8 @@ if (envelopeAnim && sobreAnimadoEl && invitationCard) {
       if (puzzleGateEl) {
         // Ensure puzzle is initialized before showing the gate
         try { initPuzzleIfNeeded(); } catch (e) { /* noop */ }
+        // Remove `hidden` attribute (we added it in the HTML) so it becomes visible
+        try { puzzleGateEl.removeAttribute('hidden'); } catch(e) { /* noop */ }
         puzzleGateEl.classList.remove('hidden');
         // Use flex when section is full-screen-like, otherwise block
         puzzleGateEl.style.display = puzzleGateEl.classList.contains('full-screen') ? 'flex' : 'block';
@@ -402,12 +405,30 @@ async function saveGuestBackend(guest: { name: string; email: string; guests: nu
 
 // Navigation helpers: show only one section (used for confirm -> form flow)
 function showOnlySection(id: string) {
+  // Hide all sections and mark them hidden to match inline hash handler behavior
   document.querySelectorAll('section').forEach(sec => {
-    (sec as HTMLElement).style.display = 'none';
+    try { sec.setAttribute('hidden', ''); } catch(e) { /* noop */ }
+    try { (sec as HTMLElement).style.display = 'none'; } catch(e) { /* noop */ }
   });
   const target = document.getElementById(id);
   if (target) {
-    target.style.display = 'flex';
+    console.debug('[showOnlySection] showing', id);
+    try { target.removeAttribute('hidden'); } catch(e) { /* noop */ }
+    try { (target as HTMLElement).style.visibility = 'visible'; } catch(e) { /* noop */ }
+    try { (target as HTMLElement).style.display = (target.classList.contains('full-screen') ? 'flex' : 'block'); } catch(e) { /* noop */ }
+    try { target.classList.remove('hidden'); } catch(e) { /* noop */ }
+    try { target.removeAttribute('aria-hidden'); } catch(e) { /* noop */ }
+    // Ensure page can scroll to show the form
+    document.body.classList.remove('no-scroll');
+    // Force reflow so the browser repaints the newly-visible section
+    try { void (target as HTMLElement).offsetWidth; } catch(e) { /* noop */ }
+    // If it's the form, focus the first input for accessibility/visual confirmation
+    try {
+      const firstInput = target.querySelector('input, textarea, button, select') as HTMLElement | null;
+      if (firstInput) firstInput.focus();
+    } catch(e) { /* noop */ }
+    // Update URL hash to keep history in sync (use replaceState to avoid extra entry)
+    try { history.replaceState(null, '', `#${id}`); } catch(e) { try { location.hash = id; } catch(e) { /* noop */ } }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
@@ -416,6 +437,8 @@ function showOnlySection(id: string) {
 document.querySelectorAll('.confirm-btn').forEach(el => {
   el.addEventListener('click', (ev) => {
     ev.preventDefault();
+    // Update URL without firing hashchange, then show the form immediately
+    try { history.pushState(null, '', '#form'); } catch (e) { try { location.hash = 'form'; } catch(e) { /* noop */ } }
     showOnlySection('form');
     const backBtn = document.getElementById('back-from-form') as HTMLElement | null;
     if (backBtn) backBtn.style.display = 'inline-block';
@@ -451,6 +474,7 @@ function showMainSections() {
   IDS_TO_SHOW.forEach(id => {
     const sec = document.getElementById(id);
     if (sec) {
+      sec.removeAttribute('hidden');
       sec.style.display = 'flex';
       sec.classList.remove('hidden');
     }
