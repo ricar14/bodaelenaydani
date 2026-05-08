@@ -233,14 +233,32 @@ function puzzleSolved() {
           sec.classList.remove('hidden');
           sec.style.removeProperty('display');
           sec.style.display = 'flex';
+          // If the section was hidden by the puzzle, restore visibility attribute
+          // @ts-ignore
+          if (sec.dataset && sec.dataset.hiddenByPuzzle) {
+            try { sec.style.removeProperty('visibility'); } catch(e) { /* noop */ }
+            // @ts-ignore
+            delete sec.dataset.hiddenByPuzzle;
+          }
         }
       });
+      // After making sections visible, trigger reveal for any itinerario frames
+      // that are already within the viewport so they animate immediately.
+      try {
+        const frames = Array.from(document.querySelectorAll('.itinerario-frame, .itinerario-frame-big, .itinerario-frame-big2')) as HTMLElement[];
+        frames.forEach(f => {
+          const r = f.getBoundingClientRect();
+          if (r.top >= 0 && r.top < (window.innerHeight * 0.9)) {
+            f.classList.add('in-place');
+          }
+        });
+      } catch (e) { /* noop */ }
       // Hide the form-related back button if present
       const backBtn = document.getElementById('back-from-form');
       if (backBtn) backBtn.style.display = 'none';
       // Hide invitation-card and puzzle-gate specifically
       const inv = document.getElementById('invitation-card'); if (inv) { inv.classList.add('hidden'); inv.style.display='none'; }
-      const pg = document.getElementById('puzzle-gate'); if (pg) { pg.classList.add('hidden'); pg.style.display='none'; }
+      const pg = document.getElementById('puzzle-gate'); if (pg) { pg.classList.add('hidden'); pg.style.display='none'; pg.classList.remove('active'); }
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     // Fallback por si transitionend no se dispara
@@ -276,8 +294,27 @@ if (envelopeAnim && sobreAnimadoEl && invitationCard) {
         puzzleGateEl.classList.remove('hidden');
         // Use flex when section is full-screen-like, otherwise block
         puzzleGateEl.style.display = puzzleGateEl.classList.contains('full-screen') ? 'flex' : 'block';
-        // Ensure it's visible at the top
-        puzzleGateEl.scrollIntoView({ behavior: 'smooth' });
+        // Mark overlay active so CSS ensures centering and z-index
+        puzzleGateEl.classList.add('active');
+        // Ensure other sections remain hidden while the puzzle is active
+        document.querySelectorAll('section').forEach(function(s){
+          if (s.id === 'puzzle-gate') return;
+          try { (s as HTMLElement).style.display = 'none'; } catch(e) { /* noop */ }
+          s.classList.add('hidden');
+        });
+        // Explicitly hide `#itinerario` (extra safety) and mark for restoration
+        try {
+          const itin = document.getElementById('itinerario');
+          if (itin) {
+            (itin as HTMLElement).style.display = 'none';
+            (itin as HTMLElement).style.visibility = 'hidden';
+            // @ts-ignore
+            itin.dataset.hiddenByPuzzle = 'true';
+          }
+        } catch (e) { /* noop */ }
+        // keep page scroll locked while solving the puzzle
+        document.body.classList.add('no-scroll');
+        // Ensure overlay is shown; keep page at top (do not scroll to element)
       } else {
         showMainSections();
       }

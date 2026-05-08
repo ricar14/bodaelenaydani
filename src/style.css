@@ -810,9 +810,10 @@ footer {
   width: 2.3rem;
   height: 2.3rem;
   border-radius: 50%;
-  background: #c7683652; /* terracota */
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  background: transparent; /* transparent as requested */
+  box-shadow: none;
   padding: 0.15rem;
+  position: relative; /* allow absolute caption positioning */
 }
 .map-wrap .map-circle-btn{
   width: 100%;
@@ -821,11 +822,16 @@ footer {
   box-shadow: none;
   font-size: 1.1rem;
   color: #fff;
+  display: inline-flex;
+  flex-direction: column; /* stack image above caption */
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
 }
 .map-wrap:hover{ transform: translateY(-3px); }
 
 @media (max-width:720px){
-  .map-wrap{ width: 2.3rem; height:2.3rem; }
+  .map-wrap{ width: 3.6rem; height:3.3rem; }
 }
 
 /* Empujar hacia abajo todo el contenido dentro de la tarjeta 'card-arco' solo en la sección de wedding-info */
@@ -1019,7 +1025,7 @@ body {
 h1, h2, h3 {
   font-family: 'Great Vibes', cursive;
   font-weight: 400;
-  color: #b48a78;
+  color: #FDFCF4;
   letter-spacing: 2px;
 }
 
@@ -1029,8 +1035,9 @@ h1 {
 }
 
 h2 {
-  font-size: 2.5em;
+  font-size: 3.5em;
   margin-bottom: 0.2em;
+  margin-top: 1em;
 }
 
 section, p, label, input, button {
@@ -1039,7 +1046,7 @@ section, p, label, input, button {
 
 p, label {
   font-size: 1.5em;
-  color: #5a4632;
+  color: #FDFCF4;
   font-family: 'Allura', cursive !important;
 }
 
@@ -1553,7 +1560,7 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 
 #confirmacion-asistencia {
-  margin-bottom: 15em;
+  margin-bottom: 8em;
 }
 
 #confirmacion-asistencia2 {
@@ -1580,13 +1587,12 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   display: block;
   margin: 1.5em auto; /* refuerzo por si la imagen no tiene estilo inline */
 }
-.confirm-content.card-arco .confirm-btn,
-.confirm-content.card-arco .btn-confirm{
-  background: rgba(255,255,255,0.10);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.18);
+.confirm-content.card-arco3 .confirm-btn,
+.confirm-content.card-arco3 .btn-confirm{
+  background: transparent !important;
+  color: #ffffff !important;
   padding: 0.5em 1em;
-  border-radius: 12px;
+  border-radius: 4px;
   text-decoration: none;
   display: inline-block;
 }
@@ -1825,28 +1831,47 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   display: block;
   margin: 0.2em auto;
 }
-.btn-confirm {
-  display: inline-block;
-  background: #ffffff;
-  padding: 0.7em 2em;
-  border-radius: 12px;
+.btn-confirm, .confirm-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent !important;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
   text-decoration: none;
-  color: #333;
+  color: #ffffff !important;
   font-weight: bold;
-  margin-top: 1.5em;
-  font-family: sans-serif;
+  margin-top: 1.2em;
+  font-family: 'Playfair Display', serif;
   letter-spacing: 0.5px;
+  border: none;
 }
 
-.btn-confirm:hover {
-  background: #f2f2f2;
+.btn-confirm:hover, .confirm-btn:hover {
+  background: rgba(255,255,255,0.06) !important;
 }
 
-/* Global background for all sections (overrides previous 'none') */
-section {
-  background-color: #FDFCF4 !important;
-  /* background-color: #dcd6ca !important; */
+/* Icon inside the confirm button (love letter) forced to white */
+.confirm-locator{
+  width: 4.8rem;
+  height: 4.8rem;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0) invert(1);
+  -webkit-filter: brightness(0) invert(1);
+  animation: lightbounce 2.5s ease-in-out infinite;
 }
+
+.confirm-caption{
+  color: #ffffff !important;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1;
+  margin-top: 0.2rem;
+  pointer-events: auto;
+}
+
 
 /* Salon logo: render in terracotta #9f3a3a using filters (approximate) */
 .salon-logo{
@@ -1880,6 +1905,60 @@ section {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* Itinerario stacked frames: each item fills viewport; image animates from left into centre
+   and becomes sticky (fixed) while its parent is in view. First-time animation triggered
+   by IntersectionObserver which adds the class `in-place`. */
+.itinerario-list { width: 100%; }
+
+/* Ensure the itinerario section flows normally so the list height
+   expands to contain all items. JS may set the section to `display:flex`
+   inline; override it here for this section only. */
+#itinerario {
+  display: block !important;
+}
+
+.itinerario-list {
+  display: block;
+  width: 100%;
+}
+
+.itinerario-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  padding: 1.2rem 0;
+  box-sizing: border-box;
+}
+/* Apply the entrance animation to all itinerary frame variants */
+.itinerario-item .itinerario-frame,
+.itinerario-item .itinerario-frame-big,
+.itinerario-item .itinerario-frame-big2 {
+  transform: translateX(-50px);
+  transition: transform 520ms cubic-bezier(.22,.9,.3,1), opacity 420ms ease;
+  opacity: 0;
+  max-width: 86%;
+  height: auto;
+  display: block;
+}
+.itinerario-item .itinerario-frame.in-place,
+.itinerario-item .itinerario-frame-big.in-place,
+.itinerario-item .itinerario-frame-big2.in-place {
+  transform: none; /* slide to its natural place */
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  .itinerario-item { padding: 0.8rem 0; }
+  .itinerario-item .itinerario-frame,
+  .itinerario-item .itinerario-frame-big,
+  .itinerario-item .itinerario-frame-big2 { transform: translateX(-30px); }
+  .itinerario-item .itinerario-frame.in-place,
+  .itinerario-item .itinerario-frame-big.in-place,
+  .itinerario-item .itinerario-frame-big2.in-place { transform: none; }
 }
 
 #titulo-form-confirmacion {
@@ -2000,8 +2079,48 @@ section.full-screen {
   width: 100%;
 }
 
+/* Centrar la imagen de la pareja dentro de la estructura de confirmación secundaria */
+.confirm-inner3 {
+  text-align: center;
+}
+.confirm-inner3 .names-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 92%;
+  height: auto;
+}
+/* Locator image and caption for map links */
+@keyframes lightbounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+.map-locator{
+  width: 4.4rem; /* doubled size */
+  height: 4.4rem; /* doubled size */
+  display: inline-block;
+  object-fit: contain;
+  animation: lightbounce 2.5s ease-in-out infinite;
+  filter: brightness(0) invert(1); /* force white appearance */
+  -webkit-filter: brightness(0) invert(1);
+}
+.map-caption{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 0.35rem); /* sit just below the image */
+  width: 70vw; /* occupy 70% of viewport width as requested */
+  max-width: 860px;
+  font-size: 0.88rem;
+  color: #ffffff !important; /* force white */
+  text-align: center;
+  line-height: 1.05;
+  pointer-events: auto;
+}
+
 .salon-logo {
-  width: 40%;
+  width: 75%;
 }
 
 .card-arco2 {
@@ -2056,8 +2175,44 @@ section.full-screen {
 .confirm-content p{ color: #5a4632; margin-bottom: 0.6rem; }
 .confirm-content.card-arco2 p { color: #ffffff; }
 .confirm-content.card-arco2 strong { color: #ffffff; }
-.confirm-btn{ margin-top: 0.6rem; }
+.confirm-btn{ margin-top: 1.6rem; margin-bottom: -4em; }
 
 #puzzle-gate {
   margin-top: 30%;
+}
+
+/* Utility: voltear verticalmente cualquier elemento con la clase `inverted`.
+   Usamos `scaleY(-1)` para invertir visualmente la imagen; también aplicamos
+   la misma transformación al pseudo-elemento ::before que usamos para máscaras
+   (por ejemplo, .not-inverted::before) para que la versión repintada también
+   aparezca invertida. */
+.inverted,
+img.inverted,
+.inverted img {
+  transform: scaleY(-1);
+  -webkit-transform: scaleY(-1);
+  transform-origin: 50% 50%;
+  display: inline-block; /* asegurar que transform funcione en elementos inline */
+}
+
+.not-inverted.inverted::before,
+.inverted::before {
+  transform: scaleY(-1);
+  -webkit-transform: scaleY(-1);
+  transform-origin: 50% 50%;
+}
+.confirm-inner3 {
+  background-color: #CF521A;
+}
+
+.itinerario-frame-big {
+  width: 80%;
+}
+
+.itinerario-frame {
+  width: 75%;
+}
+
+.itinerario-frame-big2 {
+  width: 72%;
 }
