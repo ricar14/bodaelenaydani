@@ -265,6 +265,19 @@ function puzzleSolved() {
           wedding.parentNode.insertBefore(carousel, wedding);
         }
       } catch (e) { /* noop */ }
+      // Ensure music control exists and start playback
+      try {
+        ensureMusicControl();
+        const audio = document.getElementById('page-music') as HTMLAudioElement | null;
+        if (audio) {
+          const playPromise = audio.play();
+          if (playPromise && typeof playPromise.then === 'function') {
+            playPromise.catch((err) => {
+              console.debug('Autoplay blocked or failed:', err);
+            });
+          }
+        }
+      } catch (e) { /* noop */ }
       // Hide the form-related back button if present
       const backBtn = document.getElementById('back-from-form');
       if (backBtn) backBtn.style.display = 'none';
@@ -598,6 +611,68 @@ function showModal(message: string) {
   // @ts-ignore
   const modal = new bootstrap.Modal(document.getElementById('alertModal'));
   modal.show();
+}
+
+// Music control helper: creates audio element and floating toggle button
+function ensureMusicControl() {
+  if (document.getElementById('music-toggle')) return;
+  try {
+    // Add minimal styles for the floating button
+    const styleId = 'music-control-style';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        #music-toggle { position: fixed; right: 3%; bottom: 2%; width:2.3rem; height:2.3rem; border-radius:50%; background:#CF521A; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,0.18); z-index:9999; cursor:pointer; border:none; }
+        #music-toggle:active { transform: scale(0.96); }
+        #music-toggle i { font-size:1.2rem; }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Create audio element
+    const audio = document.createElement('audio');
+    audio.id = 'page-music';
+    // Use the provided asset path; if spaces exist it's OK in src but encode if needed
+    audio.src = '/mp3/Mon Amour.mp3';
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = 0.7;
+    document.body.appendChild(audio);
+
+    // Create toggle button
+    const btn = document.createElement('button');
+    btn.id = 'music-toggle';
+    btn.setAttribute('aria-pressed', 'false');
+    btn.title = 'Reproducir / Pausar música';
+    const icon = document.createElement('i');
+    icon.className = 'fa-solid fa-volume-high';
+    btn.appendChild(icon);
+    btn.addEventListener('click', (e) => {
+      try {
+        const a = document.getElementById('page-music') as HTMLAudioElement | null;
+        if (!a) return;
+        if (a.paused) {
+          const p = a.play();
+          if (p && typeof p.then === 'function') p.catch(()=>{});
+          btn.setAttribute('aria-pressed', 'true');
+          icon.className = 'fa-solid fa-volume-high';
+        } else {
+          a.pause();
+          btn.setAttribute('aria-pressed', 'false');
+          icon.className = 'fa-solid fa-volume-xmark';
+        }
+      } catch (err) { /* noop */ }
+    });
+    // Reflect initial state (paused)
+    icon.className = 'fa-solid fa-volume-high';
+    // Append to body
+    document.body.appendChild(btn);
+
+    // When audio ends/starts update icon (keeps in sync)
+    audio.addEventListener('play', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-high'; } catch(e){} });
+    audio.addEventListener('pause', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-xmark'; } catch(e){} });
+  } catch (e) { console.error('Error creating music control', e); }
 }
 
 
