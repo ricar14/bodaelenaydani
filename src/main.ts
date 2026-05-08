@@ -648,7 +648,7 @@ function ensureMusicControl() {
     const icon = document.createElement('i');
     icon.className = 'fa-solid fa-volume-high';
     btn.appendChild(icon);
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', () => {
       try {
         const a = document.getElementById('page-music') as HTMLAudioElement | null;
         if (!a) return;
@@ -670,8 +670,8 @@ function ensureMusicControl() {
     document.body.appendChild(btn);
 
     // When audio ends/starts update icon (keeps in sync)
-    audio.addEventListener('play', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-high'; } catch(e){} });
-    audio.addEventListener('pause', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-xmark'; } catch(e){} });
+    audio.addEventListener('play', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-high'; } catch { } });
+    audio.addEventListener('pause', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-xmark'; } catch { } });
   } catch (e) { console.error('Error creating music control', e); }
 }
 
