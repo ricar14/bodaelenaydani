@@ -1239,7 +1239,7 @@ input {
 }
 
 /* Bloque de nombres: estilos solicitados (Playfair Display + Allura) */
-.names-block { margin-top: -0.8rem; }
+.names-block { margin-top: -3.5rem; }
 
 .name {
   font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -2224,4 +2224,23 @@ img.inverted,
 #form .attendance label,
 #form .large-text + label {
   color: #CF521A !important;
+}
+
+/* Align form to top and make title full-width */
+#form {
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  padding-top: 2rem !important;
+}
+
+#form .large-text {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Make the form title span the full viewport width */
+#titulo-form-confirmacion {
+  display: block;
+  width: 100% !important;
+  box-sizing: border-box;
 }

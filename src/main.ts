@@ -161,13 +161,14 @@ initPuzzleIfNeeded();
 // Global arrays used to decide which sections to show after invitation/puzzle
 const FALLBACK_IDS = [
   'nos-casamos',
+  // 'carousel-section',
+  'nuestra-historia',
   'wedding-info',
   'salon-celebraciones',
   'celebracion',
   'fiesta',
   'foto-final',
   'confirmacion-asistencia',
-  'nuestra-historia',
   'itinerario',
   'spotify'
 ];
@@ -189,7 +190,7 @@ if (invitationCard) {
   document.body.classList.add('no-scroll');
 } else {
   // si no hay invitation-card, mostrar las principales secciones por seguridad
-  const fallbackIds = ['nos-casamos', 'wedding-info', 'salon-celebraciones', 'celebracion', 'fiesta', 'form', 'foto-final', 'confirmacion-asistencia', 'nuestra-historia'];
+  const fallbackIds = ['nos-casamos' , 'nuestra-historia', 'wedding-info', 'salon-celebraciones', 'celebracion', 'fiesta', 'form', 'foto-final', 'confirmacion-asistencia'];
   fallbackIds.push('itinerario','spotify'); // Include 'itinerario' in fallbackIds
   fallbackIds.forEach(id => {
     const s = document.getElementById(id);
@@ -224,10 +225,11 @@ function puzzleSolved() {
       // Mostrar secciones definidas en las listas (FALLBACK_IDS + IDS_TO_SHOW)
       // ensure IDS_TO_SHOW exists in this scope
       const idsToShowLocal = [
-        'nos-casamos','wedding-info','nuestra-historia','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','foto-final'
+        'nos-casamos','nuestra-historia','wedding-info','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','foto-final'
       ];
-      const union = Array.from(new Set([...(FALLBACK_IDS || []), ...idsToShowLocal]));
-      union.forEach(id => {
+      // Ensure sections are shown in the desired order. Prefer idsToShowLocal order
+      const ordered = Array.from(new Set([...(idsToShowLocal || []), ...(FALLBACK_IDS || [])]));
+      ordered.forEach(id => {
         const sec = document.getElementById(id);
         if (sec) {
           sec.classList.remove('hidden');
@@ -253,6 +255,15 @@ function puzzleSolved() {
             f.classList.add('in-place');
           }
         });
+      } catch (e) { /* noop */ }
+      // Ensure carousel is positioned right after wedding-info in the DOM
+      try {
+        const wedding = document.getElementById('wedding-info');
+        const carousel = document.getElementById('carousel-section');
+        if (wedding && carousel && wedding.parentNode) {
+          // Insert carousel immediately before wedding-info
+          wedding.parentNode.insertBefore(carousel, wedding);
+        }
       } catch (e) { /* noop */ }
       // Hide the form-related back button if present
       const backBtn = document.getElementById('back-from-form');
@@ -460,8 +471,9 @@ if (backFromFormBtn) {
 function showMainSections() {
   const IDS_TO_SHOW = [
     'nos-casamos',
-    'wedding-info',
+    // 'carousel-section',
     'nuestra-historia',
+    'wedding-info',
     'itinerario',
     'salon-celebraciones',
     'countdown-section',
@@ -479,6 +491,14 @@ function showMainSections() {
       sec.classList.remove('hidden');
     }
   });
+  // Reorder carousel-section to appear immediately before wedding-info
+  try {
+    const wedding = document.getElementById('wedding-info');
+    const carousel = document.getElementById('carousel-section');
+    if (wedding && carousel && wedding.parentNode) {
+      wedding.parentNode.insertBefore(carousel, wedding);
+    }
+  } catch (e) { /* noop */ }
   // Asegura que el formulario esté oculto tras la invitación
   const formSection = document.getElementById('form');
   if (formSection) {
