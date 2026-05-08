@@ -657,10 +657,14 @@ function ensureMusicControl() {
           if (p && typeof p.then === 'function') p.catch(()=>{});
           btn.setAttribute('aria-pressed', 'true');
           icon.className = 'fa-solid fa-volume-high';
+          // user manually started playback -> clear any auto-resume marker
+          try { delete a.dataset.wasPlayingBeforeHidden; } catch { }
         } else {
           a.pause();
           btn.setAttribute('aria-pressed', 'false');
           icon.className = 'fa-solid fa-volume-xmark';
+          // user manually paused -> clear marker so we don't auto-resume on focus
+          try { delete a.dataset.wasPlayingBeforeHidden; } catch { }
         }
       } catch (err) { /* noop */ }
     });
@@ -672,6 +676,33 @@ function ensureMusicControl() {
     // When audio ends/starts update icon (keeps in sync)
     audio.addEventListener('play', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-high'; } catch { } });
     audio.addEventListener('pause', () => { try { const ic = document.querySelector('#music-toggle i'); if (ic) ic.className = 'fa-solid fa-volume-xmark'; } catch { } });
+    // Pause/music control when page visibility or focus changes
+    try {
+      const handleHide = () => {
+        try {
+          if (!audio) return;
+          if (!audio.paused) {
+            // mark that audio was playing so we may resume on focus
+            audio.dataset.wasPlayingBeforeHidden = 'true';
+            audio.pause();
+          }
+        } catch { }
+      };
+      const handleShow = () => {
+        try {
+          if (!audio) return;
+          if (audio.dataset.wasPlayingBeforeHidden === 'true') {
+            const p = audio.play();
+            if (p && typeof p.then === 'function') p.catch(()=>{});
+            try { delete audio.dataset.wasPlayingBeforeHidden; } catch { }
+          }
+        } catch { }
+      };
+      document.addEventListener('visibilitychange', () => { if (document.hidden) handleHide(); else handleShow(); });
+      window.addEventListener('blur', handleHide);
+      window.addEventListener('focus', handleShow);
+      window.addEventListener('pagehide', handleHide);
+    } catch { }
   } catch (e) { console.error('Error creating music control', e); }
 }
 
