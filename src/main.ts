@@ -78,7 +78,7 @@ function initPuzzleIfNeeded() {
       piece.style.position = 'absolute';
       piece.style.left = `${(i % SIZE) * PIECE_SIZE}px`;
       piece.style.top = `${Math.floor(i / SIZE) * PIECE_SIZE}px`;
-      piece.style.backgroundImage = "url('/img/nuestra-historia.png')";
+      piece.style.backgroundImage = "url('/img/historia-roja-dani-elena.png')";
       piece.style.backgroundSize = `${SIZE * PIECE_SIZE}px ${SIZE * PIECE_SIZE}px`;
       piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
       piece.dataset.index = i.toString();
@@ -170,7 +170,8 @@ const FALLBACK_IDS = [
   'foto-final',
   'confirmacion-asistencia',
   'itinerario',
-  'spotify'
+  'spotify',
+  'imagenesBoda'
 ];
 const invitationCard = document.querySelector("#invitation-card") as HTMLElement;
 const envelopeAnim = document.getElementById("envelope-anim");
@@ -225,7 +226,7 @@ function puzzleSolved() {
       // Mostrar secciones definidas en las listas (FALLBACK_IDS + IDS_TO_SHOW)
       // ensure IDS_TO_SHOW exists in this scope
       const idsToShowLocal = [
-        'nos-casamos','nuestra-historia','wedding-info','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','foto-final'
+        'nos-casamos','nuestra-historia','wedding-info','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','imagenesBoda','foto-final'
       ];
       // Ensure sections are shown in the desired order. Prefer idsToShowLocal order
       const ordered = Array.from(new Set([...(idsToShowLocal || []), ...(FALLBACK_IDS || [])]));
@@ -494,6 +495,7 @@ function showMainSections() {
     'confirmacion-asistencia',
     'fiesta',
     'spotify',
+    'imagenesBoda',
     'foto-final'
   ];
   IDS_TO_SHOW.forEach(id => {

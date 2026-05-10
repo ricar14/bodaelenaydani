@@ -1,0 +1,18 @@
+# Forzar Content-Type correcto para archivos JavaScript (módulos)
+# Colocar este archivo en la raíz del sitio (carpeta pública en IONOS)
+
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType application/javascript .mjs
+  AddType application/ecmascript .es .es6
+</IfModule>
+
+# Si el servidor soporta mod_headers, asegurar el header Content-Type
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|mjs)$">
+    Header set Content-Type "application/javascript; charset=UTF-8"
+  </FilesMatch>
+</IfModule>
+
+# Nota: si IONOS no permite .htaccess (AllowOverride Off) contacta soporte
+# o añade la entrada MIME desde el panel de control / configuración del hosting.
