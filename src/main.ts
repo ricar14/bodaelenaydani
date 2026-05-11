@@ -230,10 +230,9 @@ if (invitationCard) {
 
 function puzzleSolved() {
   console.log('puzzleSolved() ejecutado: puzzle-gate se ocultará y se mostrarán las secciones.');
-  // Efecto de éxito: resplandor y vibración breve
+  // Mostrar sólo el desvanecimiento final (sin efecto destello)
     const gate = document.getElementById('puzzle-gate');
     if (!gate) return;
-    gate.classList.add('puzzle-success');
   // Mostrar la imagen completa del puzzle como ayuda visual final durante 1s
   const puzzleBoardEl = document.getElementById('puzzle-board') as HTMLElement | null;
   if (puzzleBoardEl) {
@@ -259,7 +258,7 @@ function puzzleSolved() {
     const piecesEls = Array.from(puzzleBoardEl.querySelectorAll('.puzzle-piece')) as HTMLElement[];
     piecesEls.forEach(p => p.style.visibility = 'hidden');
 
-    // Después de 1s, quitar overlay y continuar con el desvanecimiento y mostrar secciones
+    // Después de 1.5s, quitar overlay y continuar con el desvanecimiento y mostrar secciones
     setTimeout(() => {
       try { fullImg.remove(); } catch (e) { /* noop */ }
       piecesEls.forEach(p => p.style.visibility = 'visible');
