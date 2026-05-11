@@ -63,7 +63,7 @@
          margin-bottom:-23px 
         } 
     .imagenesBoda .divisor-imagenes.inverted {
-       margin-top:-23px 
+       margin-top:-22px 
       } 
   }
     .imagenesBoda .slides { position:relative; width:100%; height:100%; }
@@ -90,11 +90,11 @@
   <!-- Puzzle gate: aparece tras revelar la invitación -->
   <section id="puzzle-gate" hidden class="full-screen hidden" style="display:none;align-items:center;justify-content:center;">
     <div style="text-align:center;">
-      <h2 style="font-family: 'Playfair Display', serif; color:#5a4632; margin-bottom:0.5rem;">Completa el puzzle</h2>
-      <p style="color:#6b5849; margin-top:0; margin-bottom:1rem;">Arrastra las piezas para recomponer la imagen.</p>
-      <div id="puzzle-board" style="width:318px;height:318px;margin:0 auto;position:relative;background:#f6efe9;border-radius:0.5rem;box-shadow:0 6px 18px rgba(0,0,0,0.12);"></div>
+      <h2 style="font-family: 'Playfair Display', serif; color:#CF521A; margin-bottom:0.5rem;">Completa nuestra historia</h2>
+      <p style="color:#CF521A; margin-top:0; margin-bottom:1rem;">Arrastra las piezas para recomponer la imagen.</p>
+      <div id="puzzle-board"></div>
       <div style="margin-top:0.9rem;">
-        <button id="reset-puzzle" class="btn btn-outline-secondary" style="border-radius:1.2rem;padding:0.5rem 1rem;">Reiniciar puzzle</button>
+        <button id="reset-puzzle" hidden class="btn btn-outline-secondary" style="border-radius:1.2rem;padding:0.5rem 1rem;">Reiniciar puzzle</button>
       </div>
     </div>
   </section>
@@ -105,7 +105,6 @@
       <img src="/img/curva_portada_horizontal.png" alt="Curva portada" class="top-curve" id="top-curve">
     </div>
     <div class="names-block">
-      <!-- <img src="/img/logo.png" class="logo" style="width: 21%;height: auto;margin-top: -19%;margin-bottom: -9%;" alt="Logo de la boda"> -->
       <div class="names-image-wrap" style="width:100%;height:auto;">
         <img src="/img/nombres_personaliz.png" alt="Elena y Dani" class="names-image" style="width:100%;height:auto;">
         <div class="names-overlay">¡Comienza el juego!</div>
@@ -183,30 +182,6 @@
   <section id="nuestra-historia" hidden class="full-screen">
     <img src="/img/historia-negra-dani-elena.png" alt="Nuestra historia" class="itinerario-image historia-tint" style="height:auto;margin-top:1.2rem;">
   </section>
-
-  <!-- <section id="wedding-info" class="full-screen">
-    <div class="wedding-card">
-      <img src="/img/pareja-fechas-mod-int.png" alt="Acompañanos" class="names-image" style="height:auto;margin-top:-42%;">
-      <div style="margin-top: 1em;">
-        <a href="https://www.google.com/maps/place/Iglesia+de+San+Pedro+Apóstol/@37.835209,-0.779364,17z/data=!3m1!4b1!4m6!3m5!1s0xd6310e2e3c7e3e9:0x7e2e6e7e0e92ce5d!8m2!3d37.835209!4d-0.7767891!16s%2Fg%2F11b6h7w3w9?hl=es" target="_blank" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.75em 2em;font-size:1.1em;">
-          Ver ubicación
-        </a>
-      </div>
-
-      <h2 style="font-family: 'Playfair Display', serif !important; font-size: 1.3em; color: #ffffff; margin-top: 1.2rem;">Y posteriormente celebra  
-      <br>con nosotros en</h2>
-
-      <img src="https://www.fincaeljardin.com/wp-content/uploads/2024/03/Logo-menusuperior-blanco.svg" class="salon-logo" alt="Finca El Jardín">
-
-      <div style="margin-top: 1em;">
-        <a href="https://www.google.com/maps/place/Finca+El+Jard%C3%ADn/@37.7434613,-1.2013204,12z/data=!4m10!1m2!2m1!1sfinca+el+jardin+san+pedro+del+pinatar!3m6!1s0xd636f467b910703:0xfa0267076ecdd67d!8m2!3d37.7434613!4d-1.0571248!15sCiVmaW5jYSBlbCBqYXJkaW4gc2FuIHBlZHJvIGRlbCBwaW5hdGFyWiciJWZpbmNhIGVsIGphcmRpbiBzYW4gcGVkcm8gZGVsIHBpbmF0YXKSAQ13ZWRkaW5nX3ZlbnVlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU40TFdWVVFXeDNSUkFC4AEA-gEFCIQDEDE!16s%2Fg%2F11h9gdbtlj?entry=ttu&g_ep=EgoyMDI2MDMwNC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-primary" style="background:#ffffff;border:none;border-radius:2em;padding:0.75em 2em;font-size:1.1em;color:#5a4632;">
-          Ver ubicación
-        </a>
-      </div>
-      
-      <img src="/img/Itinerario-white.png" alt="Itinerario" class="names-image" style="width:90%;height:auto;margin-top:1.2rem;">
-    </div>
-  </section> -->
 
   <section id="wedding-info" hidden class="confirm-section full-screen">
     <div class="confirm-content card-arco3" style="width:110%;transform: translateY(8%)">
@@ -291,31 +266,34 @@
   </section>
 
     <section id="fiesta" hidden class="full-screen" style="margin-bottom: 1rem;">
-      <img src="/img/subir-fotos.png" alt="Sube tus fotos" class="fiesta-image">
       <h3 class="id-musica" style="color: #CF521A;">Sube tus fotos</h3>
-
-      <p class="p-fiesta" style="color: #CF521A;">
-            Queremos revivir este día con vosotros.<br>
-Puedes compartir con nosotros las fotos de la boda<br> en la carpeta compartida.
+      <p class="p-fiesta" style="color: #CF521A;margin-bottom: 0rem;">
+            Puedes compartir con nosotros las fotos de la boda en la carpeta compartida.
       </p>
 
-      <div style="margin-top:1rem;">
-        <a href="#subir-fotos" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Subir fotos</a>
+      <div class="fiesta-spoti-wrap">
+        <a href="#subir-fotos" class="bouncy" aria-label="Subir fotos">
+          <img src="/img/subir-fotos.png" alt="Sube tus fotos" class="fiesta-image">
+          <div class="map-caption-red">(Pulsa para subir fotos)</div>
+        </a>
+        <!-- <a href="#subir-fotos" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Subir fotos</a> -->
       </div>
     </section>
 
-    <section id="spotify" hidden style="margin-bottom: 5rem;" class="full-screen">
-      <img src="/img/playlist.png" alt="Playlist" class="fiesta-image">
+    <section id="spotify" hidden style="margin-bottom: 5rem;margin-top: 5rem;" class="full-screen">
       <h3 class="id-musica" style="color: #CF521A;">Playlist</h3>
 
       <p class="p-fiesta" style="color: #CF521A;">
-            Queremos crear una playlist que nos haga bailar a todos.<br>
            Si tienes una canción especial que te gustaría escuchar,
-           <br>¡compártela con nosotros!     
+           <br>¡Compártela con nosotros!     
       </p>
 
-      <div style="margin-top:1rem;">
-        <a href="https://open.spotify.com/playlist/1A7QIi61KRjvap6yZkLa6I?si=rFrYKaq3S1WTiDYGJHBzeg&pt=4f45ae6c8bbf262377da161eb923780b" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Abrir playlist en Spotify</a>
+      <div style="margin-right: -11rem;margin-top: -1.5rem;">
+        <a href="https://open.spotify.com/playlist/1A7QIi61KRjvap6yZkLa6I?si=rFrYKaq3S1WTiDYGJHBzeg&pt=4f45ae6c8bbf262377da161eb923780b" target="_blank" rel="noopener noreferrer" class="bouncy">
+          <img src="/img/spotify-logo.png" alt="Playlist" class="fiesta-spoti">
+          <div class="map-caption-red">(Pulsa para abrir Spotify)</div>
+        </a>
+        <!-- <a href="https://open.spotify.com/playlist/1A7QIi61KRjvap6yZkLa6I?si=rFrYKaq3S1WTiDYGJHBzeg&pt=4f45ae6c8bbf262377da161eb923780b" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Abrir playlist en Spotify</a> -->
       </div>
     </section>
 
@@ -421,23 +399,27 @@ Puedes compartir con nosotros las fotos de la boda<br> en la carpeta compartida.
         <details>
           <summary>1. Lugar de salida y vuelta de buses</summary>
           <div class="faq-content">
-            <p>Ejemplo: Los autobuses saldrán desde el aparcamiento del Centro Comercial a las 16:00 y regresarán al mismo punto tras la cena (aprox. 01:30). Por favor, confirmad plaza en el formulario.</p>
+            <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;">Ejemplo: Los autobuses saldrán desde el aparcamiento del Centro Comercial a las 16:00 y regresarán al mismo punto tras la cena (aprox. 01:30). Por favor, confirmad plaza en el formulario.</p>
           </div>
         </details>
 
         <details>
           <summary>2. Código de vestimenta</summary>
           <div class="faq-content">
-            <p>Recomendamos traje de cóctel o vestido elegante. Evitad ropa deportiva. Si tenéis dudas consultad con la organización.</p>
+            <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;">Recomendamos traje de cóctel o vestido elegante. Evitad ropa deportiva. Si tenéis dudas consultad con la organización.</p>
           </div>
         </details>
 
         <details>
           <summary>3. Horario boda</summary>
           <div class="faq-content">
-            <p>Ceremonia: 17:00. Cóctel: 18:00–19:30. Cena: 20:00. Fiesta: 22:00–03:00.</p>
+            <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;">Ceremonia: 17:00. Cóctel: 18:00–19:30. Cena: 20:00. Fiesta: 22:00</p>
           </div>
         </details>
+    </div>
+    <div class="nombres-centro" style="margin-top: -2rem;margin-bottom: -2rem;">
+      <div class="names-image-wrap" style="width:80%;max-width:560px;margin:0 auto;">
+        <img src="/img/nombres_personaliz.png" alt="Elena y Dani" class="names-image" style="width:50%;height:auto;">
       </div>
     </div>
   </section>

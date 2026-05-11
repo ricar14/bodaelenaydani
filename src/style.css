@@ -1,3 +1,8 @@
+/* Utility: make the contained image bounce lightly to draw attention */
+.bouncy img {
+  display: inline-block;
+  animation: lightbounce 2.5s ease-in-out infinite;
+}
 /* ============================
    Import de Google Fonts y estilos para .names-block
    Playfair Display (serif) y Allura (script)
@@ -195,10 +200,12 @@
 #puzzle-board {
   user-select: none;
   aspect-ratio: 1/1;
-  min-width: 220px;
-  min-height: 220px;
+  width: min(560px, 90vw);
   max-width: 90vw;
-  max-height: 90vw;
+  min-width: 200px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
 }
 #puzzle-gate h2 {
   text-align: center;
@@ -424,10 +431,9 @@ section {
 .foto-wrap{
   position: relative;
   /* make the container full-bleed so the image spans the full viewport width */
-  width: 100vw;
   max-width: none;
-  left: 50%;
-  right: 50%;
+  left: 0%;
+  right: 0%;
   margin-left: -50vw;
   margin-right: -50vw;
   display: block;
@@ -448,6 +454,11 @@ section {
   height: auto;
   pointer-events: none;
   z-index: 3;
+
+/* Color específico para los párrafos dentro de la FAQ en #foto-final */
+#foto-final .faq .faq-content p {
+  color: #CF521A;
+}
 
 
 /* Fiesta animation container */
@@ -530,7 +541,7 @@ section {
 }
 
 @media (max-width: 520px){
-  .foto-wrap{ width: 200vw; }
+  .foto-wrap{ width: 100%; }
   .foto-wrap .letras-overlay{ top: 9%; width: clamp(70px, 12%, 65px); }
 }
 
@@ -1660,10 +1671,33 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 
 .fiesta-image{
   width: 220px;
-  max-width: 60%;
+  max-width: 85%;
   height: auto;
   display: block;
   margin: 1rem auto 0.6rem;
+}
+
+.fiesta-spoti{
+  width: 220px;
+  max-width: 42%;
+  height: auto;
+  display: block;
+  margin: 1rem auto 0.6rem;
+}
+
+/* Center wrapper for the Spotify image in its section */
+.fiesta-spoti-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0; /* use padding instead of large min-height */
+  margin: 0 auto -0.5rem;
+  flex-direction: column;
+  min-height: 0;
+}
+
+@media (max-width: 520px){
+  .fiesta-spoti-wrap{ padding: 0.15rem 0; margin-bottom: -0.25rem; }
 }
 
 /* Suggest song form styles reuse form defaults but slightly larger */
@@ -1692,8 +1726,24 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 
 @media (max-width: 520px){
-  .fiesta-image{ width: 20%; }
-  .spotify-embed{ width: 20%; }
+  .fiesta-image{ width: 85%; }
+  .fiesta-spoti{ width: 42%; }
+  .spotify-embed{ width: 85%; }
+}
+/* Centered personalized names image under foto-wrap */
+.nombres-centro{
+  text-align: center;
+  margin: 1.25rem 0 2rem;
+}
+.nombres-personaliz{
+  max-width: 560px;
+  width: 86%;
+  height: auto;
+  display: inline-block;
+}
+
+@media (max-width: 520px){
+  .nombres-personaliz{ width: 92%; max-width: 360px; }
 }
 
 /* Wedding-info rectangle styled like confirmation card but red base */
@@ -1999,18 +2049,25 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   z-index: 999;
 }
 #puzzle-board {
-  width: 318px;
-  height: 318px;
+  aspect-ratio: 1/1;
+  width: min(560px, 90vw);
+  max-width: 90vw;
+  min-width: 200px;
+  height: auto;
   margin: 0 auto;
   position: relative;
-  background-image: url('/img/IMG-20260101-WA0000.jpg');
+  background-image: url('/img/historia-roja-dani-elena.png');
   background-size: cover;
   background-position: center center;
   border-radius: 0.5rem;
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 @media (max-width: 420px) {
-  #puzzle-board { width: 260px; height: 260px; }
+  #puzzle-board { width: min(320px, 94vw); height: auto; }
+}
+
+@media (min-width: 900px) {
+  #puzzle-board { width: min(720px, 60vw); }
 }
 
 #h-fiesta {
@@ -2117,12 +2174,26 @@ section.full-screen {
   pointer-events: auto;
 }
 
+.map-caption-red{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + -1rem); /* sit just below the image */
+  width: 70vw; /* occupy 70% of viewport width as requested */
+  max-width: 860px;
+  font-size: 0.88rem;
+  color: #CF521A !important; /* force terracotta */
+  text-align: center;
+  line-height: 1.05;
+  pointer-events: auto;
+}
+
 .salon-logo {
   width: 75%;
 }
 
 .card-arco2 {
-  background-color: #9a4d4b; /* fallback color */
+  background-color: #CF521A; /* fallback color */
   background-image: url('/img/fondo-terracota.png');
   background-repeat: no-repeat;
   background-position: center;
@@ -2146,7 +2217,7 @@ section.full-screen {
   position: absolute;
   inset: 0.5em; /* distancia desde el borde de la caja */
   border-radius: inherit;
-  border: 1px solid #c15123;
+  border: 1px solid #CF521A;
   pointer-events: none;
   box-sizing: border-box;
 }
@@ -2250,17 +2321,27 @@ img.inverted,
   color: #5a4632;
   font-family: 'Playfair Display', serif;
   max-width: 1100px;
-  margin: 2rem auto;
-  padding: 1rem;
 }
 #foto-final .faq h2 { margin: 0 0 0.6rem 0; }
-#foto-final details { background: #fffaf6; border-radius: 10px; padding: 0.6rem 0.8rem; margin-bottom: 0.6rem; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+#foto-final details {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  background: #fffaf6;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  margin: 0 0 0.6rem 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
 #foto-final summary {
   list-style: none;
   cursor: pointer;
   color: #CF521A;
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: 1.20rem;
   outline: none;
 }
 #foto-final summary::-webkit-details-marker { display: none; }
@@ -2270,6 +2351,11 @@ img.inverted,
 
 @media (max-width:720px){
   #foto-final .faq { padding: 0 0.6rem; }
+}
+/* Make sure details don't cause horizontal scroll on small viewports */
+@media (max-width:520px){
+  #foto-final { padding-left: 0.5rem; padding-right: 0.5rem; }
+  #foto-final details { padding-left: 0.5rem; padding-right: 0.5rem; }
 }
 /* .top-hero{
   width: 100vw !important;
@@ -2281,7 +2367,19 @@ img.inverted,
  #foto-final .faq {
   position: relative;
   box-sizing: border-box;
-  width: min(1100px, calc(100%));
-  margin: 2rem auto;
-  padding: 1rem;
+  width: 95%;
+  margin-top: 4rem;
+  margin-bottom: 4rem;
 }
+
+/* Make paragraph text inside details use the same font as the summary */
+#foto-final details .faq-content p {
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+}
+
+/* Ensure nombres-personaliz in foto-final is centered and uses the masked tint
+   The wrapper provides the mask (::before) and the img remains in DOM for alt/layout */
+.nombres-centro { text-align: center; }
+.nombres-centro .names-image-wrap { width: 100%; max-width: 560px; margin: 0 auto; display: block; }
+.nombres-centro .names-image-wrap .names-image { display: block; width: 55% !important; height: auto; margin: 0 auto; opacity: 0; }
