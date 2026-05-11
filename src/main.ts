@@ -343,9 +343,6 @@ function puzzleSolved() {
     gate.classList.remove('puzzle-success');
     void gate.offsetWidth;
     gate.classList.add('desvanecer');
-    const fallback = setTimeout(() => {
-      const g = document.getElementById('puzzle-gate'); if (g) g.style.display = 'none';
-    }, 450);
   }, 300);
 }
 
