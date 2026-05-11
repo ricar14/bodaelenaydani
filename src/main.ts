@@ -7,15 +7,21 @@ import "./style.css";
 // Smooth scrolling effect for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener("click", (e) => {
-    e.preventDefault();
     const href = (e.currentTarget as HTMLAnchorElement).getAttribute("href");
-    if (href) {
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+    if (!href) return;
+    const target = document.querySelector(href) as HTMLElement | null;
+    // Only perform smooth scroll if the target is currently visible in the layout
+    // This avoids scrolling to hidden elements which can produce a mid-screen view
+    if (target) {
+      const style = window.getComputedStyle(target);
+      const isHidden = style.display === 'none' || target.hasAttribute('hidden') || target.classList.contains('hidden');
+      if (!isHidden) {
+        e.preventDefault();
+        try {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (err) {
+          target.scrollIntoView();
+        }
       }
     }
   });
@@ -51,14 +57,25 @@ function initPuzzleIfNeeded() {
   const resetPuzzleBtn = resetPuzzleBtnElLocal as HTMLButtonElement;
   const SIZE = 3; // 3x3
   const PIECE_SIZE = 106;
+  const FIXED_POS = 1; // mantener la pieza central-superior (segunda, índice 1) fija como ayuda
   let pieces: number[] = [];
   let draggingIndex: number | null = null;
 
   function shufflePieces() {
-    pieces = Array.from({ length: SIZE * SIZE }, (_, i) => i);
-    for (let i = pieces.length - 1; i > 0; i--) {
+    // Build a shuffled array but keep FIXED_POS fixed in its correct place
+    const total = SIZE * SIZE;
+    const all = Array.from({ length: total }, (_, i) => i);
+    const movable = all.filter(i => i !== FIXED_POS);
+    // Fisher-Yates shuffle for movable pieces
+    for (let i = movable.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+      [movable[i], movable[j]] = [movable[j], movable[i]];
+    }
+    pieces = [];
+    let m = 0;
+    for (let pos = 0; pos < total; pos++) {
+      if (pos === FIXED_POS) pieces[pos] = FIXED_POS;
+      else pieces[pos] = movable[m++];
     }
   }
 
@@ -72,7 +89,8 @@ function initPuzzleIfNeeded() {
       const idx = pieces[i];
       const piece = document.createElement('div');
       piece.className = 'puzzle-piece';
-      piece.draggable = true;
+      // Make the fixed piece non-draggable and visually static
+      piece.draggable = (i !== FIXED_POS);
       piece.style.width = `${PIECE_SIZE}px`;
       piece.style.height = `${PIECE_SIZE}px`;
       piece.style.position = 'absolute';
@@ -84,56 +102,66 @@ function initPuzzleIfNeeded() {
       piece.dataset.index = i.toString();
       piece.dataset.piece = idx.toString();
 
-      piece.addEventListener('dragstart', () => {
-        draggingIndex = i;
-        piece.classList.add('dragging');
-      });
-      piece.addEventListener('dragend', () => {
-        draggingIndex = null;
-        piece.classList.remove('dragging');
-      });
-      piece.addEventListener('dragover', (event) => {
-        event.preventDefault();
-      });
-      piece.addEventListener('drop', (e) => {
-        e.preventDefault();
-        if (draggingIndex !== null && draggingIndex !== i) {
-          [pieces[draggingIndex], pieces[i]] = [pieces[i], pieces[draggingIndex]];
-          renderPuzzle();
-          if (isSolved()) setTimeout(puzzleSolved, 300);
-        }
-      });
-
-      let touchDragging = false;
-      piece.addEventListener('touchstart', (e) => {
-        if (e.touches.length !== 1) return;
-        touchDragging = true;
-        draggingIndex = i;
-        piece.classList.add('dragging');
-        e.preventDefault();
-      }, {passive: false});
-      piece.addEventListener('touchmove', (e) => {
-        if (!touchDragging || draggingIndex === null) return;
-        if (e.touches.length !== 1) return;
-        const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-        if (target && target instanceof HTMLElement && target.classList.contains('puzzle-piece') && target !== piece) {
-          const otherIndexStr = target.dataset.index;
-          if (otherIndexStr !== undefined) {
-            const otherIndex = parseInt(otherIndexStr);
-            [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
-            draggingIndex = otherIndex;
+      // Only attach drag/drop handlers for movable pieces
+      if (i !== FIXED_POS) {
+        piece.addEventListener('dragstart', () => {
+          draggingIndex = i;
+          piece.classList.add('dragging');
+        });
+        piece.addEventListener('dragend', () => {
+          draggingIndex = null;
+          piece.classList.remove('dragging');
+        });
+        piece.addEventListener('dragover', (event) => {
+          event.preventDefault();
+        });
+        piece.addEventListener('drop', (e) => {
+          e.preventDefault();
+          // Prevent swapping with the fixed position
+          if (draggingIndex !== null && draggingIndex !== i && i !== FIXED_POS && draggingIndex !== FIXED_POS) {
+            [pieces[draggingIndex], pieces[i]] = [pieces[i], pieces[draggingIndex]];
             renderPuzzle();
+            if (isSolved()) setTimeout(puzzleSolved, 300);
           }
-        }
-        e.preventDefault();
-      }, {passive: false});
-      piece.addEventListener('touchend', (e) => {
-        touchDragging = false;
-        piece.classList.remove('dragging');
-        draggingIndex = null;
-        if (isSolved()) setTimeout(puzzleSolved, 300);
-        e.preventDefault();
-      }, {passive: false});
+        });
+      }
+
+      // Touch handlers only for movable pieces
+      if (i !== FIXED_POS) {
+        let touchDragging = false;
+        piece.addEventListener('touchstart', (e) => {
+          if (e.touches.length !== 1) return;
+          touchDragging = true;
+          draggingIndex = i;
+          piece.classList.add('dragging');
+          e.preventDefault();
+        }, {passive: false});
+        piece.addEventListener('touchmove', (e) => {
+          if (!touchDragging || draggingIndex === null) return;
+          if (e.touches.length !== 1) return;
+          const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+          if (target && target instanceof HTMLElement && target.classList.contains('puzzle-piece') && target !== piece) {
+            const otherIndexStr = target.dataset.index;
+            if (otherIndexStr !== undefined) {
+              const otherIndex = parseInt(otherIndexStr);
+              // Prevent swapping with fixed position
+              if (otherIndex !== FIXED_POS && draggingIndex !== FIXED_POS) {
+                [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
+                draggingIndex = otherIndex;
+                renderPuzzle();
+              }
+            }
+          }
+          e.preventDefault();
+        }, {passive: false});
+        piece.addEventListener('touchend', (e) => {
+          touchDragging = false;
+          piece.classList.remove('dragging');
+          draggingIndex = null;
+          if (isSolved()) setTimeout(puzzleSolved, 300);
+          e.preventDefault();
+        }, {passive: false});
+      }
 
       puzzleBoard.appendChild(piece);
     }
@@ -206,97 +234,119 @@ function puzzleSolved() {
     const gate = document.getElementById('puzzle-gate');
     if (!gate) return;
     gate.classList.add('puzzle-success');
-  setTimeout(() => {
-    gate.classList.remove('puzzle-success');
-    // Forzar reflow y aplicar nueva clase de desvanecimiento
-    void gate.offsetWidth;
-    gate.classList.add('desvanecer');
+  // Mostrar la imagen completa del puzzle como ayuda visual final durante 1s
+  const puzzleBoardEl = document.getElementById('puzzle-board') as HTMLElement | null;
+  if (puzzleBoardEl) {
+    // Crear overlay absoluto dentro de #puzzle-board para no afectar el layout
+    const fullImg = document.createElement('img');
+    fullImg.src = '/img/historia-roja-dani-elena.png';
+    fullImg.id = 'puzzle-complete-img';
+    fullImg.style.position = 'absolute';
+    fullImg.style.left = '0';
+    fullImg.style.top = '0';
+    fullImg.style.width = '100%';
+    fullImg.style.height = '100%';
+    fullImg.style.objectFit = 'cover';
+    fullImg.style.zIndex = '999';
+    fullImg.style.pointerEvents = 'none';
+    fullImg.style.boxShadow = '0 6px 24px rgba(0,0,0,0.2)';
 
-    let finished = false;
-    const showSections = () => {
-      if (finished) return;
-      finished = true;
-      gate.style.display = 'none';
-      if (envelopeAnim) envelopeAnim.style.display = "none";
-      if (sobreAnimadoEl && (sobreAnimadoEl instanceof HTMLMediaElement)) {
-        sobreAnimadoEl.pause();
-      }
-      // ensure scrolling unlocked when revealing sections
-      document.body.classList.remove('no-scroll');
-      // Mostrar secciones definidas en las listas (FALLBACK_IDS + IDS_TO_SHOW)
-      // ensure IDS_TO_SHOW exists in this scope
-      const idsToShowLocal = [
-        'nos-casamos','nuestra-historia','wedding-info','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','imagenesBoda','foto-final'
-      ];
-      // Ensure sections are shown in the desired order. Prefer idsToShowLocal order
-      const ordered = Array.from(new Set([...(idsToShowLocal || []), ...(FALLBACK_IDS || [])]));
-      ordered.forEach(id => {
-        const sec = document.getElementById(id);
-        if (sec) {
-          sec.classList.remove('hidden');
-          sec.removeAttribute('hidden');
-          sec.style.removeProperty('display');
-          sec.style.display = 'flex';
-          // If the section was hidden by the puzzle, restore visibility attribute
-          // @ts-ignore
-          if (sec.dataset && sec.dataset.hiddenByPuzzle) {
-            try { sec.style.removeProperty('visibility'); } catch(e) { /* noop */ }
-            // @ts-ignore
-            delete sec.dataset.hiddenByPuzzle;
-          }
+    // Asegurar que #puzzle-board es contenedor relativo (se hace en setupPuzzle, pero por seguridad):
+    try { puzzleBoardEl.style.position = puzzleBoardEl.style.position || 'relative'; } catch (e) { /* noop */ }
+
+    // Añadir overlay y ocultar solo las piezas (manteniendo el espacio)
+    puzzleBoardEl.appendChild(fullImg);
+    const piecesEls = Array.from(puzzleBoardEl.querySelectorAll('.puzzle-piece')) as HTMLElement[];
+    piecesEls.forEach(p => p.style.visibility = 'hidden');
+
+    // Después de 1s, quitar overlay y continuar con el desvanecimiento y mostrar secciones
+    setTimeout(() => {
+      try { fullImg.remove(); } catch (e) { /* noop */ }
+      piecesEls.forEach(p => p.style.visibility = 'visible');
+      // Forzar reflow y aplicar nueva clase de desvanecimiento
+      gate.classList.remove('puzzle-success');
+      void gate.offsetWidth;
+      gate.classList.add('desvanecer');
+
+      let finished = false;
+      const showSections = () => {
+        if (finished) return;
+        finished = true;
+        gate.style.display = 'none';
+        if (envelopeAnim) envelopeAnim.style.display = "none";
+        if (sobreAnimadoEl && (sobreAnimadoEl instanceof HTMLMediaElement)) {
+          sobreAnimadoEl.pause();
         }
-      });
-      // After making sections visible, trigger reveal for any itinerario frames
-      // that are already within the viewport so they animate immediately.
-      try {
-        const frames = Array.from(document.querySelectorAll('.itinerario-frame, .itinerario-frame-big, .itinerario-frame-big2')) as HTMLElement[];
-        frames.forEach(f => {
-          const r = f.getBoundingClientRect();
-          if (r.top >= 0 && r.top < (window.innerHeight * 0.9)) {
-            f.classList.add('in-place');
+        document.body.classList.remove('no-scroll');
+        const idsToShowLocal = [
+          'nos-casamos','nuestra-historia','wedding-info','itinerario','salon-celebraciones','countdown-section','celebracion','confirmacion-asistencia','fiesta','spotify','imagenesBoda','foto-final'
+        ];
+        const ordered = Array.from(new Set([...(idsToShowLocal || []), ...(FALLBACK_IDS || [])]));
+        ordered.forEach(id => {
+          const sec = document.getElementById(id);
+          if (sec) {
+            sec.classList.remove('hidden');
+            sec.removeAttribute('hidden');
+            sec.style.removeProperty('display');
+            sec.style.display = 'flex';
+            if (sec.dataset && sec.dataset.hiddenByPuzzle) {
+              try { sec.style.removeProperty('visibility'); } catch(e) { /* noop */ }
+              delete sec.dataset.hiddenByPuzzle;
+            }
           }
         });
-      } catch (e) { /* noop */ }
-      // Ensure carousel is positioned right after wedding-info in the DOM
-      try {
-        const wedding = document.getElementById('wedding-info');
-        const carousel = document.getElementById('carousel-section');
-        if (wedding && carousel && wedding.parentNode) {
-          // Insert carousel immediately before wedding-info
-          wedding.parentNode.insertBefore(carousel, wedding);
-        }
-      } catch (e) { /* noop */ }
-      // Ensure music control exists and start playback
-      try {
-        ensureMusicControl();
-        const audio = document.getElementById('page-music') as HTMLAudioElement | null;
-        if (audio) {
-          const playPromise = audio.play();
-          if (playPromise && typeof playPromise.then === 'function') {
-            playPromise.catch((err) => {
-              console.debug('Autoplay blocked or failed:', err);
-            });
+        try {
+          const frames = Array.from(document.querySelectorAll('.itinerario-frame, .itinerario-frame-big, .itinerario-frame-big2')) as HTMLElement[];
+          frames.forEach(f => {
+            const r = f.getBoundingClientRect();
+            if (r.top >= 0 && r.top < (window.innerHeight * 0.9)) {
+              f.classList.add('in-place');
+            }
+          });
+        } catch (e) { /* noop */ }
+        try {
+          const wedding = document.getElementById('wedding-info');
+          const carousel = document.getElementById('carousel-section');
+          if (wedding && carousel && wedding.parentNode) {
+            wedding.parentNode.insertBefore(carousel, wedding);
           }
+        } catch (e) { /* noop */ }
+        try {
+          ensureMusicControl();
+          const audio = document.getElementById('page-music') as HTMLAudioElement | null;
+          if (audio) {
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.then === 'function') {
+              playPromise.catch((err) => { console.debug('Autoplay blocked or failed:', err); });
+            }
+          }
+        } catch (e) { /* noop */ }
+        const backBtn = document.getElementById('back-from-form');
+        if (backBtn) backBtn.style.display = 'none';
+        const inv = document.getElementById('invitation-card'); if (inv) { inv.classList.add('hidden'); inv.style.display='none'; }
+        const pg = document.getElementById('puzzle-gate'); if (pg) { pg.classList.add('hidden'); pg.style.display='none'; pg.classList.remove('active'); }
+        // No forzamos scroll aquí para evitar movimientos inesperados
+      };
+      const fallback = setTimeout(showSections, 450);
+      gate.addEventListener('transitionend', function handler(e) {
+        if (e.propertyName === 'opacity') {
+          clearTimeout(fallback);
+          gate.removeEventListener('transitionend', handler);
+          showSections();
         }
-      } catch (e) { /* noop */ }
-      // Hide the form-related back button if present
-      const backBtn = document.getElementById('back-from-form');
-      if (backBtn) backBtn.style.display = 'none';
-      // Hide invitation-card and puzzle-gate specifically
-      const inv = document.getElementById('invitation-card'); if (inv) { inv.classList.add('hidden'); inv.style.display='none'; }
-      const pg = document.getElementById('puzzle-gate'); if (pg) { pg.classList.add('hidden'); pg.style.display='none'; pg.classList.remove('active'); }
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-    // Fallback por si transitionend no se dispara
-    const fallback = setTimeout(showSections, 450);
-    gate.addEventListener('transitionend', function handler(e) {
-      if (e.propertyName === 'opacity') {
-        clearTimeout(fallback);
-        gate.removeEventListener('transitionend', handler);
-        showSections();
-      }
-    });
-  }, 300); // Duración del efecto de éxito (reducida)
+      });
+    }, 1000);
+    return;
+  }
+  // Fallback: si no existe puzzleBoard, seguir comportamiento anterior
+  setTimeout(() => {
+    gate.classList.remove('puzzle-success');
+    void gate.offsetWidth;
+    gate.classList.add('desvanecer');
+    const fallback = setTimeout(() => {
+      const g = document.getElementById('puzzle-gate'); if (g) g.style.display = 'none';
+    }, 450);
+  }, 300);
 }
 
 
@@ -447,14 +497,14 @@ function showOnlySection(id: string) {
     document.body.classList.remove('no-scroll');
     // Force reflow so the browser repaints the newly-visible section
     try { void (target as HTMLElement).offsetWidth; } catch(e) { /* noop */ }
-    // If it's the form, focus the first input for accessibility/visual confirmation
-    try {
-      const firstInput = target.querySelector('input, textarea, button, select') as HTMLElement | null;
-      if (firstInput) firstInput.focus();
-    } catch(e) { /* noop */ }
+    // Eliminar enfoque automático para evitar scroll inesperado
+    try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { /* noop */ }
     // Update URL hash to keep history in sync (use replaceState to avoid extra entry)
     try { history.replaceState(null, '', `#${id}`); } catch(e) { try { location.hash = id; } catch(e) { /* noop */ } }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Gentle smooth scroll, then ensure we end up exactly at the page top
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) { window.scrollTo(0,0); }
+    // After layout settles, force immediate top to override any browser auto-scroll
+    setTimeout(() => { try { window.scrollTo(0,0); } catch(e) { /* noop */ } }, 60);
   }
 }
 

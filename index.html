@@ -595,8 +595,8 @@
         // Mostrar como flex por compatibilidad con los estilos existentes
         target.removeAttribute('hidden');
         target.style.display = target.classList.contains('full-screen') ? 'flex' : 'block';
-        // Llevar al foco y hacer scroll suave
-        target.scrollIntoView({behavior: 'smooth'});
+        // Llevar al foco y hacer scroll suave: scroll to top of page to avoid partial views
+        try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) { window.scrollTo(0,0); }
         if (id === 'sugerir-cancion') {
           setTimeout(function(){ var s = document.getElementById('sugg-name'); if (s) s.focus(); }, 250);
         }
