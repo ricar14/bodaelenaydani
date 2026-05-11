@@ -481,6 +481,16 @@ if (backFromFormBtn) {
   });
 }
 
+// Back button on the invitadosconfirmados section (same behavior as form back)
+const backFromInvitadosBtn = document.getElementById('back-from-invitados');
+if (backFromInvitadosBtn) {
+  backFromInvitadosBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    showMainSections();
+    (backFromInvitadosBtn as HTMLElement).style.display = 'none';
+  });
+}
+
 // Reusable helper to show the primary sections shown after invitation
 function showMainSections() {
   const IDS_TO_SHOW = [
