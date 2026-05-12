@@ -424,7 +424,9 @@
           <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;">
             Nos gustaría que, en la medida de lo posible, la celebración sea solo para adultos. Entendemos que en ocasiones puede ser complicado, pero agradecemos vuestra comprensión para que todos podamos disfrutar al máximo de este día especial.
           </p>
-          </div>
+        </details>
+        <details id="confirm-detail" data-url="https://forms.gle/b8dUtd2eACqCHoUj8">
+          <summary id="confirm-summary">Confirmar asistencia</summary>
         </details>
     </div>
     <div class="nombres-centro" style="margin-top: -2rem;margin-bottom: -2rem;">
@@ -652,6 +654,19 @@
         }, options);
         frames.forEach(function(f){ io.observe(f); });
       })();
+    });
+  </script>
+  <script>
+    // Open the confirmation form when the summary is clicked (keep it simple and open in new tab)
+    document.addEventListener('DOMContentLoaded', function(){
+      var summary = document.getElementById('confirm-summary');
+      var detail = document.getElementById('confirm-detail');
+      if (!summary || !detail) return;
+      summary.addEventListener('click', function(e){
+        e.preventDefault();
+        var url = detail.dataset.url;
+        if (url) window.open(url, '_blank', 'noopener');
+      });
     });
   </script>
 </body>

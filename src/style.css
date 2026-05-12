@@ -398,6 +398,22 @@ body.no-scroll, html.no-scroll {
   transform: translateY(0);
 }
 
+/* Prevent #reset-puzzle (Pista) from darkening on press/focus (override bootstrap active styles) */
+#reset-puzzle,
+#reset-puzzle:focus,
+#reset-puzzle:active,
+#reset-puzzle:focus-visible {
+  background-color: transparent !important;
+  color: #CF521A !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* Ensure hover keeps outline style but no fill */
+#reset-puzzle:hover {
+  background-color: rgba(0,0,0,0.02) !important;
+}
+
 /* General styles */
 header {
   background: #f4f4f4;
