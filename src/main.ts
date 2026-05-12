@@ -58,24 +58,30 @@ function initPuzzleIfNeeded() {
   const SIZE = 3; // 3x3
   const PIECE_SIZE = 106;
   const FIXED_POS = 1; // mantener la pieza central-superior (segunda, índice 1) fija como ayuda
+  // Support multiple fixed positions (hints). Start with the original fixed pos.
+  const fixedPositions = new Set<number>([FIXED_POS]);
   let pieces: number[] = [];
   let draggingIndex: number | null = null;
 
   function shufflePieces() {
-    // Build a shuffled array but keep FIXED_POS fixed in its correct place
+    // Build a shuffled array but keep any fixed positions fixed in their correct places
     const total = SIZE * SIZE;
     const all = Array.from({ length: total }, (_, i) => i);
-    const movable = all.filter(i => i !== FIXED_POS);
-    // Fisher-Yates shuffle for movable pieces
-    for (let i = movable.length - 1; i > 0; i--) {
+    // Pieces that must remain as the correct tile (indices)
+    const availablePieces = all.filter(i => !fixedPositions.has(i));
+    // Positions that we can place movable pieces into
+    const availablePositions = all.filter(pos => !fixedPositions.has(pos));
+    // Fisher-Yates shuffle for availablePieces
+    for (let i = availablePieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [movable[i], movable[j]] = [movable[j], movable[i]];
+      [availablePieces[i], availablePieces[j]] = [availablePieces[j], availablePieces[i]];
     }
-    pieces = [];
-    let m = 0;
-    for (let pos = 0; pos < total; pos++) {
-      if (pos === FIXED_POS) pieces[pos] = FIXED_POS;
-      else pieces[pos] = movable[m++];
+    pieces = new Array(total);
+    // Set fixed positions to their correct piece (solved for that slot)
+    for (const pos of fixedPositions) pieces[pos] = pos;
+    // Fill remaining positions with shuffled available pieces
+    for (let k = 0; k < availablePositions.length; k++) {
+      pieces[availablePositions[k]] = availablePieces[k];
     }
   }
 
@@ -89,8 +95,9 @@ function initPuzzleIfNeeded() {
       const idx = pieces[i];
       const piece = document.createElement('div');
       piece.className = 'puzzle-piece';
-      // Make the fixed piece non-draggable and visually static
-      piece.draggable = (i !== FIXED_POS);
+      // Make any fixed piece non-draggable and visually static
+      const isFixed = fixedPositions.has(i);
+      piece.draggable = !isFixed;
       piece.style.width = `${PIECE_SIZE}px`;
       piece.style.height = `${PIECE_SIZE}px`;
       piece.style.position = 'absolute';
@@ -101,9 +108,25 @@ function initPuzzleIfNeeded() {
       piece.style.backgroundPosition = `-${(idx % SIZE) * PIECE_SIZE}px -${Math.floor(idx / SIZE) * PIECE_SIZE}px`;
       piece.dataset.index = i.toString();
       piece.dataset.piece = idx.toString();
+      // Mark any fixed piece with a special class so it can be highlighted
+      if (isFixed) {
+        piece.classList.add('puzzle-piece-fixed');
+        piece.setAttribute('aria-label', 'pieza fija, ayuda: no mover');
+        // Add joining classes if adjacent fixed pieces exist so CSS can merge borders
+        const col = i % SIZE;
+        const row = Math.floor(i / SIZE);
+        // left
+        if (col > 0 && fixedPositions.has(i - 1)) piece.classList.add('fixed-join-left');
+        // right
+        if (col < SIZE - 1 && fixedPositions.has(i + 1)) piece.classList.add('fixed-join-right');
+        // top
+        if (row > 0 && fixedPositions.has(i - SIZE)) piece.classList.add('fixed-join-top');
+        // bottom
+        if (row < SIZE - 1 && fixedPositions.has(i + SIZE)) piece.classList.add('fixed-join-bottom');
+      }
 
       // Only attach drag/drop handlers for movable pieces
-      if (i !== FIXED_POS) {
+      if (!isFixed) {
         piece.addEventListener('dragstart', () => {
           draggingIndex = i;
           piece.classList.add('dragging');
@@ -117,8 +140,8 @@ function initPuzzleIfNeeded() {
         });
         piece.addEventListener('drop', (e) => {
           e.preventDefault();
-          // Prevent swapping with the fixed position
-          if (draggingIndex !== null && draggingIndex !== i && i !== FIXED_POS && draggingIndex !== FIXED_POS) {
+          // Prevent swapping with any fixed position
+          if (draggingIndex !== null && draggingIndex !== i && !fixedPositions.has(i) && !fixedPositions.has(draggingIndex)) {
             [pieces[draggingIndex], pieces[i]] = [pieces[i], pieces[draggingIndex]];
             renderPuzzle();
             if (isSolved()) setTimeout(puzzleSolved, 300);
@@ -127,7 +150,7 @@ function initPuzzleIfNeeded() {
       }
 
       // Touch handlers only for movable pieces
-      if (i !== FIXED_POS) {
+      if (!isFixed) {
         let touchDragging = false;
         piece.addEventListener('touchstart', (e) => {
           if (e.touches.length !== 1) return;
@@ -144,8 +167,8 @@ function initPuzzleIfNeeded() {
             const otherIndexStr = target.dataset.index;
             if (otherIndexStr !== undefined) {
               const otherIndex = parseInt(otherIndexStr);
-              // Prevent swapping with fixed position
-              if (otherIndex !== FIXED_POS && draggingIndex !== FIXED_POS) {
+              // Prevent swapping with any fixed position
+              if (!fixedPositions.has(otherIndex) && !fixedPositions.has(draggingIndex)) {
                 [pieces[draggingIndex], pieces[otherIndex]] = [pieces[otherIndex], pieces[draggingIndex]];
                 draggingIndex = otherIndex;
                 renderPuzzle();
@@ -173,10 +196,40 @@ function initPuzzleIfNeeded() {
     puzzleBoard.style.height = `${SIZE * PIECE_SIZE}px`;
     shufflePieces();
     renderPuzzle();
-    resetPuzzleBtn.onclick = () => {
-      shufflePieces();
-      renderPuzzle();
+    // New behavior for the 'Pista' button: mark a new fixed piece (hint)
+    const MAX_HINTS = 4;
+    const updateResetButtonState = () => {
+      if (fixedPositions.size >= MAX_HINTS) {
+        resetPuzzleBtn.disabled = true;
+      } else {
+        resetPuzzleBtn.disabled = false;
+      }
     };
+
+    resetPuzzleBtn.onclick = () => {
+      // choose a random position that is not already fixed
+      const total = SIZE * SIZE;
+      const candidates: number[] = [];
+      for (let pos = 0; pos < total; pos++) {
+        if (!fixedPositions.has(pos)) candidates.push(pos);
+      }
+      if (candidates.length === 0) return;
+      // pick randomly from candidates
+      const pick = candidates[Math.floor(Math.random() * candidates.length)];
+      // Mark as fixed and place its correct piece at that position by swapping
+      fixedPositions.add(pick);
+      const currentIndex = pieces.findIndex(v => v === pick);
+      if (currentIndex !== -1 && currentIndex !== pick) {
+        [pieces[currentIndex], pieces[pick]] = [pieces[pick], pieces[currentIndex]];
+      } else {
+        pieces[pick] = pick;
+      }
+      renderPuzzle();
+      updateResetButtonState();
+      if (fixedPositions.size >= MAX_HINTS) resetPuzzleBtn.disabled = true;
+    };
+    // initialize button state
+    updateResetButtonState();
   }
 
   setupPuzzle();
@@ -415,6 +468,23 @@ if (envelopeAnim && sobreAnimadoEl && invitationCard) {
         } catch (e) { /* ignore if seek not allowed yet */ }
         sobreAnimadoEl.playbackRate = 1;
         const playPromise = sobreAnimadoEl.play();
+        // Smoothly fade out the poster image once playback actually starts
+        try {
+          const posterEl = document.getElementById('sobrePoster') as HTMLElement | null;
+          if (posterEl && sobreAnimadoEl) {
+            const fadePoster = () => {
+              try { posterEl.style.opacity = '0'; } catch (e) {}
+              setTimeout(() => { try { posterEl.remove(); } catch (e) {} }, 420);
+              sobreAnimadoEl.removeEventListener('playing', fadePoster);
+            };
+            sobreAnimadoEl.addEventListener('playing', fadePoster);
+            // If the video already buffered a frame, ensure we still fade
+            if (!sobreAnimadoEl.paused && !sobreAnimadoEl.seeking) {
+              // small timeout to allow first frame render
+              setTimeout(() => { try { posterEl.style.opacity = '0'; } catch (e) {} }, 80);
+            }
+          }
+        } catch (e) { /* noop */ }
         // After ~1.3s of playback, pause and reveal the site
         const revealAfter = 1300;
         const t = setTimeout(() => {
@@ -507,6 +577,10 @@ function showOnlySection(id: string) {
 // When user clicks the confirm button in the confirmation screen, show only the form
 document.querySelectorAll('.confirm-btn').forEach(el => {
   el.addEventListener('click', (ev) => {
+    const anchor = ev.currentTarget as HTMLAnchorElement;
+    const href = anchor.getAttribute('href') || '';
+    // If this confirm button points to an external URL, let the browser handle it (do not intercept)
+    if (href.startsWith('http') || href.startsWith('//')) return;
     ev.preventDefault();
     // Update URL without firing hashchange, then show the form immediately
     try { history.pushState(null, '', '#form'); } catch (e) { try { location.hash = 'form'; } catch(e) { /* noop */ } }

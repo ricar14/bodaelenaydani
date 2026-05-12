@@ -193,10 +193,30 @@
   cursor: grab;
   transition: box-shadow 0.2s;
 }
+.puzzle-piece-fixed {
+  border: 2px solid rgba(207,82,26,0.95);
+  box-shadow: 0 6px 18px rgba(207,82,26,0.18), inset 0 0 10px rgba(255,255,255,0.06);
+  cursor: default;
+  z-index: 20;
+}
+/* Badge removed — kept highlighting styles only */
 .puzzle-piece.dragging {
   opacity: 0.7;
   box-shadow: 0 0 12px #b48a78;
 }
+
+/* Merge borders for adjacent fixed pieces so the red outline appears continuous */
+.puzzle-piece-fixed {
+  border-radius: 0; /* esquinas cuadradas para piezas marcadas */
+}
+.puzzle-piece-fixed.fixed-join-left { border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.puzzle-piece-fixed.fixed-join-right { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.puzzle-piece-fixed.fixed-join-top { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; }
+.puzzle-piece-fixed.fixed-join-bottom { border-bottom: none; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+
+/* When two pieces join horizontally, remove inner borders on both sides to avoid 1px seam
+   (rendered by having each side remove its respective internal border) */
+.puzzle-piece-fixed.fixed-join-left.fixed-join-right { border-left: none; border-right: none; }
 #puzzle-board {
   user-select: none;
   aspect-ratio: 1/1;
@@ -838,6 +858,7 @@ footer {
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
+  margin-top: -1em;
 }
 .map-wrap:hover{ transform: translateY(-3px); }
 
@@ -875,7 +896,7 @@ footer {
 }
 @media (max-width: 720px){
   #wedding-info .names-image,
-  #wedding-info .salon-logo{ max-width: 96%; }
+  #wedding-info .salon-logo{ max-width: 100%; }
 }
 
 /* Quick tint: make images inside the wedding card appear in an off-white tone (#FDFCF4) */
@@ -2130,6 +2151,37 @@ section.full-screen {
   }
 }
 
+@media (min-width: 420px) {
+  /* Target the caption that is the sibling immediately after the image inside the anchor
+     (HTML structure: <a class="bouncy"><img class="fiesta-image"> <div class="map-caption-red">...)
+     Use `top` to adjust the absolute-positioned caption reliably. */
+  .bouncy .fiesta-image + .map-caption-red {
+    top: calc(100% - 16.5rem);
+  }
+  /* For the spotify block (uses class `fiesta-spoti`) */
+  #spotify .fiesta-spoti + .map-caption-red,
+  .bouncy .fiesta-spoti + .map-caption-red {
+    top: calc(100% - 18rem);
+  }
+  /* Apply negative spacing only to the inner wrappers to avoid affecting unrelated layout
+     when the viewport width is near small tablet/large-phone breakpoints. */
+  #fiesta {
+    margin-bottom: -14rem;
+  }
+  /* For spotify section target the immediate inner div or its .bouncy child */
+  #spotify {
+    margin-bottom: -11rem;
+  }
+}
+
+@media (max-width: 420px) {
+  /* For spotify section target the immediate inner div or its .bouncy child */
+  #spotify {
+    margin-bottom: 5rem;
+    margin-top: 3rem;
+  }
+}
+
 .confirm-inner {
   width: 100%;
 }
@@ -2189,7 +2241,7 @@ section.full-screen {
 }
 
 .salon-logo {
-  width: 75%;
+  width: 60%;
 }
 
 .card-arco2 {

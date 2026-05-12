@@ -82,19 +82,20 @@
   <!-- Fondo del sobre, colocado dentro de la tarjeta más abajo (ver .invitation-box) -->
 
   <section id="invitation-card">
-    <div id="envelope-anim" style="display:flex;">
-      <video id="sobreAnimado" src="/img/invitacion_abriendose.mp4" class="envelope-image" muted preload="metadata"></video>
+    <div id="envelope-anim" style="display:flex;position:relative;">
+      <img id="sobrePoster" src="/img/sobre.png" alt="Sobre" style="position:absolute;left:0;top:0;width:100vw;height:100vh;object-fit:cover;pointer-events:none;z-index:10001;transition:opacity 360ms ease;" />
+      <video id="sobreAnimado" src="/img/invitacion_abriendose.mp4" class="envelope-image" muted preload="metadata" playsinline webkit-playsinline poster="/img/sobre.png" style="position:relative;z-index:10000;"></video>
     </div>
   </section>
 
   <!-- Puzzle gate: aparece tras revelar la invitación -->
   <section id="puzzle-gate" hidden class="full-screen hidden" style="display:none;align-items:center;justify-content:center;">
     <div style="text-align:center;">
-      <h2 style="font-family: wfont_25822f_742283984906494d857b784be3c912ce, wf_742283984906494d857b784be, orig_geographica_script_w_01_regular, 'Great Vibes'; color:#CF521A; margin-bottom:0.5rem;">Completa nuestra historia</h2>
-      <p style="color:#CF521A; margin-top:-1em; margin-bottom:1rem;font-family:'Playfair Display', serif !important;font-size: 1.2em;">Arrastra las piezas para recomponer la imagen.</p>
+      <h2 style="font-family: wfont_25822f_742283984906494d857b784be3c912ce, wf_742283984906494d857b784be, orig_geographica_script_w_01_regular, 'Great Vibes'; color:#CF521A; margin-bottom:0.5rem;">Completa el puzzle de <br>nuestra historia</h2>
+      <p style="color:#CF521A; margin-top:-1em; margin-bottom:1rem;font-family:'Playfair Display', serif !important;font-size: 1.2em;">Arrastra las piezas no marcadas en rojo<br> para recomponer la imagen.</p>
       <div id="puzzle-board"></div>
       <div style="margin-top:0.9rem;">
-        <button id="reset-puzzle" hidden class="btn btn-outline-secondary" style="border-radius:1.2rem;padding:0.5rem 1rem;">Reiniciar puzzle</button>
+        <button id="reset-puzzle" class="btn btn-outline-secondary" style="border-radius: 0.8rem;font-size: 1.5em;padding: 0.2rem 0.7rem;color: #CF521A;border-color: #CF521A;">Pista</button>
       </div>
     </div>
   </section>
@@ -188,20 +189,20 @@
       <img src="/img/divisor.png" alt="Divisor" class="not-inverted">
     </div>
     <div class="confirm-inner3" style="width:110%;">
-      <img src="/img/pareja-fechas-mod-int.png" alt="Acompañanos" class="names-image" style="height:auto;margin-top:3%;margin-bottom:1%;width:100%;">
+      <img src="/img/pareja-fechas-mod-int.png" alt="Acompañanos" class="names-image" style="height:auto;margin-top:-6%;margin-bottom:-42%;width:100%;">
 
       <div class="map-wrap" style="margin-bottom: 4em;margin-top: 1em;">
-        <a href="https://www.google.com/maps/place/Iglesia+de+San+Pedro+Apóstol/@37.835209,-0.779364,17z/data=!3m1!4b1!4m6!3m5!1s0xd6310e2e3c7e3e9:0x7e2e6e7e0e92ce5d!8m2!3d37.835209!4d-0.7767891!16s%2Fg%2F11b6h7w3w9?hl=es" target="_blank" class="map-circle-btn" rel="noopener noreferrer" aria-label="Ver ubicación (Iglesia)">
+        <a href="https://maps.app.goo.gl/Xhffhaaz1wjXCUYC8" target="_blank" class="map-circle-btn" rel="noopener noreferrer" aria-label="Ver ubicación (Iglesia)">
           <img src="/img/localtion-map-white.png" alt="Ver ubicación Iglesia" class="map-locator">
           <span class="visually-hidden">Iglesia</span>
           <div class="map-caption">(Pulsa para ver en Maps)</div>
         </a>
       </div>
 
-      <img src="/img/finca.png" style="margin-top:6em;" class="salon-logo" alt="Finca El Jardín">
+      <img src="/img/finca.png" style="margin-top:4em;" class="salon-logo" alt="Finca El Jardín">
 
       <div class="map-wrap" style="margin-bottom: 4em;">
-        <div class="map-caption" style="transform: translate(-8em, -12em);font-size:1.1rem;">Y posteriormente celebra <br>con nosotros en</div>
+        <div class="map-caption" style="transform: translate(-12em, -14em);font-size:0.8rem;">Y posteriormente celebra con nosotros en</div>
         <a href="https://www.google.com/maps/place/Finca+El+Jard%C3%ADn/@37.7434613,-1.2013204,12z/data=!4m10!1m2!2m1!1sfinca+el+jardin+san+pedro+del+pinatar!3m6!1s0xd636f467b910703:0xfa0267076ecdd67d!8m2!3d37.7434613!4d-1.0571248!15sCiVmaW5jYSBlbCBqYXJkaW4gc2FuIHBlZHJvIGRlbCBwaW5hdGFyWiciJWZpbmNhIGVsIGphcmRpbiBzYW4gcGVkcm8gZGVsIHBpbmF0YXKSAQ13ZWRkaW5nX3ZlbnVlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU40TFdWVVFXeDNSUkFC4AEA-gEFCIQDEDE!16s%2Fg%2F11h9gdbtlj?entry=ttu&g_ep=EgoyMDI2MDMwNC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="map-circle-btn" rel="noopener noreferrer" aria-label="Ver ubicación (Finca El Jardín)">
           <img src="/img/map-locator.png"  alt="Ver ubicación Finca El Jardín" class="map-locator">
           <span class="visually-hidden">Finca El Jardín</span>
@@ -253,7 +254,7 @@
 
         <p style="margin-bottom: 0rem;font-family: 'Playfair Display', serif !important;">¿Nos acompañas?</p>
 
-        <a href="#form" style="font-family: 'Playfair Display', serif !important;" class="confirm-btn" aria-label="Ir al formulario de confirmación">
+        <a href="https://forms.gle/b8dUtd2eACqCHoUj8" target="_blank" rel="noopener noreferrer" style="font-family: 'Playfair Display', serif !important;" class="confirm-btn" aria-label="Ir al formulario de confirmación">
           <img src="/img/love-letter.png" alt="Sobre de invitación" class="confirm-locator">
           <span class="visually-hidden">Confirmación</span>
           <div class="confirm-caption">(Pulsa sobre el sobre)</div>
@@ -265,22 +266,21 @@
     </div>
   </section>
 
-    <section id="fiesta" hidden class="full-screen" style="margin-bottom: 1rem;">
+    <section id="fiesta" hidden class="full-screen">
       <h3 class="id-musica" style="color: #CF521A;">Sube tus fotos</h3>
       <p class="p-fiesta" style="color: #CF521A;margin-bottom: 0rem;">
             Puedes compartir con nosotros las fotos de la boda en la carpeta compartida.
       </p>
 
       <div class="fiesta-spoti-wrap">
-        <a href="#subir-fotos" class="bouncy" aria-label="Subir fotos">
+        <a href="https://photos.app.goo.gl/hjLYBiv2NGiwK5p27" target="_blank" rel="noopener noreferrer" class="bouncy" aria-label="Subir fotos">
           <img src="/img/subir-fotos.png" alt="Sube tus fotos" class="fiesta-image">
           <div class="map-caption-red">(Pulsa para subir fotos)</div>
         </a>
-        <!-- <a href="#subir-fotos" class="btn btn-primary" style="background:#b48a78;border:none;border-radius:2em;padding:0.6em 1.2em;font-size:1.05em;">Subir fotos</a> -->
       </div>
     </section>
 
-    <section id="spotify" hidden style="margin-bottom: 5rem;margin-top: 5rem;" class="full-screen">
+    <section id="spotify" hidden class="full-screen">
       <h3 class="id-musica" style="color: #CF521A;">Playlist</h3>
 
       <p class="p-fiesta" style="color: #CF521A;">
@@ -411,9 +411,19 @@
         </details>
 
         <details>
-          <summary>3. Horario boda</summary>
+          <summary>3. Horario ceremonia</summary>
           <div class="faq-content">
-            <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;">Ceremonia: 17:00. Cóctel: 18:00–19:30. Cena: 20:00. Fiesta: 22:00</p>
+            <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;">La ceremónia empieza a las 12:00, pero rogamos que los invitados lleguen con al menos 30 minutos de antelación para asegurar un inicio puntual.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>4. Invitados</summary>
+          <div class="faq-content">
+            <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;"></p>
+          <p style="color:#CF521A;font-family: 'Playfair Display', serif !important;font-size: 0.95em;">
+            Nos gustaría que, en la medida de lo posible, la celebración sea solo para adultos. Entendemos que en ocasiones puede ser complicado, pero agradecemos vuestra comprensión para que todos podamos disfrutar al máximo de este día especial.
+          </p>
           </div>
         </details>
     </div>
