@@ -1,7 +1,28 @@
 /* Utility: make the contained image bounce lightly to draw attention */
-.bouncy img {
+.bouncy{
+  position: relative;
   display: inline-block;
+  line-height: 0; /* avoid extra descender space when inline */
+}
+.bouncy img {
+  display: block;
+  width: 100%;
+  height: auto;
   animation: lightbounce 2.5s ease-in-out infinite;
+}
+
+/* Centered caption variant used under clickable images (spotify / subir-fotos)
+   - `.bouncy` is the positioning context and sized to the image width
+   - caption is placed just below the image and horizontally centered */
+.map-caption-red{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 1rem);
+  white-space: nowrap;
+  font-size: 0.95rem;
+  color: #CF521A;
+  pointer-events: none;
 }
 /* ============================
    Import de Google Fonts y estilos para .names-block
@@ -220,10 +241,12 @@
 #puzzle-board {
   user-select: none;
   aspect-ratio: 1/1;
-  width: min(560px, 90vw);
-  max-width: 90vw;
+  /* Make puzzle scale to 90% of the smaller viewport dimension (vmin)
+     JS will set explicit pixel size but this is a good CSS fallback. */
+  width: 90vmin;
+  height: 90vmin;
+  max-width: 90vmin;
   min-width: 200px;
-  height: auto;
   margin: 0 auto;
   display: block;
 }
@@ -1702,24 +1725,20 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 
 /* Fiesta section styles */
 #fiesta {
+  display: flex;
   text-align: center;
   padding: 2rem 1rem;
 }
 
 .fiesta-image{
-  width: 220px;
-  max-width: 85%;
+  width: 100%;
   height: auto;
-  display: block;
-  margin: 1rem auto 0.6rem;
 }
 
 .fiesta-spoti{
-  width: 220px;
-  max-width: 42%;
   height: auto;
   display: block;
-  margin: 1rem auto 0.6rem;
+  margin: 1rem auto -0.6rem;
 }
 
 /* Center wrapper for the Spotify image in its section */
@@ -1731,10 +1750,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   margin: 0 auto -0.5rem;
   flex-direction: column;
   min-height: 0;
-}
-
-@media (max-width: 520px){
-  .fiesta-spoti-wrap{ padding: 0.15rem 0; margin-bottom: -0.25rem; }
 }
 
 /* Suggest song form styles reuse form defaults but slightly larger */
@@ -1762,11 +1777,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   color: #fff;
 }
 
-@media (max-width: 520px){
-  .fiesta-image{ width: 85%; }
-  .fiesta-spoti{ width: 42%; }
-  .spotify-embed{ width: 85%; }
-}
 /* Centered personalized names image under foto-wrap */
 .nombres-centro{
   text-align: center;
@@ -2087,10 +2097,10 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 #puzzle-board {
   aspect-ratio: 1/1;
-  width: min(560px, 90vw);
-  max-width: 90vw;
+  width: 90vmin;
+  height: 90vmin;
+  max-width: 90vmin;
   min-width: 200px;
-  height: auto;
   margin: 0 auto;
   position: relative;
   background-image: url('/img/historia-roja-dani-elena.png');
@@ -2167,29 +2177,6 @@ section.full-screen {
   }
 }
 
-@media (min-width: 420px) {
-  /* Target the caption that is the sibling immediately after the image inside the anchor
-     (HTML structure: <a class="bouncy"><img class="fiesta-image"> <div class="map-caption-red">...)
-     Use `top` to adjust the absolute-positioned caption reliably. */
-  .bouncy .fiesta-image + .map-caption-red {
-    top: calc(100% - 16.5rem);
-  }
-  /* For the spotify block (uses class `fiesta-spoti`) */
-  #spotify .fiesta-spoti + .map-caption-red,
-  .bouncy .fiesta-spoti + .map-caption-red {
-    top: calc(100% - 18rem);
-  }
-  /* Apply negative spacing only to the inner wrappers to avoid affecting unrelated layout
-     when the viewport width is near small tablet/large-phone breakpoints. */
-  #fiesta {
-    margin-bottom: -14rem;
-  }
-  /* For spotify section target the immediate inner div or its .bouncy child */
-  #spotify {
-    margin-bottom: -11rem;
-  }
-}
-
 @media (max-width: 420px) {
   /* For spotify section target the immediate inner div or its .bouncy child */
   #spotify {
@@ -2244,17 +2231,14 @@ section.full-screen {
 
 .map-caption-red{
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: calc(100% + -1rem); /* sit just below the image */
-  width: 70vw; /* occupy 70% of viewport width as requested */
-  max-width: 860px;
   font-size: 0.88rem;
   color: #CF521A !important; /* force terracotta */
   text-align: center;
-  line-height: 1.05;
   pointer-events: auto;
 }
+
+/* Make the clickable image wrapper a positioning context so captions can be centered */
+.bouncy { position: relative; display: inline-block; }
 
 .salon-logo {
   width: 60%;
@@ -2457,4 +2441,124 @@ img.inverted,
   display: block;
   margin: 1rem auto;
   text-align: center;
+}
+
+/* ======== Forzar visual como 430px en pantallas mayores ======== */
+@media (min-width: 431px) {
+  /* Contenedor raíz fijo a 430px y centrado */
+  html, body, .container, #app {
+    width: 430px !important;
+    max-width: 430px !important;
+    min-width: 430px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Forzar que ningún elemento (fuera del puzzle) supere 430px */
+  *:not(#puzzle-board):not(#puzzle-board *):not(.puzzle-piece):not(.puzzle-piece *) {
+    box-sizing: border-box !important;
+    max-width: 430px !important;
+  }
+
+  /* Anular offsets/transform que sacan elementos fuera del contenedor (excluir puzzle) */
+  *[style]:not(#puzzle-board):not(#puzzle-board *):not(.puzzle-piece):not(.puzzle-piece *),
+  *[class]:not(#puzzle-board):not(#puzzle-board *):not(.puzzle-piece):not(.puzzle-piece *) {
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Ajustar elementos que usaban 100vw/100vh o full-bleed (excluir puzzle) */
+  [style*="100vw"]:not(#puzzle-board):not(#puzzle-board *),
+  [style*="100vh"]:not(#puzzle-board):not(#puzzle-board *),
+  .envelope-image:not(#puzzle-board *),
+  #sobrePoster:not(#puzzle-board *),
+  #sobreAnimado:not(#puzzle-board *),
+  .foto-wrap .cabecera:not(#puzzle-board *),
+  .top-hero:not(#puzzle-board *),
+  .top-sunset:not(#puzzle-board *),
+  .top-curve:not(#puzzle-board *),
+  .full-screen:not(#puzzle-board *) {
+    width: 430px !important;
+    max-width: 430px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* Flechas/carousel adaptadas al contenedor */
+  .imagenesBoda .arrow, #carousel-section .carousel-wrapper, #carousel-section .slide img {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+  }
+
+  /* Evitar offsets negativos (ej: margin-left:-50vw) */
+  .foto-wrap, .foto-wrap .letras-overlay {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    left: auto !important;
+  }
+
+  /* Asegurar sin scroll horizontal */
+  html, body { overflow-x: hidden !important; }
+}
+
+/* Ajustes puntuales para countdown, divisores, spotify y fiesta en pantallas grandes */
+@media (min-width: 431px) {
+  /* Countdown: que el fondo se comporte como en 430px y no se expanda */
+  #countdown-section {
+    background-size: 430px auto !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
+    margin-top: 0 !important;
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  #countdown-section .count-inner {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    padding: 1rem !important;
+    margin: 0 auto !important;
+  }
+
+  /* Divisores y confirm-content: evitar sobresalto por width:110% o transform */
+  .confirm-content, .confirm-inner3, .confirm-inner {
+    width: 100% !important;
+    max-width: 430px !important;
+    transform: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+  .confirm-content img { width: 100% !important; height: auto !important; display: block; margin: 0 auto !important; }
+
+  /* Spotify & Fiesta: eliminar márgenes negativos y captions fuera de lugar */
+  #fiesta, #spotify {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  .bouncy .fiesta-image + .map-caption-red,
+  #spotify .fiesta-spoti + .map-caption-red,
+  .bouncy .fiesta-spoti + .map-caption-red {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: calc(100% + 0.5rem) !important;
+    margin: 0 !important;
+  }
+
+  /* Asegurar que los contenedores centrados mantienen max-width 430 */
+  .fiesta-spoti, .fiesta-image, .fiesta-spoti-wrap { width: 100% !important; }
 }

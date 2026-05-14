@@ -56,7 +56,7 @@ function initPuzzleIfNeeded() {
   const puzzleBoard = puzzleBoardElLocal as HTMLElement;
   const resetPuzzleBtn = resetPuzzleBtnElLocal as HTMLButtonElement;
   const SIZE = 3; // 3x3
-  const PIECE_SIZE = 106;
+  let PIECE_SIZE = 106; // will be computed to fit 90% of viewport
   const FIXED_POS = 1; // mantener la pieza central-superior (segunda, índice 1) fija como ayuda
   // Support multiple fixed positions (hints). Start with the original fixed pos.
   const fixedPositions = new Set<number>([FIXED_POS]);
@@ -191,9 +191,31 @@ function initPuzzleIfNeeded() {
   }
 
   function setupPuzzle() {
-    puzzleBoard.style.position = 'relative';
-    puzzleBoard.style.width = `${SIZE * PIECE_SIZE}px`;
-    puzzleBoard.style.height = `${SIZE * PIECE_SIZE}px`;
+    // Compute responsive sizes: make puzzle occupy 90% of the smaller viewport dimension
+    function computeSizes() {
+      const vmin = Math.min(window.innerWidth, window.innerHeight);
+      const boardSize = Math.max(200, Math.floor(vmin * 0.9)); // at least 200px
+      PIECE_SIZE = Math.floor(boardSize / SIZE);
+      // ensure integer piece size and boardSize is exact multiple
+      const exactBoard = PIECE_SIZE * SIZE;
+      puzzleBoard.style.position = 'relative';
+      puzzleBoard.style.width = `${exactBoard}px`;
+      puzzleBoard.style.height = `${exactBoard}px`;
+    }
+
+    // initial compute
+    computeSizes();
+    // recompute on resize to remain responsive
+    let resizeTimer: number | null = null;
+    const onResize = () => {
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        computeSizes();
+        renderPuzzle();
+      }, 120);
+    };
+    window.addEventListener('resize', onResize);
+
     shufflePieces();
     renderPuzzle();
     // New behavior for the 'Pista' button: mark a new fixed piece (hint)
