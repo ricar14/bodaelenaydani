@@ -2540,7 +2540,7 @@ img.inverted,
 }
 
 @media (min-width: 431px) {
-  .imagenesBoda .divisor-wrap { margin-bottom: -8px !important; position: relative !important; z-index: 5 !important; }
-  .imagenesBoda .divisor-imagenes.inverted { margin-top: -8px !important; z-index: 6 !important; display:block !important; }
+  .imagenesBoda .divisor-wrap { margin-bottom: -12.1% !important; position: relative !important; z-index: 5 !important; }
+  .imagenesBoda .divisor-imagenes.inverted { margin-top: -4.4% !important; z-index: 6 !important; display:block !important; }
   .imagenesBoda .gallery { z-index: 1 !important; position: relative !important; }
 }
