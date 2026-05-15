@@ -60,10 +60,10 @@
     .imagenesBoda .gallery { margin:0; position:relative; z-index:1; }
     @media (max-width:700px) {
        .imagenesBoda .divisor-wrap {
-         margin-bottom:-23px 
+         margin-bottom:-19px 
         } 
     .imagenesBoda .divisor-imagenes.inverted {
-       margin-top:-22px 
+       margin-top:-19px 
       } 
   }
     .imagenesBoda .slides { position:relative; width:100%; height:100%; }
@@ -107,57 +107,14 @@
     </div>
     <div class="names-block">
       <div class="names-image-wrap" style="width:100%;height:auto;">
-        <img src="/img/nombres_personaliz.png" alt="Elena y Dani" class="names-image" style="width:100%;height:auto;">
         <div class="names-overlay">¡Comienza el juego!</div>
+        <img src="/img/nombres_personaliz.png" alt="Elena y Dani" class="names-image" style="width:100%;height:auto;">
       </div>
     </div>
 </section>
 
-    <!-- Sección: Carrusel de imágenes (auto-advance cada 3s) -->
-    <section id="carousel-section" class="full-screen" style="display:flex;align-items:center;justify-content:center;padding:2rem 1rem;margin-bottom:6rem;margin-top: 3rem;">
-      <img src="/img/fotos.png" style="max-width: 108%;" alt="Fotos">
-      <div class="carousel-wrapper">
-        <div class="slides">
-          <div class="slide active"><img src="/img/DSC_0054.JPG" alt=""></div>
-          <div class="slide"><img src="/img/DSC_1196.JPG" alt=""></div>
-          <div class="slide"><img src="/img/DSC_1333.JPG" alt=""></div>
-          <div class="slide"><img src="/img/DSC_0137.JPG" alt=""></div>
-          <div class="slide"><img src="/img/DSC_1128.JPG" alt=""></div>
-        </div>
-        <div class="carousel-dots" aria-hidden="true"></div>
-      </div>
-    </section>
-    <script>
-      document.addEventListener('DOMContentLoaded', function(){
-        var slides = document.querySelectorAll('#carousel-section .slide');
-        if (!slides || slides.length === 0) return;
-        var dotsContainer = document.querySelector('#carousel-section .carousel-dots');
-        var current = 0;
-        slides.forEach(function(s, i){
-          var dot = document.createElement('button');
-          dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-          dot.dataset.index = i;
-          dotsContainer.appendChild(dot);
-          dot.addEventListener('click', function(){ showSlide(parseInt(this.dataset.index)); resetTimer(); });
-        });
-        function showSlide(idx){
-          slides.forEach(function(s,i){ s.classList.toggle('active', i === idx); });
-          Array.from(dotsContainer.children).forEach(function(d,i){ d.classList.toggle('active', i === idx); });
-          current = idx;
-        }
-        function nextSlide(){ showSlide((current + 1) % slides.length); }
-        var timer = setInterval(nextSlide, 3000);
-        function resetTimer(){ clearInterval(timer); timer = setInterval(nextSlide, 3000); }
-        var wrapper = document.querySelector('#carousel-section .carousel-wrapper');
-        if (wrapper) {
-          wrapper.addEventListener('mouseenter', function(){ clearInterval(timer); });
-          wrapper.addEventListener('mouseleave', function(){ resetTimer(); });
-        }
-      });
-    </script>
-
-  <section id="countdown-section" hidden class="full-screen" style="align-items: center;justify-content: center;min-height: 45vh;height: 45vh;background-image: url(&quot;/img/contador3.png&quot;);background-repeat: no-repeat;background-size: cover;background-position: center center;display: flex;margin-top: -22%;">
-    <div class="count-inner"  style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1rem;left: 1.5em;top: 14em;">
+  <section id="countdown-section" hidden class="full-screen" style="width:100%;height:50%;background-image: url(&quot;/img/contador3.png&quot;);background-repeat: no-repeat;background-size: cover;background-position: center center;display: flex;">
+    <div class="count-inner"  style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;left: 1.5em;top: 2em;">
       <div class="count-grid" style="display:flex;align-items:center;margin-top:3.5rem;">
         <div class="count-item" style="text-align:center;min-width:50px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5);">
           <div class="count-number" id="days" style="font-size:1.5rem;font-weight:700;"><span>0</span></div>
@@ -189,7 +146,7 @@
       <img src="/img/divisor.png" alt="Divisor" class="not-inverted">
     </div>
     <div class="confirm-inner3" style="width:110%;">
-      <img src="/img/pareja-fechas-mod-int.png" alt="Acompañanos" class="names-image" style="height:auto;margin-top:-6%;margin-bottom:-42%;width:100%;">
+      <img src="/img/pareja-fechas-mod-int2.png" alt="Acompañanos" class="names-image" style="height:auto;margin-top:-6%;margin-bottom:-42%;width:100%;">
 
       <div class="map-wrap" style="margin-bottom: 4em;margin-top: 1em;">
         <a href="https://maps.app.goo.gl/Xhffhaaz1wjXCUYC8" target="_blank" class="map-circle-btn" rel="noopener noreferrer" aria-label="Ver ubicación (Iglesia)">

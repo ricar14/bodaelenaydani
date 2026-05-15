@@ -96,14 +96,14 @@
 
 .names-overlay{
   position: absolute;
-  width: 80%;
+  width: 100%;
   left: 50%;
-  top: 19%;
+  top: -16%;
   transform: translate(-50%, -50%);
   z-index: 2;
   color: #c15123;
   font-family: wfont_25822f_742283984906494d857b784be3c912ce, wf_742283984906494d857b784be, orig_geographica_script_w_01_regular, 'Great Vibes', cursive;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
   font-weight: 800;
   letter-spacing: 0.02em;
   text-align: center;
@@ -173,7 +173,7 @@
 
 @media (max-width: 520px){
   :root{ --gap: var(--small-gap); }
-  .names-block{ flex-direction: column; gap: 0.35rem; padding: 0.25rem; }
+  .names-block{ flex-direction: column; gap: 0.35rem; }
   .names-block .name{ font-size: clamp(1.25rem, 6vw, 1.9rem); letter-spacing: 0.18em; text-align: center; width: 100%; }
   .names-block .ampersand{ font-size: clamp(1.6rem, 9vw, 2.6rem); transform: none; margin: 0.05rem 0; }
   .names-block .middle-line{ display: none; }
@@ -1309,8 +1309,6 @@ input {
   margin: 1.2rem 0 1.8rem;
 }
 
-/* Bloque de nombres: estilos solicitados (Playfair Display + Allura) */
-.names-block { margin-top: -3.5rem; }
 
 .name {
   font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -2161,22 +2159,6 @@ p {
   margin-bottom: 1rem;
 }
 
-/* --- Ajuste: subir ligeramente todo el contenido de las secciones ---
-   Reduce el padding superior y alinea el contenido hacia la parte superior
-   para que la vista general quede un poco más alta en la pantalla. */
-section.full-screen {
-  justify-content: flex-start !important;
-  padding-top: clamp(0.8rem, 2vw, 1.4rem) !important;
-  padding-bottom: clamp(0.8rem, 2vw, 1.2rem) !important;
-  gap: 0.4rem;
-}
-
-@media (max-width: 520px) {
-  section.full-screen {
-    padding-top: clamp(0.6rem, 2vw, 1rem) !important;
-  }
-}
-
 @media (max-width: 420px) {
   /* For spotify section target the immediate inner div or its .bouncy child */
   #spotify {
@@ -2457,39 +2439,35 @@ img.inverted,
     overflow-x: hidden !important;
   }
 
-  /* Forzar que ningún elemento (fuera del puzzle) supere 430px */
-  *:not(#puzzle-board):not(#puzzle-board *):not(.puzzle-piece):not(.puzzle-piece *) {
+  /* Limitar solo a contenedores conocidos para evitar sobrescribir todo el DOM
+     (reemplaza la regla universal agresiva que causaba efectos colaterales). */
+  /* .full-screen,
+  section.full-screen,
+  .confirm-content,
+  .confirm-inner3,
+  .confirm-inner,
+  .imagenesBoda,
+  #carousel-section,
+  .nombres-centro .names-image-wrap,
+  .foto-wrap,
+  #countdown-section {
     box-sizing: border-box !important;
     max-width: 430px !important;
-  }
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+  } */
 
-  /* Anular offsets/transform que sacan elementos fuera del contenedor (excluir puzzle) */
-  *[style]:not(#puzzle-board):not(#puzzle-board *):not(.puzzle-piece):not(.puzzle-piece *),
-  *[class]:not(#puzzle-board):not(#puzzle-board *):not(.puzzle-piece):not(.puzzle-piece *) {
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  /* Ajustar elementos que usaban 100vw/100vh o full-bleed (excluir puzzle) */
-  [style*="100vw"]:not(#puzzle-board):not(#puzzle-board *),
-  [style*="100vh"]:not(#puzzle-board):not(#puzzle-board *),
-  .envelope-image:not(#puzzle-board *),
-  #sobrePoster:not(#puzzle-board *),
-  #sobreAnimado:not(#puzzle-board *),
-  .foto-wrap .cabecera:not(#puzzle-board *),
-  .top-hero:not(#puzzle-board *),
-  .top-sunset:not(#puzzle-board *),
-  .top-curve:not(#puzzle-board *),
-  .full-screen:not(#puzzle-board *) {
-    width: 430px !important;
+  /* Elementos que originalmente eran full-bleed: limitar su ancho sin tocar transform/offsets globales */
+  .top-hero,
+  .top-sunset,
+  .top-curve,
+  .envelope-image,
+  #sobrePoster,
+  #sobreAnimado {
     max-width: 430px !important;
+    width: 100% !important;
     height: auto !important;
-    min-height: 0 !important;
   }
 
   /* Flechas/carousel adaptadas al contenedor */
@@ -2514,7 +2492,7 @@ img.inverted,
 /* Ajustes puntuales para countdown, divisores, spotify y fiesta en pantallas grandes */
 @media (min-width: 431px) {
   /* Countdown: que el fondo se comporte como en 430px y no se expanda */
-  #countdown-section {
+  /* #countdown-section {
     background-size: 430px auto !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
@@ -2530,13 +2508,12 @@ img.inverted,
     top: auto !important;
     padding: 1rem !important;
     margin: 0 auto !important;
-  }
+  } */
 
   /* Divisores y confirm-content: evitar sobresalto por width:110% o transform */
   .confirm-content, .confirm-inner3, .confirm-inner {
     width: 100% !important;
     max-width: 430px !important;
-    transform: none !important;
     margin: 0 auto !important;
     padding: 0 !important;
   }
@@ -2559,6 +2536,11 @@ img.inverted,
     margin: 0 !important;
   }
 
-  /* Asegurar que los contenedores centrados mantienen max-width 430 */
-  .fiesta-spoti, .fiesta-image, .fiesta-spoti-wrap { width: 100% !important; }
+
+}
+
+@media (min-width: 431px) {
+  .imagenesBoda .divisor-wrap { margin-bottom: -8px !important; position: relative !important; z-index: 5 !important; }
+  .imagenesBoda .divisor-imagenes.inverted { margin-top: -8px !important; z-index: 6 !important; display:block !important; }
+  .imagenesBoda .gallery { z-index: 1 !important; position: relative !important; }
 }
