@@ -295,7 +295,7 @@
 }
 #invitation-card #envelope-anim {
   width: 100vw;
-  height: 100vh;
+  height: auto;
   max-width: none;
   margin: 0;
   align-items: center;
@@ -303,8 +303,8 @@
 }
 
 #invitation-card .envelope-image {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: auto;
   max-width: none;
   max-height: none;
   /* Use cover so the video fills the viewport without letterboxing */
@@ -315,6 +315,7 @@
   cursor: pointer;
   background-color: #fff8f0; /* fallback color matching paper */
   display: block;
+  transform: scale(1.5);
 }
 
 
@@ -917,8 +918,6 @@ footer {
 /* Tintar imágenes dentro de #wedding-info a terracota (mejor visibilidad sobre el fondo) */
 #wedding-info .names-image{
   /* filtros para aproximar color terracota #c15123 */
-  filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
-  -webkit-filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
   mix-blend-mode: normal;
   display: block;
   max-width: 92%;
@@ -1445,7 +1444,7 @@ section,
 }
 
 /* Asegurar que la sección pueda posicionar corner-decor */
-#nos-casamos { position: relative; }
+#nos-casamos { position: relative; width: 100%; }
 
 
 .date-card{
@@ -1565,7 +1564,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   display:flex;
   align-items:center;
   justify-content:center;
-  padding: clamp(1rem, 3vw, 2.4rem);
   background: transparent;
 }
 .confirm-inner{
@@ -1674,7 +1672,7 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
 }
 
 @media (max-width: 420px){
-  section { min-height: auto; padding: 0.8rem; }
+  section { min-height: auto; }
   .hero-rect { width: 94vw; padding: 1rem; margin: 0.6rem; }
   .count-grid { flex-wrap: wrap; justify-content: center; }
   .count-item { min-width: 44px; }
@@ -1975,8 +1973,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   height: auto;
   margin: 0.4rem auto;
   /* tint toward #9f3a3a */
-  filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
-  -webkit-filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
 }
 
 @media (max-width:720px){
@@ -1992,9 +1988,6 @@ img, iframe, .envelope-image, .corner-decor, .invitation-box img {
   display: block;
   width: 76%;
   height: auto;
-  /* tint toward #9f3a3a */
-  filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
-  -webkit-filter: brightness(56) saturate(100%) sepia(192%) hue-rotate(-5deg) saturate(355%) brightness(1.95) contrast(0.95);
 }
 .itinerario-image{
   display: block;
@@ -2403,7 +2396,7 @@ img.inverted,
   box-sizing: border-box;
   width: 95%;
   margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-bottom: 6rem;
 }
 
 /* Make paragraph text inside details use the same font as the summary */
@@ -2429,34 +2422,13 @@ img.inverted,
 @media (min-width: 431px) {
   /* Contenedor raíz fijo a 430px y centrado */
   html, body, .container, #app {
-    width: 430px !important;
-    max-width: 430px !important;
-    min-width: 430px !important;
+    width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     overflow-x: hidden !important;
   }
-
-  /* Limitar solo a contenedores conocidos para evitar sobrescribir todo el DOM
-     (reemplaza la regla universal agresiva que causaba efectos colaterales). */
-  /* .full-screen,
-  section.full-screen,
-  .confirm-content,
-  .confirm-inner3,
-  .confirm-inner,
-  .imagenesBoda,
-  #carousel-section,
-  .nombres-centro .names-image-wrap,
-  .foto-wrap,
-  #countdown-section {
-    box-sizing: border-box !important;
-    max-width: 430px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    width: 100% !important;
-  } */
 
   /* Elementos que originalmente eran full-bleed: limitar su ancho sin tocar transform/offsets globales */
   .top-hero,
@@ -2465,7 +2437,6 @@ img.inverted,
   .envelope-image,
   #sobrePoster,
   #sobreAnimado {
-    max-width: 430px !important;
     width: 100% !important;
     height: auto !important;
   }
@@ -2513,7 +2484,6 @@ img.inverted,
   /* Divisores y confirm-content: evitar sobresalto por width:110% o transform */
   .confirm-content, .confirm-inner3, .confirm-inner {
     width: 100% !important;
-    max-width: 430px !important;
     margin: 0 auto !important;
     padding: 0 !important;
   }
